@@ -1,0 +1,43 @@
+.btnCerrar {
+    -fx-background-color: red;
+}
+
+.ico {
+    -fx-fill: white;
+}
+
+.btnAceptar {
+    -fx-background-color: #53dd6c;
+}
+
+.button-raised {
+     -fx-font-size: 14px;
+     -jfx-button-type: RAISED;
+     -fx-text-fill: WHITE;
+ }
+
+.white {
+    -fx-background-color: white;
+}
+
+.font {
+    -fx-font-family: Quicksand;
+    -fx-font-weight: bold;
+}
+
+.tree-table-row-cell:selected {
+    -fx-background-color: #c6878f;
+}
+
+.tree-table-view {
+    -fx-font-fill: black;
+    -fx-font-family: Quicksand;
+    -fx-font-weight: bold;
+}
+
+.tree-table-view:focused .tree-table-row-cell:selected .tree-table-cell {
+    -fx-text-fill: white;
+    -fx-font-family: Quicksand;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+}

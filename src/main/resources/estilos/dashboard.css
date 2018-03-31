@@ -1,0 +1,65 @@
+.textLogo {
+    -fx-font-weight: bold;
+    -fx-fill: white;
+    -fx-font-family: Quicksand;
+    -fx-font-size: 18;
+}
+
+.textChino {
+    -fx-font-weight: bold;
+    -fx-font-family: Quicksand;
+    -fx-font-size: 18;
+}
+
+.icoPrincipal {
+    -fx-fill: white;
+    -fx-font-size: 32;
+}
+
+.iconosMenu {
+    -fx-fill: #43617C;
+    -fx-font-size: 1.5em;
+}
+
+.iconosGrande {
+    -fx-fill: #43617C;
+    -fx-font-size: 5em !important;
+}
+
+.text1 {
+    -fx-font-weight: bold;
+    -fx-font-family: Quicksand;
+    -fx-font-size: 14;
+}
+
+.panelWhite {
+    -fx-background-color: white;
+}
+
+.panel1 {
+    -fx-background-color: #5b85aa;
+}
+
+.hover_border:hover {
+    -fx-border-color: #53dd6c;
+    -fx-border-width: 0px 0px 0px 5px;
+    -fx-background-color: #e3e5e8 !important;
+    -fx-cursor: hand;
+}
+
+.tarMenu {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);
+}
+
+
+.tarMenu:hover {
+    -fx-background-color: #e3e5e8 !important;
+    -fx-cursor: hand;
+}
+
+.btnEstadistica {
+    -fx-background-color: #43617C;
+    -fx-text-fill: white;
+    -fx-background-radius: 0px;
+}

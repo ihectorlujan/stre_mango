@@ -1,0 +1,43 @@
+.text {
+    -fx-font-family: Quicksand;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.ico {
+    -fx-fill: #43617c;
+    -fx-font-size: 1.5em !important;
+}
+
+.ico:hover {
+    -fx-effect: dropshadow(gaussian, rgb(126.0, 130.0, 135.0, 0.3), 10.0, 0.7, 0.5,1.5);
+    -fx-cursor: hand;
+}
+
+.white {
+    -fx-background-color: white;
+}
+
+
+.jfx-list-cell:selected{
+    -fx-background-color: #90708c;
+}
+
+.jfx-list-cell{
+    -fx-background-insets: 0.0;
+}
+
+.jfx-list-cell:hover {
+    -fx-background-color: #e3e5e8;
+}
+
+.jfx-rippler {
+    -jfx-rippler-fill: #c6878f;
+}
+
+.jfx-list-view {
+    -fx-background-insets: 0;
+    -fx-cell-vertical-margin: 10.0;
+    -fx-vertical-gap: 10;
+    -fx-pref-width: 150;
+}

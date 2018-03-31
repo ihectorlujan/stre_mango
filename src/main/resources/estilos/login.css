@@ -1,0 +1,69 @@
+.signin {
+    -fx-background-color:  #183059;
+}
+
+.forget {
+    -fx-border-color: #183059;
+    -fx-background-color: white;
+    -fx-text-fill: black !important;
+}
+
+.iconBack {
+    -fx-fill: #43617C;
+    -fx-font-size: 2.5em !important;
+}
+
+.iconBack:hover {
+    -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.3), 10.0, 0.7, 0.5,1.5);
+}
+
+.button:hover {
+    -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.3), 10.0, 0.7, 0.5,1.5);
+}
+
+.button {
+    -fx-text-fill: white;
+    -fx-font-family: Quicksand;
+    -fx-font-weight: bold;
+}
+
+.label {
+    -fx-font-family: Quicksand;
+    -fx-font-weight: bold;
+}
+
+.anchorPane {
+    -fx-background-image: url("/imagenes/background.jpg");
+    -fx-background-size: cover;
+}
+
+.backgroundMenu {
+    -fx-background-image: url("/com/resources/bg.png");
+    -fx-background-size: cover;
+}
+
+.menus{
+    -fx-background-color: rgb(255, 255, 255,0.9);
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);
+    -fx-cursor: hand;
+}
+
+.chino:hover {
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.9), 6, 0.2, 3, 3);
+}
+
+.chino {
+    -fx-font-size: 63;
+    -fx-font-family: Sacramento;
+    -fx-text-fill: white;
+}
+
+.icon {
+    -fx-fill: #ef6461;
+}
+
+.nameLabel {
+    -fx-font-size: 14;
+}
