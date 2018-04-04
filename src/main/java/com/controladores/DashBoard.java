@@ -41,17 +41,18 @@ public class DashBoard {
         HBox opcionHome = opcionMenu(FontAwesomeIcon.CIRCLE_ALT_NOTCH, "Menu", 0);
         HBox opcionCompras = opcionMenu(FontAwesomeIcon.SHOPPING_CART, "Compras", 10);
         HBox opcionVentas = opcionMenu(FontAwesomeIcon.MONEY, "Ventas", 10);
-        HBox opcionUsuarios = opcionMenu(FontAwesomeIcon.USERS, "Usuarios", 10);
+        HBox opcionUsuarios = opcionMenu(FontAwesomeIcon.USERS, "Clientes", 10);
         HBox opcionProveedores = opcionMenu(FontAwesomeIcon.USER_SECRET, "Proveedores", 10);
         HBox opcionEmpleados = opcionMenu(FontAwesomeIcon.MALE, "Empleados", 10);
         HBox opcionProductos = opcionMenu(FontAwesomeIcon.PRODUCT_HUNT, "Productos", 10);
+        HBox opcionDevolucion = opcionMenu(FontAwesomeIcon.EXCHANGE, "Devoluciones",10);
         VBox masOpciones = new VBox();
         masOpciones.setAlignment(Pos.CENTER);
         VBox.setVgrow(masOpciones, Priority.ALWAYS);
         HBox ajustes = opcionMenu(FontAwesomeIcon.COG, "Ajustes", 0);
         HBox acerca = opcionMenu(FontAwesomeIcon.QUESTION_CIRCLE, "Acerca", 0);
         masOpciones.getChildren().addAll(ajustes,acerca);
-        leftBox.getChildren().addAll(opcionHome, opcionCompras, opcionVentas, opcionUsuarios, opcionProveedores, opcionEmpleados, opcionProductos, masOpciones);
+        leftBox.getChildren().addAll(opcionHome, opcionCompras, opcionVentas, opcionUsuarios, opcionProveedores, opcionEmpleados, opcionProductos, opcionDevolucion, masOpciones);
 
         //Center Box
         centerBox.setPadding(new Insets(20,20,20,20));

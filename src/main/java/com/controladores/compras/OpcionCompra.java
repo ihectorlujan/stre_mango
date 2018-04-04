@@ -1,5 +1,6 @@
 package com.controladores.compras;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -13,6 +14,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -85,29 +87,38 @@ public class OpcionCompra extends VBox{
     private HBox opciones() {
         HBox box = new HBox();
         HBox textBox = new HBox();
-        Text addCompra = GlyphsDude.createIcon(FontAwesomeIcon.PLUS);
-        Text historial = GlyphsDude.createIcon(FontAwesomeIcon.HISTORY);
+        JFXButton btnAddCompra = new JFXButton();
+        JFXButton btnHistorial = new JFXButton();
+        Text icoCompra = GlyphsDude.createIcon(FontAwesomeIcon.PLUS);
+        Text icoHistorial = GlyphsDude.createIcon(FontAwesomeIcon.HISTORY);
         Text text = new Text("Opciones");
 
+        //Buttons
+        btnAddCompra.setGraphic(icoCompra);
+        btnHistorial.setGraphic(icoHistorial);
+        btnAddCompra.setRipplerFill(Color.web("#90708c"));
+        btnHistorial.setRipplerFill(Color.web("#90708c"));
+        icoCompra.getStyleClass().add("ico");
+        icoHistorial.getStyleClass().add("ico");
+
         //Styles
-        addCompra.getStyleClass().add("ico");
-        historial.getStyleClass().add("ico");
+        btnAddCompra.getStyleClass().add("button-raised");
+        btnHistorial.getStyleClass().add("button-raised");
         text.getStyleClass().add("text");
         box.getStyleClass().add("white");
 
-        addCompra.setOnMouseClicked(e -> {
-            if (e.getButton() == MouseButton.PRIMARY)
+        btnAddCompra.setOnAction(e -> {
                 new AgregarCompra();
         });
 
-        HBox.setMargin(addCompra, new Insets(0,5,0,5));
-        HBox.setMargin(historial, new Insets(0,5,0,5));
+        HBox.setMargin(btnAddCompra, new Insets(0,5,0,5));
+        HBox.setMargin(btnHistorial, new Insets(0,5,0,5));
         HBox.setMargin(textBox, new Insets(0,0,0,10));
 
         textBox.getChildren().add(text);
         HBox.setHgrow(textBox, Priority.ALWAYS);
         textBox.setAlignment(Pos.CENTER_LEFT);
-        box.getChildren().addAll(textBox,addCompra, historial);
+        box.getChildren().addAll(textBox,btnAddCompra, btnHistorial);
         box.setAlignment(Pos.CENTER_RIGHT);
         return box;
     }

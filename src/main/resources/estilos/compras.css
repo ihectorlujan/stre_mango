@@ -6,13 +6,20 @@
 
 .ico {
     -fx-fill: #43617c;
-    -fx-font-size: 1.5em !important;
+    -fx-font-size: 1em !important;
 }
 
-.ico:hover {
+
+.button:hover {
     -fx-effect: dropshadow(gaussian, rgb(126.0, 130.0, 135.0, 0.3), 10.0, 0.7, 0.5,1.5);
     -fx-cursor: hand;
 }
+
+.button-raised {
+     -fx-font-size: 14px;
+     -jfx-button-type: RAISED;
+     -fx-text-fill: WHITE;
+ }
 
 .white {
     -fx-background-color: white;
