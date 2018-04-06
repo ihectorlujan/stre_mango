@@ -46,12 +46,9 @@ public class AgregarCompra extends Stage {
         Label lblMonto = new Label("Monto");
         Label lbl$Monto = new Label("$0.00");
         JFXButton btnAceptar = new JFXButton();
-        JFXButton btnCerrar = new JFXButton();
-        Text icoCerrar = GlyphsDude.createIcon(FontAwesomeIcon.CLOSE);
         Text icoAceptar = GlyphsDude.createIcon(FontAwesomeIcon.CHECK);
         GridPane pane1 = new GridPane();
         GridPane pane2 = new GridPane();
-        GridPane paneCerrar = new GridPane();
         GridPane paneAceptar = new GridPane();
         ColumnConstraints column1 = new ColumnConstraints(10,100,Double.MAX_VALUE);
         ColumnConstraints column2 = new ColumnConstraints(10,100,Double.MAX_VALUE);
@@ -66,15 +63,11 @@ public class AgregarCompra extends Stage {
         btnAceptar.getStyleClass().addAll("btnAceptar", "button-raised");
         btnAceptar.setGraphic(icoAceptar);
         btnAceptar.setStyle("-fx-pref-width: 90 !important;");
-        btnCerrar.setRipplerFill(Color.web("#90708c"));
-        btnCerrar.getStyleClass().addAll("btnCerrar", "button-raised");
-        btnCerrar.setGraphic(icoCerrar);
         lblProveedor.getStyleClass().add("font");
         lblFecha.getStyleClass().add("font");
         lblProductos.getStyleClass().add("font");
         lblMonto.getStyleClass().add("font");
         lbl$Monto.getStyleClass().add("font");
-        icoCerrar.getStyleClass().add("ico");
         icoAceptar.getStyleClass().add("ico");
 
         //Pane 1 properties
@@ -99,12 +92,8 @@ public class AgregarCompra extends Stage {
         VBox.setMargin(pane2, new Insets(10,0,10,0));
 
         //paneCerrar & paneAceptar
-        GridPane.setConstraints(btnCerrar,0,0);
         GridPane.setConstraints(btnAceptar,0,0);
-        GridPane.setHalignment(btnCerrar, HPos.RIGHT);
         GridPane.setHalignment(btnAceptar, HPos.RIGHT);
-        paneCerrar.getColumnConstraints().add(column1);
-        paneCerrar.getChildren().add(btnCerrar);
         paneAceptar.getColumnConstraints().add(column1);
         paneAceptar.getChildren().add(btnAceptar);
 
@@ -112,10 +101,9 @@ public class AgregarCompra extends Stage {
         //box properties
         VBox.setMargin(lblProductos, new Insets(0,0,5,0));
         VBox.setMargin(tblProductos, new Insets(0,0,10,0));
-        VBox.setMargin(btnCerrar, new Insets(0,0,0,315));
         VBox.setMargin(btnAceptar, new Insets(0,0,0,310));
-        box.setPadding(new Insets(25));
-        box.getChildren().addAll(paneCerrar, pane1, lblProductos, tblProductos, pane2, paneAceptar);
+        box.setPadding(new Insets(15,20,20,20));
+        box.getChildren().addAll(pane1, lblProductos, tblProductos, pane2, paneAceptar);
 
          //      TABLE   PROPERTIES         //
         clmNombre.setResizable(false);
@@ -143,10 +131,6 @@ public class AgregarCompra extends Stage {
         //      END TABLE                  //
 
         //actions
-        btnCerrar.setOnMouseClicked(e -> {
-            if (e.getButton() == MouseButton.PRIMARY)
-                this.close();
-        });
 
         btnAceptar.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY)
@@ -155,12 +139,11 @@ public class AgregarCompra extends Stage {
 
         // Stage properties
         Scene scene = new Scene(box,430,524);
-        setResizable(false);
         setScene(scene);
-        initStyle(StageStyle.UNDECORATED);
         initModality(Modality.APPLICATION_MODAL);
-        scene.getStylesheets().add(getClass().getResource("/estilos/opcion_compra.css").toExternalForm());
+        setResizable(false);
         show();
+        scene.getStylesheets().add(getClass().getResource("/estilos/opcion_compra.css").toExternalForm());
     }
 
 }

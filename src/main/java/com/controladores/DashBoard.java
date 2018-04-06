@@ -1,6 +1,7 @@
 package com.controladores;
 
 import com.controladores.compras.OpcionCompra;
+import com.controladores.proveedores.OpcionProveedores;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import de.jensd.fx.glyphs.GlyphsDude;
@@ -81,8 +82,8 @@ public class DashBoard {
         eventosRecientesH.getChildren().addAll(ultimaCompraH, ultimaVentaH, ultimoUsuarioH);
 
         HBox graficas = new HBox();
-        VBox mejoresCompradores = graficasRecientes("Marzo", FontAwesomeIcon.CALENDAR, "Mejores compradores");
-        VBox mejoresVentas = graficasRecientes("Marzo", FontAwesomeIcon.CALENDAR, "Mejores ventas");
+        VBox mejoresCompradores = graficasRecientes("Marzo", "Mejores compradores");
+        VBox mejoresVentas = graficasRecientes("Marzo", "Mejores ventas");
         HBox.setMargin(mejoresCompradores, new Insets(20,20,20,20));
         HBox.setHgrow(mejoresCompradores, Priority.ALWAYS);
         HBox.setMargin(mejoresVentas, new Insets(20,20,20,20));
@@ -100,6 +101,11 @@ public class DashBoard {
         opcionCompras.setOnMouseClicked(a -> {
             if(a.getButton() == MouseButton.PRIMARY)
                 borderPane.setCenter(new OpcionCompra());
+        });
+
+        opcionProveedores.setOnMouseClicked(a ->{
+            if(a.getButton()==MouseButton.PRIMARY)
+                borderPane.setCenter(new OpcionProveedores());
         });
 
         //Eventos de icono
@@ -238,7 +244,7 @@ public class DashBoard {
     private HBox actividadesRecientesH(FontAwesomeIcon icon, String text, String date) {
         HBox hBox = new HBox();
 
-        Text icoFecha = GlyphsDude.createIcon(FontAwesomeIcon.CALENDAR_ALT, "1.5em");
+        Text icoFecha = GlyphsDude.createIcon(FontAwesomeIcon.CALENDAR, "1.5em");
         Text fecha = new Text(date);
         Text ico = GlyphsDude.createIcon(icon, "1.5em");
         Text textIco = new Text(text);
@@ -261,13 +267,12 @@ public class DashBoard {
         return hBox;
     }
 
-
     private VBox actividadesRecientes(FontAwesomeIcon icon, String text, String date) {
         VBox vBox = new VBox();
         HBox internalBox = new HBox();
         HBox icono = new HBox();
 
-        Text icoFecha = GlyphsDude.createIcon(FontAwesomeIcon.CALENDAR_ALT);
+        Text icoFecha = GlyphsDude.createIcon(FontAwesomeIcon.CALENDAR);
         Text fecha = new Text(date);
         Text ico = GlyphsDude.createIcon(icon);
         Text textIco = new Text(text);
@@ -290,12 +295,12 @@ public class DashBoard {
         return vBox;
     }
 
-    private VBox graficasRecientes(String mes, FontAwesomeIcon ico, String txt) {
+    private VBox graficasRecientes(String mes, String txt) {
         VBox vBox = new VBox();
         HBox internalBox = new HBox();
         HBox icono = new HBox();
 
-        Text icoFecha = GlyphsDude.createIcon(FontAwesomeIcon.CALENDAR_ALT);
+        Text icoFecha = GlyphsDude.createIcon(FontAwesomeIcon.CALENDAR);
         Text fecha = new Text(mes);
         Text textIco = new Text(txt);
         CategoryAxis xAxis = new CategoryAxis();
@@ -320,6 +325,5 @@ public class DashBoard {
         icono.getChildren().add(icoFecha);
         return vBox;
     }
-
 
 }

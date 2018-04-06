@@ -10,6 +10,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -107,9 +108,13 @@ public class OpcionCompra extends VBox{
         text.getStyleClass().add("text");
         box.getStyleClass().add("white");
 
-        btnAddCompra.setOnAction(e -> {
-                new AgregarCompra();
-        });
+        //Acciones
+        btnAddCompra.setOnAction(e -> new AgregarCompra());
+
+        btnHistorial.setOnAction(e -> new HistorialCompras());
+
+        btnAddCompra.setTooltip(new Tooltip("Agregar una nueva compra"));
+        btnHistorial.setTooltip(new Tooltip("Ver el historial de compras"));
 
         HBox.setMargin(btnAddCompra, new Insets(0,5,0,5));
         HBox.setMargin(btnHistorial, new Insets(0,5,0,5));
