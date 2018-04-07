@@ -169,7 +169,7 @@ public class DashBoard {
 
         //Segundo Box
         Text icoBell = GlyphsDude.createIcon(FontAwesomeIcon.BELL_ALT, "18");
-        ImageView user = new ImageView("/imagenes/riki.jpg");
+        ImageView user = new ImageView("https://storage.googleapis.com/com-chino-refaccionaria/imagenes/riki.jpg");
         Text icoDown = GlyphsDude.createIcon(FontAwesomeIcon.CHEVRON_DOWN, "16");
         Text txtUser = new Text("Riki");
         user.setFitWidth(32);

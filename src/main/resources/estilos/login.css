@@ -37,11 +37,6 @@
     -fx-background-size: cover;
 }
 
-.backgroundMenu {
-    -fx-background-image: url("/com/resources/bg.png");
-    -fx-background-size: cover;
-}
-
 .menus{
     -fx-background-color: rgb(255, 255, 255,0.9);
     -fx-background-radius: 5;

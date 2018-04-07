@@ -212,7 +212,7 @@ public class OpcionProveedores extends VBox {
         VBox box1=new VBox();
         box1.setPadding(internalInsets);
         box1.setAlignment(Pos.CENTER_LEFT);
-        ImageView imageView=new ImageView("/imagenes/default_provider.png");
+        ImageView imageView=new ImageView("https://storage.googleapis.com/com-chino-refaccionaria/imagenes/default_provider.png");
         imageView.isResizable();
         Button change=GlyphsDude.createIconButton(FontAwesomeIcon.FOLDER_OPEN_ALT,"Cambiar imagen");
         BorderPane spacePick=new BorderPane();

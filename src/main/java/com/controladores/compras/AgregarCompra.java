@@ -20,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class AgregarCompra extends Stage {
     HBox prodCompras = new HBox();
@@ -143,7 +142,7 @@ public class AgregarCompra extends Stage {
         initModality(Modality.APPLICATION_MODAL);
         setResizable(false);
         show();
-        scene.getStylesheets().add(getClass().getResource("/estilos/opcion_compra.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/estilos/agregar_compra.css").toExternalForm());
     }
 
 }

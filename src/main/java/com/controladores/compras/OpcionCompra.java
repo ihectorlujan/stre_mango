@@ -75,7 +75,9 @@ public class OpcionCompra extends VBox{
         for (int i = 0; i < 5; i++)
             lista.getItems().add(new Label("producto " + i));
 
-        //
+            //Expanded List
+            //lista.setVerticalGap(10.0);
+            //lista.setExpanded(true);
         txtProductos.setTextAlignment(TextAlignment.CENTER);
         txtProductos.getStyleClass().add("text");
         VBox.setMargin(lista, new Insets(0,5,5,5));

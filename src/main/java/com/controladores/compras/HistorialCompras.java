@@ -4,11 +4,11 @@ import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.modelo.Compra;
 import com.modelo.Conexion;
+import com.modelo.DetalleCompra;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,15 +21,21 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import tray.notification.NotificationType;
+import tray.notification.TrayNotification;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
 
 public class HistorialCompras extends Stage {
 
+    //Paneles
     private GridPane panelDatos;
     private GridPane panelEtiquetas;
     private GridPane panelOpciones;
@@ -41,24 +47,31 @@ public class HistorialCompras extends Stage {
     private TextField txtEmpleado;
     private TextField txtProveedor;
     private JFXButton btnDetalles;
+    private JFXPopup popup;
+
+    //Opciones
+    private TextField txtBuscar;
+    private JFXButton btnBuscar;
+    private JFXDatePicker pickerDateBuscar;
+    private JFXDatePicker pickerDateBuscar2;
+    private JFXButton btnReset;
 
     //Conexion
     private Conexion conexion;
 
     //Colecciones
     private ObservableList<Compra> listaCompra;
-    private FilteredList<Compra> filteredCompra;
-
-
+    private ObservableList<DetalleCompra> detalleCompras;
 
     public HistorialCompras() {
         conexion = new Conexion();
         listaCompra = FXCollections.observableArrayList();
-        filteredCompra = new FilteredList<>(listaCompra, e->true);
+        detalleCompras = FXCollections.observableArrayList();
 
         conexion.establecerConexion();
 
         Compra.llenarCompras(conexion.getConection(), listaCompra);
+        DetalleCompra.llenarDatos(conexion.getConection(), detalleCompras);
 
         conexion.cerrarConexion();
 
@@ -85,7 +98,18 @@ public class HistorialCompras extends Stage {
         contenedorPrincipal.setPadding(new Insets(5,15,15,15));
         contenedorPrincipal.getChildren().addAll(panelEtiquetas, panelDatos, panelOpciones, tblCompras);
 
+        //Operaciones de la tabla
         llenarTabla(tblCompras, listaCompra);
+        buscarTbl(txtBuscar, tblCompras);
+
+        //Eventos
+        btnBuscar.setOnAction(e -> buscarPorFecha(pickerDateBuscar, pickerDateBuscar2, tblCompras));
+        btnReset.setOnAction(e -> {
+            pickerDateBuscar.setValue(null);
+            pickerDateBuscar2.setValue(null);
+            txtBuscar.setText("");
+            tblCompras.setPredicate(p -> true);
+        });
 
         setResizable(false);
         Scene  scene = new Scene(contenedorPrincipal, 835,583);
@@ -133,9 +157,9 @@ public class HistorialCompras extends Stage {
         Label lblId = new Label("ID:");
         Label lblFecha = new Label("Fecha:");
         Label lblHora = new Label("Hora:");
-        Label lblEmpleado = new Label("Empleado:");
+        Label lblEmpleado = new Label("ID Empleado:");
         Label lblProveedor = new Label("Proveedor:");
-        Label lblDetalles = new Label("Detalles");
+        Label lblDetalles = new Label("Detalles de la compra");
         txtID = new TextField();
         datePicker = new JFXDatePicker();
         timePicker = new JFXTimePicker();
@@ -161,9 +185,6 @@ public class HistorialCompras extends Stage {
         panelDatos.add(btnDetalles, 3,2);
 
         //Estilos
-        txtID.getStyleClass().add("textField");
-        txtEmpleado.getStyleClass().add("textField");
-        txtProveedor.getStyleClass().add("textField");
         btnDetalles.getStyleClass().add("btnRaisedBlue");
         panelDatos.getStyleClass().add("white");
         panelDatos.setHgap(30);
@@ -190,17 +211,17 @@ public class HistorialCompras extends Stage {
         //paneOpciones1
         HBox box1 = new HBox();
         Label lblBuscar = new Label("Buscar por:");
-        TextField txtBuscar = new TextField();
+        txtBuscar = new TextField();
         box1.getChildren().addAll(lblBuscar, txtBuscar);
 
         HBox box2 = new HBox();
         Label lblDe = new Label("De:");
-        JFXDatePicker pickerDateBuscar = new JFXDatePicker();
+        pickerDateBuscar = new JFXDatePicker();
         box2.getChildren().addAll(lblDe, pickerDateBuscar);
 
         HBox box3 = new HBox();
         Label lblA = new Label("A:");
-        JFXDatePicker pickerDateBuscar2 = new JFXDatePicker();
+        pickerDateBuscar2 = new JFXDatePicker();
         box3.getChildren().addAll(lblA, pickerDateBuscar2);
 
         paneOpciones1.add(box1, 0,0);
@@ -208,15 +229,16 @@ public class HistorialCompras extends Stage {
         paneOpciones1.add(box3,2,0);
 
         //paneOpciones2
-        JFXButton btnBuscar = new JFXButton("Buscar");
-        JFXButton btnReset = new JFXButton("Reset");
+        btnBuscar = new JFXButton("Buscar");
+        btnReset = new JFXButton("Reset");
         paneOpciones2.add(btnBuscar, 0,0);
         paneOpciones2.add(btnReset,1,0);
 
         //Estilos
-        txtBuscar.getStyleClass().add("textField");
         btnBuscar.getStyleClass().add("btnRaisedBlue");
         btnReset.getStyleClass().add("btnRaisedPurple");
+        pickerDateBuscar.setEditable(false);
+        pickerDateBuscar2.setEditable(false);
         lblBuscar.setPrefWidth(100);
         lblDe.setPrefWidth(100);
         lblA.setPrefWidth(100);
@@ -259,7 +281,7 @@ public class HistorialCompras extends Stage {
         JFXTreeTableColumn<Compra, String> clmFecha = new JFXTreeTableColumn("Fecha");
         JFXTreeTableColumn<Compra, String> clmHora = new JFXTreeTableColumn("Hora");
         JFXTreeTableColumn<Compra, Integer> clmEmpleado = new JFXTreeTableColumn("Empleado");
-        JFXTreeTableColumn<Compra, Integer> clmProveedor = new JFXTreeTableColumn("Proveedor");
+        JFXTreeTableColumn<Compra, String> clmProveedor = new JFXTreeTableColumn("Proveedor");
 
         clmId.setResizable(false);
         clmId.setPrefWidth(150);
@@ -292,21 +314,23 @@ public class HistorialCompras extends Stage {
         clmEmpleado.setPrefWidth(150);
         clmEmpleado.setCellValueFactory((TreeTableColumn.CellDataFeatures<Compra, Integer> param) -> {
             if (clmEmpleado.validateValue(param))
-                return param.getValue().getValue().empleadoProperty().asObject();
+                return param.getValue().getValue().idEmpleadoProperty().asObject();
             else
                 return clmEmpleado.getComputedValue(param);
         });
 
         clmProveedor.setResizable(false);
         clmProveedor.setPrefWidth(150);
-        clmProveedor.setCellValueFactory((TreeTableColumn.CellDataFeatures<Compra, Integer> param) -> {
+        clmProveedor.setCellValueFactory((TreeTableColumn.CellDataFeatures<Compra, String> param) -> {
             if (clmProveedor.validateValue(param))
-                return param.getValue().getValue().proveedorProperty().asObject();
+                return param.getValue().getValue().proveedorProperty();
             else
                 return clmProveedor.getComputedValue(param);
         });
 
-        setDatosTable(tbl);
+        // Operaciones con la tabla
+        setDatos(tbl);
+        bloquearCampos();
 
         tbl.setEditable(false);
         tbl.setShowRoot(false);
@@ -314,17 +338,158 @@ public class HistorialCompras extends Stage {
 
     }
 
-    private void setDatosTable(JFXTreeTableView<Compra> tbl) {
+    private void setDatos(JFXTreeTableView<Compra> tbl) {
         tbl.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 txtID.setText(newValue.getValue().getId() + "");
-                txtEmpleado.setText(newValue.getValue().getEmpleado() + "");
+                txtEmpleado.setText(newValue.getValue().getIdEmpleado() + "");
                 txtProveedor.setText(newValue.getValue().getProveedor() + "");
                 datePicker.setValue(LocalDate.parse(newValue.getValue().getFecha()));
                 timePicker.setValue(LocalTime.parse(newValue.getValue().getTime()));
+
+                datePicker.setDisable(false);
+                timePicker.setDisable(false);
+                btnDetalles.setDisable(false);
+
+                initPopup(newValue.getValue());
+                btnDetalles.setOnAction(e -> popup.show(btnDetalles));
             }
 
         });
     }
 
+    private void bloquearCampos() {
+        txtID.setEditable(false);
+        txtProveedor.setEditable(false);
+        txtEmpleado.setEditable(false);
+        btnDetalles.setDisable(true);
+        timePicker.setEditable(false);
+        datePicker.setEditable(false);
+        pickerDateBuscar.setEditable(false);
+        pickerDateBuscar2.setEditable(false);
+
+        timePicker.setDisable(true);
+        datePicker.setDisable(true);
+    }
+
+    private void initPopup(Compra compra) {
+        VBox vBox = new VBox();
+        GridPane pane = new GridPane();
+
+        Label lblId = new Label("ID Empleado:");
+        Label lblNombre = new Label("Nombre:");
+        Label lblApellido = new Label("Apellido:");
+        TextField txtId = new TextField(compra.getIdEmpleado() + "");
+        TextField txtNombre = new TextField(compra.getNombreEmpleado());
+        TextField txtApellido = new TextField(compra.getApellidoEmpleado());
+
+        txtId.setEditable(false);
+        txtNombre.setEditable(false);
+        txtApellido.setEditable(false);
+
+        pane.setHgap(20);
+        pane.setVgap(10);
+
+        pane.add(lblId,0,0);
+        pane.add(lblNombre,0,1);
+        pane.add(lblApellido,0,2);
+        pane.add(txtId,1,0);
+        pane.add(txtNombre,1,1);
+        pane.add(txtApellido,1,2);
+
+        JFXTreeTableView table = createTableDetalle(detalleCompras.filtered(dC -> dC.getIdTransaccion() == compra.getId()));
+
+        VBox.setMargin(table, new Insets(10,0,0,0));
+        VBox.setVgrow(table, Priority.ALWAYS);
+        vBox.setPadding(new Insets(10));
+        vBox.getChildren().addAll(pane, table);
+        vBox.setPrefSize(400,400);
+
+        popup = new JFXPopup(vBox);
+    }
+
+    private void buscarTbl(TextField text, JFXTreeTableView<Compra> tbl) {
+        text.textProperty().addListener((value, oldValue, newValue) -> {
+            tbl.setPredicate(c ->
+                    c.getValue().getProveedor().toLowerCase().contains(newValue.toLowerCase()) ||
+                            String.valueOf(c.getValue().getId()).contains(newValue)
+            );
+        });
+    }
+
+    private void buscarPorFecha(JFXDatePicker date1, JFXDatePicker date2, JFXTreeTableView<Compra> table) {
+        if (date1.getValue() == null || date2.getValue() == null)
+            errorNotification("Verifique las fechas", "Ingrese ambas fechas");
+        else {
+            Date picker1 = Date.from(date1.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            Date picker2 = Date.from(date2.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+            if (picker1.after(picker2))
+                errorNotification("Verifique las fechas", "La primer fecha debe ser inferior a a segunda");
+            else {
+                table.setPredicate(c -> {
+                    try {
+                        Date date = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(c.getValue().getFecha());
+                        return (date.after(picker1) || date.equals(picker1)) &&
+                                (date.before(picker2) || date.equals(picker2));
+                    } catch (ParseException e1) {
+                        e1.printStackTrace();
+                    }
+                    return false;
+                });
+            }
+        }
+    }
+
+    private void errorNotification(String msgPrincipal, String msgSecundario) {
+        TrayNotification trayNotification = new TrayNotification();
+        trayNotification.setTitle(msgPrincipal);
+        trayNotification.setMessage(msgSecundario);
+        trayNotification.setNotificationType(NotificationType.ERROR);
+        trayNotification.showAndDismiss(Duration.millis(3000));
+    }
+
+    private JFXTreeTableView createTableDetalle(ObservableList<DetalleCompra> list) {
+        final TreeItem<DetalleCompra> root = new RecursiveTreeItem<>(list, RecursiveTreeObject::getChildren);
+
+        JFXTreeTableView tableView = new JFXTreeTableView(root);
+
+        JFXTreeTableColumn<DetalleCompra, String> clmBarCode = new JFXTreeTableColumn("Codigo");
+        JFXTreeTableColumn<DetalleCompra, String> clmNombre = new JFXTreeTableColumn("Nombre");
+        JFXTreeTableColumn<DetalleCompra, Double> clmPrecio = new JFXTreeTableColumn("Precio");
+
+        clmBarCode.setResizable(false);
+        clmBarCode.setPrefWidth(100);
+        clmBarCode.setCellValueFactory((TreeTableColumn.CellDataFeatures<DetalleCompra, String> param) -> {
+            if (clmBarCode.validateValue(param))
+                return param.getValue().getValue().codBarraProperty();
+            else
+                return clmBarCode.getComputedValue(param);
+        });
+
+        clmNombre.setResizable(false);
+        clmNombre.setPrefWidth(200);
+        clmNombre.setCellValueFactory((TreeTableColumn.CellDataFeatures<DetalleCompra, String> param) -> {
+            if (clmNombre.validateValue(param))
+                return param.getValue().getValue().nombreProductoProperty();
+            else
+                return clmNombre.getComputedValue(param);
+        });
+
+        clmPrecio.setResizable(false);
+        clmPrecio.setPrefWidth(70);
+        clmPrecio.setCellValueFactory((TreeTableColumn.CellDataFeatures<DetalleCompra, Double> param) -> {
+            if (clmPrecio.validateValue(param))
+                return param.getValue().getValue().precioProductoProperty().asObject();
+            else
+                return clmPrecio.getComputedValue(param);
+        });
+
+        tableView.setEditable(false);
+        tableView.setShowRoot(false);
+
+        tableView.getColumns().setAll(clmBarCode, clmNombre, clmPrecio);
+
+        return tableView;
+    }
 }

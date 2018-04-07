@@ -6,7 +6,6 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-
     @Override
     public void start(Stage primaryStage) {
         Login login = new Login(primaryStage);

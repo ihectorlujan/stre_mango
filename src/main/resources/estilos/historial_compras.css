@@ -23,7 +23,7 @@
     -fx-font-size: 14px;
 }
 
-.textField {
+.text-field {
     -fx-background-color: white;
     -fx-border-color: #43617c;
     -fx-border-width: 1.2;
@@ -78,6 +78,20 @@
 
 .tree-table-view .tree-table-cell {
     -fx-alignment: center;
+}
+
+.jfx-date-picker,
+.jfx-time-picker {
+    -jfx-default-color: #43617c;
+    -fx-font-family: Quicksand;
+    -fx-font-size: 14px;
+}
+
+.jfx-date-picker .jfx-text-field,
+.jfx-time-picker .jfx-text-field {
+    -fx-alignment: center;
+    -fx-border-color: white !important;
+    -fx-border-width: 0 !important;
 }
 
 /*
