@@ -140,7 +140,7 @@ public class DashBoard {
         box.setMaxWidth(Region.USE_PREF_SIZE);
         HBox.setHgrow(box, Priority.NEVER);
 
-        Text textChino = new Text("StreMango");
+        Text textChino = new Text("StreaMango");
 
         Text ico = GlyphsDude.createIcon(FontAwesomeIcon.FIRE, "32");
         ico.getStyleClass().add("icoPrincipal");

@@ -2,13 +2,18 @@ package com.controladores.compras;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
+import com.modelo.Compra;
+import com.modelo.Conexion;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
@@ -19,19 +24,31 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+import java.sql.Connection;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map;
+
 public class OpcionCompra extends VBox{
+    Conexion connection = new Conexion();
 
     public OpcionCompra() {
         HBox primerContenedor = new HBox();
         HBox opcionesCompra = opciones();
-        JFXListView<String> listaUltimasCompras = new JFXListView<>();
+        JFXListView<Compra> listaUltimasCompras = new JFXListView<>();
+        ObservableList<Compra> ultimasCompras = FXCollections.observableArrayList();
         HBox txtUltimasCompras = ultimasCompras();
         VBox masComprados = prodComprados();
         VBox grafica = grafica();
 
-        //Ultimas compras
-        for (int i = 0; i < 5; i++)
-            listaUltimasCompras.getItems().add("22/02/2028\t" + "proveedor\t" + "monto: " + "$00.00");
+        //Ultimas compras, Y mas Vendidos
+        connection.establecerConexion();
+        Compra.llenarCompras(connection.getConection(), ultimasCompras);
+        connection.cerrarConexion();
+
+        ultimasCompras.stream().limit(8).forEach(x -> listaUltimasCompras.getItems().add(x));
+
         listaUltimasCompras.getStyleClass().add("jfx-list-cell");
 
 
@@ -51,10 +68,28 @@ public class OpcionCompra extends VBox{
 
     private VBox grafica() {
         VBox box = new VBox();
-        Text txtMes = new Text("Marzo");
+        Text txtMes = new Text("Ultimas 8 Compras del Mes de Abril");
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
         BarChart<String, Number> grafica = new BarChart<>(xAxis, yAxis);
+        ObservableList<Compra> listCompra = FXCollections.observableArrayList();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+
+        xAxis.setLabel("ID");
+        yAxis.setLabel("Monto");
+        grafica.setLegendVisible(false);
+
+        connection.establecerConexion();
+        Compra.llenarCompras(connection.getConection(), listCompra);
+        connection.cerrarConexion();
+
+        listCompra.sort(Comparator.comparing(Compra::getFecha).reversed());
+
+        listCompra.stream().limit(8).forEach(c ->
+                series.getData().add(new XYChart.Data<>(c.getId() + "", c.getMonto()))
+        );
+
+        grafica.getData().add(series);
 
         //
         grafica.setPrefHeight(230);
@@ -69,11 +104,15 @@ public class OpcionCompra extends VBox{
     private VBox prodComprados() {
         VBox box = new VBox();
         Text txtProductos = new Text("Productos mas comprados");
-        JFXListView<Label> lista = new JFXListView<>();
+        JFXListView<String> lista = new JFXListView<>();
         lista.getStyleClass().add("jfx-list-cell");
 
-        for (int i = 0; i < 5; i++)
-            lista.getItems().add(new Label("producto " + i));
+        //Establecer la conexion, obtener los datos y cerrar la conexion
+        connection.establecerConexion();
+        Map<String, Integer> map = Compra.getMasVendidos(connection.getConection());
+        connection.cerrarConexion();
+
+        map.forEach((v, k) -> lista.getItems().add(k + "  " + v));
 
             //Expanded List
             //lista.setVerticalGap(10.0);
@@ -132,7 +171,7 @@ public class OpcionCompra extends VBox{
 
     private HBox ultimasCompras() {
         HBox box = new HBox();
-        Text text = new Text("Ultimas compras");
+        Text text = new Text("Ultimas 8 compras");
 
         //
         HBox.setHgrow(text, Priority.ALWAYS);

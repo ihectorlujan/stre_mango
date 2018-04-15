@@ -2,12 +2,13 @@ package com.modelo;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Compra extends RecursiveTreeObject<Compra> {
@@ -18,8 +19,9 @@ public class Compra extends RecursiveTreeObject<Compra> {
     private StringProperty nombreEmpleado;
     private StringProperty apellidoEmpleado;
     private StringProperty proveedor;
+    private DoubleProperty monto;
 
-    public Compra(int id, String fecha, String time, int idEmpleado, String nombreEmpleado, String apellidoEmpleado,String proveedor) {
+    public Compra(int id, String fecha, String time, int idEmpleado, String nombreEmpleado, String apellidoEmpleado,String proveedor, Double monto) {
         this.id = new SimpleIntegerProperty(id);
         this.fecha = new SimpleStringProperty(fecha);
         this.time = new SimpleStringProperty(time);
@@ -27,6 +29,7 @@ public class Compra extends RecursiveTreeObject<Compra> {
         this.nombreEmpleado = new SimpleStringProperty(nombreEmpleado);
         this.apellidoEmpleado = new SimpleStringProperty(apellidoEmpleado);
         this.proveedor = new SimpleStringProperty(proveedor);
+        this.monto = new SimpleDoubleProperty(monto);
     }
 
     public int getId() {
@@ -113,19 +116,31 @@ public class Compra extends RecursiveTreeObject<Compra> {
         this.proveedor.set(proveedor);
     }
 
+    public double getMonto() {
+        return monto.get();
+    }
+
+    public DoubleProperty montoProperty() {
+        return monto;
+    }
+
+    public void setMonto(double monto) {
+        this.monto.set(monto);
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id.get() + "\t\t"
+                + "Fecha: " + fecha.get() + "\t\t"
+                + "Monto: $" + monto.get() + "\t\t\t"
+                + "Proveedor: " + proveedor.get();
+    }
+
     //
     public static void llenarCompras(Connection connection, ObservableList<Compra> list) {
         try{
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(
-                    "SELECT t.id, t.fecha, t.hora, t.id_empleado,\n" +
-                    "        e.nombre, e.apellido, \n" +
-                    "        p.razon_social\n" +
-                    "FROM transaccion AS t \n" +
-                    "        INNER JOIN empleado AS e ON e.id = t.id_empleado \n" +
-                    "        INNER JOIN proveedor as p ON t.id_proveedor = p.id\n" +
-                    "WHERE t.tipo = true ORDER BY t.fecha DESC"
-            );
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM getCompras()");
 
             while(resultSet.next())
                 list.add(new Compra(
@@ -135,12 +150,27 @@ public class Compra extends RecursiveTreeObject<Compra> {
                         resultSet.getInt(4),
                         resultSet.getString(5),
                         resultSet.getString(6),
-                        resultSet.getString(7))
-                );
+                        resultSet.getString(7),
+                        resultSet.getDouble(8)
+                ));
 
         }catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static Map<String, Integer> getMasVendidos(Connection connection) {
+        Map<String, Integer> map = new HashMap<>();
+
+        try (Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM getMasComprados()");
+            while(resultSet.next())
+                map.put(resultSet.getString(1), resultSet.getInt(2));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return map;
     }
 
 }

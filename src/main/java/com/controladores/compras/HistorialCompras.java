@@ -26,6 +26,7 @@ import tray.notification.NotificationType;
 import tray.notification.TrayNotification;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -375,20 +376,26 @@ public class HistorialCompras extends Stage {
     private void initPopup(Compra compra) {
         VBox vBox = new VBox();
         GridPane pane = new GridPane();
+        GridPane totalPane = new GridPane();
 
         Label lblId = new Label("ID Empleado:");
         Label lblNombre = new Label("Nombre:");
         Label lblApellido = new Label("Apellido:");
+        Label lblTotal = new Label("Monto total de la compra:");
         TextField txtId = new TextField(compra.getIdEmpleado() + "");
         TextField txtNombre = new TextField(compra.getNombreEmpleado());
         TextField txtApellido = new TextField(compra.getApellidoEmpleado());
+        TextField txtTotal = new TextField(compra.getMonto() + "");
 
         txtId.setEditable(false);
         txtNombre.setEditable(false);
         txtApellido.setEditable(false);
+        txtTotal.setEditable(false);
+        txtTotal.setAlignment(Pos.CENTER_RIGHT);
 
         pane.setHgap(20);
         pane.setVgap(10);
+        totalPane.setHgap(20);
 
         pane.add(lblId,0,0);
         pane.add(lblNombre,0,1);
@@ -397,12 +404,20 @@ public class HistorialCompras extends Stage {
         pane.add(txtNombre,1,1);
         pane.add(txtApellido,1,2);
 
+        GridPane.setHgrow(lblId, Priority.SOMETIMES);
+        GridPane.setHgrow(lblNombre, Priority.SOMETIMES);
+        GridPane.setHgrow(lblApellido, Priority.SOMETIMES);
+        GridPane.setHgrow(lblTotal, Priority.SOMETIMES);
+
+        totalPane.add(lblTotal, 0,0);
+        totalPane.add(txtTotal,1,0);
+
         JFXTreeTableView table = createTableDetalle(detalleCompras.filtered(dC -> dC.getIdTransaccion() == compra.getId()));
 
-        VBox.setMargin(table, new Insets(10,0,0,0));
+        VBox.setMargin(table, new Insets(10,0,10,0));
         VBox.setVgrow(table, Priority.ALWAYS);
         vBox.setPadding(new Insets(10));
-        vBox.getChildren().addAll(pane, table);
+        vBox.getChildren().addAll(pane, table, totalPane);
         vBox.setPrefSize(400,400);
 
         popup = new JFXPopup(vBox);
@@ -457,6 +472,8 @@ public class HistorialCompras extends Stage {
         JFXTreeTableColumn<DetalleCompra, String> clmBarCode = new JFXTreeTableColumn("Codigo");
         JFXTreeTableColumn<DetalleCompra, String> clmNombre = new JFXTreeTableColumn("Nombre");
         JFXTreeTableColumn<DetalleCompra, Double> clmPrecio = new JFXTreeTableColumn("Precio");
+
+//        System.out.println(total);
 
         clmBarCode.setResizable(false);
         clmBarCode.setPrefWidth(100);
