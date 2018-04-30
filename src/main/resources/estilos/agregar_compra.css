@@ -41,3 +41,21 @@
     -fx-font-weight: bold;
     -fx-font-size: 14;
 }
+
+.label {
+    -fx-font-family: Quicksand;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.jfx-date-picker {
+    -jfx-default-color: #43617c;
+    -fx-font-family: Quicksand;
+    -fx-font-size: 14px;
+}
+
+.jfx-date-picker .jfx-text-field {
+    -fx-alignment: center;
+    -fx-border-color: white !important;
+    -fx-border-width: 0 !important;
+}

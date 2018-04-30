@@ -1,0 +1,25 @@
+.text {
+    -fx-font-size: 18px;
+    -fx-font-family: Quicksand;
+    -fx-background-color: white;
+    -fx-border-color: white;
+    -fx-wrap-text: true;
+}
+
+.ico {
+    -fx-fill: white;
+}
+
+.btnAceptar {
+    -fx-background-color: #53dd6c;
+}
+
+.button-raised {
+     -fx-font-size: 14px;
+     -jfx-button-type: RAISED;
+     -fx-text-fill: WHITE;
+}
+
+.pane {
+    -fx-background-color: WHITE;
+}

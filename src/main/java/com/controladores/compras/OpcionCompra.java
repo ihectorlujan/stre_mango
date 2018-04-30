@@ -2,7 +2,7 @@ package com.controladores.compras;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
-import com.modelo.Compra;
+import com.modelo.compra.Compra;
 import com.modelo.Conexion;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -14,9 +14,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -24,11 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-import java.sql.Connection;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.Map;
 
 public class OpcionCompra extends VBox{
     Conexion connection = new Conexion();
@@ -68,7 +62,7 @@ public class OpcionCompra extends VBox{
 
     private VBox grafica() {
         VBox box = new VBox();
-        Text txtMes = new Text("Ultimas 8 Compras del Mes de Abril");
+        Text txtMes = new Text("Ultimas 8 Compras");
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
         BarChart<String, Number> grafica = new BarChart<>(xAxis, yAxis);
@@ -109,10 +103,11 @@ public class OpcionCompra extends VBox{
 
         //Establecer la conexion, obtener los datos y cerrar la conexion
         connection.establecerConexion();
-        Map<String, Integer> map = Compra.getMasVendidos(connection.getConection());
+        var listMasComprados = Compra.getMasComprados(connection.getConection());
         connection.cerrarConexion();
 
-        map.forEach((v, k) -> lista.getItems().add(k + "  " + v));
+        for (String x:listMasComprados)
+            lista.getItems().add(x);
 
             //Expanded List
             //lista.setVerticalGap(10.0);

@@ -1,9 +1,7 @@
-package com.modelo;
+package com.modelo.compra;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.Connection;
@@ -16,14 +14,14 @@ public class DetalleCompra extends RecursiveTreeObject<DetalleCompra> {
     private StringProperty nombreProducto;
     private DoubleProperty precioProducto;
     private IntegerProperty cantidadProducto;
-    private IntegerProperty idTransaccion;
+    private IntegerProperty idCompra;
 
-    public DetalleCompra(String codBarra, String nombreProducto, Double precioProducto, Integer cantidadProducto, int idTransaccion) {
+    public DetalleCompra(String codBarra, String nombreProducto, Double precioProducto, Integer cantidadProducto, int idCompra) {
         this.codBarra = new SimpleStringProperty(codBarra);
         this.nombreProducto = new SimpleStringProperty(nombreProducto);
         this.precioProducto = new SimpleDoubleProperty(precioProducto);
         this.cantidadProducto = new SimpleIntegerProperty(cantidadProducto);
-        this.idTransaccion = new SimpleIntegerProperty(idTransaccion);
+        this.idCompra = new SimpleIntegerProperty(idCompra);
     }
 
     public String getCodBarra() {
@@ -74,16 +72,16 @@ public class DetalleCompra extends RecursiveTreeObject<DetalleCompra> {
         this.cantidadProducto.set(cantidadProducto);
     }
 
-    public int getIdTransaccion() {
-        return idTransaccion.get();
+    public int getIdCompra() {
+        return idCompra.get();
     }
 
-    public IntegerProperty idTransaccionProperty() {
-        return idTransaccion;
+    public IntegerProperty idCompraProperty() {
+        return idCompra;
     }
 
-    public void setIdTransaccion(int idTransaccion) {
-        this.idTransaccion.set(idTransaccion);
+    public void setIdCompra(int idCompra) {
+        this.idCompra.set(idCompra);
     }
 
     //
@@ -92,8 +90,7 @@ public class DetalleCompra extends RecursiveTreeObject<DetalleCompra> {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(
-                    "SELECT d.cod_barra, p.nombre, p.precio_compra, d.cantidad, d.id_transaccion \n" +
-                    "FROM detalle_transaccion AS d INNER JOIN producto AS p ON p.cod_barra = d.cod_barra "
+                    "SELECT * FROM getDetalleCompras()"
             );
             while(resultSet.next())
                 list.add(new DetalleCompra(
@@ -101,7 +98,7 @@ public class DetalleCompra extends RecursiveTreeObject<DetalleCompra> {
                         resultSet.getString(2),
                         resultSet.getDouble(3),
                         resultSet.getInt(4),
-                        resultSet.getInt(5)
+                        resultSet.getInt(6)
                 ));
         } catch (SQLException e) {
             e.printStackTrace();

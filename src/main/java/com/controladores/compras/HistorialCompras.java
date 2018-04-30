@@ -2,9 +2,9 @@ package com.controladores.compras;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import com.modelo.Compra;
+import com.modelo.compra.Compra;
 import com.modelo.Conexion;
-import com.modelo.DetalleCompra;
+import com.modelo.compra.DetalleCompra;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.collections.FXCollections;
@@ -26,7 +26,6 @@ import tray.notification.NotificationType;
 import tray.notification.TrayNotification;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -353,7 +352,7 @@ public class HistorialCompras extends Stage {
                 btnDetalles.setDisable(false);
 
                 initPopup(newValue.getValue());
-                btnDetalles.setOnAction(e -> popup.show(btnDetalles));
+                btnDetalles.setOnAction(e -> popup.show(panelDatos));
             }
 
         });
@@ -412,13 +411,13 @@ public class HistorialCompras extends Stage {
         totalPane.add(lblTotal, 0,0);
         totalPane.add(txtTotal,1,0);
 
-        JFXTreeTableView table = createTableDetalle(detalleCompras.filtered(dC -> dC.getIdTransaccion() == compra.getId()));
+        JFXTreeTableView table = createTableDetalle(detalleCompras.filtered(dC -> dC.getIdCompra() == compra.getId()));
 
         VBox.setMargin(table, new Insets(10,0,10,0));
         VBox.setVgrow(table, Priority.ALWAYS);
         vBox.setPadding(new Insets(10));
         vBox.getChildren().addAll(pane, table, totalPane);
-        vBox.setPrefSize(400,400);
+        vBox.setPrefSize(600,400);
 
         popup = new JFXPopup(vBox);
     }
@@ -471,12 +470,13 @@ public class HistorialCompras extends Stage {
 
         JFXTreeTableColumn<DetalleCompra, String> clmBarCode = new JFXTreeTableColumn("Codigo");
         JFXTreeTableColumn<DetalleCompra, String> clmNombre = new JFXTreeTableColumn("Nombre");
+        JFXTreeTableColumn<DetalleCompra, Integer> clmCantidad = new JFXTreeTableColumn("Cantidad");
         JFXTreeTableColumn<DetalleCompra, Double> clmPrecio = new JFXTreeTableColumn("Precio");
 
 //        System.out.println(total);
 
         clmBarCode.setResizable(false);
-        clmBarCode.setPrefWidth(100);
+        clmBarCode.setPrefWidth(130);
         clmBarCode.setCellValueFactory((TreeTableColumn.CellDataFeatures<DetalleCompra, String> param) -> {
             if (clmBarCode.validateValue(param))
                 return param.getValue().getValue().codBarraProperty();
@@ -493,8 +493,17 @@ public class HistorialCompras extends Stage {
                 return clmNombre.getComputedValue(param);
         });
 
+        clmCantidad.setResizable(false);
+        clmCantidad.setPrefWidth(130);
+        clmCantidad.setCellValueFactory((TreeTableColumn.CellDataFeatures<DetalleCompra, Integer> param) -> {
+            if (clmCantidad.validateValue(param))
+                return param.getValue().getValue().cantidadProductoProperty().asObject();
+            else
+                return clmCantidad.getComputedValue(param);
+        });
+
         clmPrecio.setResizable(false);
-        clmPrecio.setPrefWidth(70);
+        clmPrecio.setPrefWidth(120);
         clmPrecio.setCellValueFactory((TreeTableColumn.CellDataFeatures<DetalleCompra, Double> param) -> {
             if (clmPrecio.validateValue(param))
                 return param.getValue().getValue().precioProductoProperty().asObject();
@@ -505,7 +514,7 @@ public class HistorialCompras extends Stage {
         tableView.setEditable(false);
         tableView.setShowRoot(false);
 
-        tableView.getColumns().setAll(clmBarCode, clmNombre, clmPrecio);
+        tableView.getColumns().setAll(clmBarCode, clmNombre,clmCantidad ,clmPrecio);
 
         return tableView;
     }

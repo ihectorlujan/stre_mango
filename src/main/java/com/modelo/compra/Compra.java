@@ -1,14 +1,10 @@
-package com.modelo;
+package com.modelo.compra;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class Compra extends RecursiveTreeObject<Compra> {
@@ -140,7 +136,7 @@ public class Compra extends RecursiveTreeObject<Compra> {
     public static void llenarCompras(Connection connection, ObservableList<Compra> list) {
         try{
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM getCompras()");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM getcompras()");
 
             while(resultSet.next())
                 list.add(new Compra(
@@ -159,18 +155,21 @@ public class Compra extends RecursiveTreeObject<Compra> {
         }
     }
 
-    public static Map<String, Integer> getMasVendidos(Connection connection) {
-        Map<String, Integer> map = new HashMap<>();
+    public static String[] getMasComprados(Connection connection) {
+        var list = new String[5];
+        var count = 0;
 
         try (Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM getMasComprados()");
-            while(resultSet.next())
-                map.put(resultSet.getString(1), resultSet.getInt(2));
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM getmascomprados()");
+            while(resultSet.next()){
+                list[count] = (resultSet.getInt(2) + "  " + resultSet.getString(1));
+                count++;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return map;
+        return list;
     }
 
 }

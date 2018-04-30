@@ -68,6 +68,7 @@ public class AgregarCompra extends Stage {
         lblMonto.getStyleClass().add("font");
         lbl$Monto.getStyleClass().add("font");
         icoAceptar.getStyleClass().add("ico");
+        picker.setEditable(false);
 
         //Pane 1 properties
         GridPane.setConstraints(lblProveedor,0,0);
