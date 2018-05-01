@@ -106,6 +106,11 @@ public class DashBoard {
                 borderPane.setCenter(new OpcionCompra());
         });
 
+        opcionUsuarios.setOnMouseClicked(a -> {
+            if(a.getButton()==MouseButton.PRIMARY)
+                borderPane.setCenter(new Opcion_clientes());
+        });
+
         opcionEmpleados.setOnMouseClicked(a -> {
             if(a.getButton()==MouseButton.PRIMARY)
                 borderPane.setCenter(new OpcionEmpleado());
