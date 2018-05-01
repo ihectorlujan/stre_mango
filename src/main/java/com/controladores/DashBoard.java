@@ -1,6 +1,7 @@
 package com.controladores;
 
 import com.controladores.compras.OpcionCompra;
+import com.controladores.empleados.OpcionEmpleado;
 import com.controladores.proveedores.OpcionProveedores;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPopup;
@@ -102,6 +103,11 @@ public class DashBoard {
         opcionCompras.setOnMouseClicked(a -> {
             if(a.getButton() == MouseButton.PRIMARY)
                 borderPane.setCenter(new OpcionCompra());
+        });
+
+        opcionEmpleados.setOnMouseClicked(a -> {
+            if(a.getButton()==MouseButton.PRIMARY)
+                borderPane.setCenter(new OpcionEmpleado());
         });
 
         opcionProveedores.setOnMouseClicked(a ->{
