@@ -1,5 +1,6 @@
 package com.controladores;
 
+import com.controladores.clientes.Opcion_clientes;
 import com.controladores.compras.OpcionCompra;
 import com.controladores.empleados.OpcionEmpleado;
 import com.controladores.proveedores.OpcionProveedores;
