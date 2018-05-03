@@ -5,11 +5,14 @@ import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import com.modelo.Conexion;
 import com.modelo.empleado.Empleado;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import javafx.collections.FXCollections;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -18,8 +21,27 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
+import tray.notification.NotificationType;
+import tray.notification.TrayNotification;
 
 public class OpcionEmpleado extends VBox {
+
+    Conexion connection = new Conexion();
+
+    TextField txtNombre = new TextField();
+    TextField txtApellido = new TextField();
+    TextField txtEdad = new TextField();
+    TextField txtTelefono = new TextField();
+    TextField txtCorreo = new TextField();
+    TextField txtEstado = new TextField();
+    TextField txtNombreCalle = new TextField();
+    TextField txtNoCasa = new TextField();
+    TextField txtCodPostal = new TextField();
+    TextField txtAsentamiento = new TextField();
+    TextField txtCiudad = new TextField();
+    TextField txtMunicipio = new TextField();
+    IntegerProperty id = new SimpleIntegerProperty();
 
     public OpcionEmpleado() {
         var bottomInsets = new Insets(0,0,10,0);
@@ -38,18 +60,6 @@ public class OpcionEmpleado extends VBox {
         var lblCiudad = new Label("Ciudad:");
         var lblMunicipio = new Label("Municipio:");
         var lblBuscar = new Label("Buscar:");
-        var txtNombre = new TextField();
-        var txtApellido = new TextField();
-        var txtEdad = new TextField();
-        var txtTelefono = new TextField();
-        var txtCorreo = new TextField();
-        var txtEstado = new TextField();
-        var txtNombreCalle = new TextField();
-        var txtNoCasa = new TextField();
-        var txtCodPostal = new TextField();
-        var txtAsentamiento = new TextField();
-        var txtCiudad = new TextField();
-        var txtMunicipio = new TextField();
         var hBox = new HBox();
         var hBoxSearch = new HBox();
         var hBoxDatos = new HBox();
@@ -60,13 +70,18 @@ public class OpcionEmpleado extends VBox {
         var icoAdd = GlyphsDude.createIcon(FontAwesomeIcon.USER_PLUS,"14px");
         var icoDelete = GlyphsDude.createIcon(FontAwesomeIcon.TRASH_ALT,"14px");
         var txtFiltro = new TextField();
-        ObservableList<Empleado> listEmpleados = FXCollections.observableArrayList();
+        ObservableList<Empleado> listEmpleados;
+
+        //Ultimas compras, Y mas Vendidos
+        connection.establecerConexion();
+        listEmpleados = Empleado.llenarEmpleados(connection.getConection());
+        connection.cerrarConexion();
 
         //Primer box and txtFiltro
         hBoxDatos.getChildren().add(txtDatos);
         hBoxDatos.setPadding(new Insets(0,0,0,5));
         hBoxDatos.getStyleClass().add("panelWhite");
-        txtFiltro.setPromptText("ID o Nombre");
+        txtFiltro.setPromptText("Nombre o Correo");
         txtFiltro.setPrefWidth(180);
 
         //Buttons and Icons
@@ -119,7 +134,6 @@ public class OpcionEmpleado extends VBox {
         gridPane.getStyleClass().add("panelWhite");
         blockGridPaneFields(gridPane);
 
-
         //HBox and hBoxSearch
         hBoxSearch.getChildren().addAll(lblBuscar,txtFiltro);
         hBoxSearch.setAlignment(Pos.CENTER_LEFT);
@@ -135,7 +149,13 @@ public class OpcionEmpleado extends VBox {
 
         //Table
         var table = createTable(listEmpleados);
+        buscarTbl(txtFiltro, table);
+        establecerCampos(table);
 
+        //Acciones de os botones
+        btnEliminar.setOnAction(this::noFunciona);
+        btnEditar.setOnAction(this::noFunciona);
+        btnAnadir.setOnAction(this::noFunciona);
 
         VBox.setMargin(hBoxDatos, bottomInsets);
         VBox.setMargin(txtDatos, bottomInsets);
@@ -147,6 +167,16 @@ public class OpcionEmpleado extends VBox {
         getStylesheets().add(getClass().getResource("/estilos/empleados.css").toExternalForm());
     }
 
+    private void deshabilitarEmpleado(ActionEvent e) {
+    }
+
+    private void noFunciona(ActionEvent e) {
+        TrayNotification trayNotification = new TrayNotification();
+        trayNotification.setTitle("Verifique");
+        trayNotification.setMessage("Esta opcion no esta disponible");
+        trayNotification.setNotificationType(NotificationType.NOTICE);
+        trayNotification.showAndDismiss(Duration.millis(3000));
+    }
 
     private JFXTreeTableView createTable(ObservableList<Empleado> list) {
         final TreeItem<Empleado> root = new RecursiveTreeItem<>(list, RecursiveTreeObject::getChildren);
@@ -157,9 +187,10 @@ public class OpcionEmpleado extends VBox {
         var clmApellido = new JFXTreeTableColumn<Empleado, String>("Apellido");
         var clmTelefono = new JFXTreeTableColumn<Empleado, String>("Telefono");
         var clmCorreo = new JFXTreeTableColumn<Empleado, String>("Correo");
+        var clmMunicipio = new JFXTreeTableColumn<Empleado, String>("Municipio");
 
         clmNombre.setResizable(false);
-        clmNombre.setPrefWidth(195);
+        clmNombre.setPrefWidth(200);
         clmNombre.setCellValueFactory((TreeTableColumn.CellDataFeatures<Empleado, String> param) -> {
             if (clmNombre.validateValue(param))
                 return param.getValue().getValue().nombreProperty();
@@ -168,37 +199,74 @@ public class OpcionEmpleado extends VBox {
         });
 
         clmApellido.setResizable(false);
-        clmApellido.setPrefWidth(195);
+        clmApellido.setPrefWidth(200);
         clmApellido.setCellValueFactory((TreeTableColumn.CellDataFeatures<Empleado, String> param) -> {
             if (clmApellido.validateValue(param))
-                return param.getValue().getValue().nombreProperty();
+                return param.getValue().getValue().apellidoProperty();
             else
                 return clmApellido.getComputedValue(param);
         });
 
         clmTelefono.setResizable(false);
-        clmTelefono.setPrefWidth(180);
+        clmTelefono.setPrefWidth(190);
         clmTelefono.setCellValueFactory((TreeTableColumn.CellDataFeatures<Empleado, String> param) -> {
             if (clmTelefono.validateValue(param))
-                return param.getValue().getValue().nombreProperty();
+                return param.getValue().getValue().telefonoProperty();
             else
                 return clmTelefono.getComputedValue(param);
         });
 
         clmCorreo.setResizable(false);
-        clmCorreo.setPrefWidth(190);
+        clmCorreo.setPrefWidth(250);
         clmCorreo.setCellValueFactory((TreeTableColumn.CellDataFeatures<Empleado, String> param) -> {
             if (clmCorreo.validateValue(param))
-                return param.getValue().getValue().nombreProperty();
+                return param.getValue().getValue().correoProperty();
             else
                 return clmCorreo.getComputedValue(param);
         });
 
+        clmMunicipio.setResizable(false);
+        clmMunicipio.setPrefWidth(250);
+        clmMunicipio.setCellValueFactory((TreeTableColumn.CellDataFeatures<Empleado, String> param) -> {
+            if (clmMunicipio.validateValue(param))
+                return param.getValue().getValue().municipioProperty();
+            else
+                return clmMunicipio.getComputedValue(param);
+        });
+
         tableView.setShowRoot(false);
         tableView.setEditable(false);
-        tableView.getColumns().setAll(clmNombre, clmApellido, clmTelefono, clmCorreo);
+        tableView.getColumns().setAll(clmNombre, clmApellido, clmMunicipio, clmTelefono, clmCorreo);
 
         return tableView;
+    }
+
+    private void establecerCampos(JFXTreeTableView<Empleado> tableView) {
+        tableView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            if(newValue != null) {
+                txtNombre.setText(newValue.getValue().getNombre());
+                txtApellido.setText(newValue.getValue().getApellido());
+                txtEdad.setText(newValue.getValue().getEdad()+"");
+                txtTelefono.setText(newValue.getValue().getTelefono());
+                txtCorreo.setText(newValue.getValue().getCorreo());
+                txtEstado.setText(newValue.getValue().getEstado());
+                txtNombreCalle.setText(newValue.getValue().getNombreCalle());
+                txtNoCasa.setText(newValue.getValue().getnCalle()+"");
+                txtCodPostal.setText(newValue.getValue().getCodigoPostal());
+                txtAsentamiento.setText(newValue.getValue().getAsentamiento());
+                txtCiudad.setText(newValue.getValue().getCiudad());
+                txtMunicipio.setText(newValue.getValue().getMunicipio());
+            }
+        }));
+    }
+
+    private void buscarTbl(TextField field, JFXTreeTableView<Empleado> tbl) {
+        field.textProperty().addListener((value, oldValue, newValue) -> {
+            tbl.setPredicate(c ->
+                c.getValue().getNombre().toLowerCase().contains(newValue.toLowerCase()) ||
+                        c.getValue().getCorreo().toLowerCase().contains(newValue.toLowerCase())
+            );
+        });
     }
 
     private void blockGridPaneFields(GridPane gridPane) {

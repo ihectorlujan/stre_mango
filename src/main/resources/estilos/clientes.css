@@ -4,23 +4,6 @@
     -fx-font-weight: bold;
 }
 
-.panelWhite {
-    -fx-background-color: white;
-}
-
-.jfx-button {
-    -fx-background-color: #43617c;
-    -fx-text-fill: white;
-    -fx-font-family: Quicksand;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -jfx-button-type: RAISED;
-}
-
-.ico {
-    -fx-fill: white;
-}
-
 .text-field {
     -fx-background-color: white;
     -fx-border-color: #43617c;
@@ -29,7 +12,6 @@
     -fx-font-family: Quicksand;
     -fx-prompt-text-fill: #5f6266;
 }
-
 
 .tree-table-row-cell:selected {
     -fx-background-color: #c6878f;

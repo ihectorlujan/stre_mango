@@ -147,6 +147,9 @@ public class Opcion_clientes extends VBox {
         getChildren().addAll(hBoxTitulo, gridPane, hBoxDomicilio, gridPane2, hBoxBuscar, table);
 
         setPadding(insetsBase);
+
+        //Hoja de estilos
+        getStylesheets().add(getClass().getResource("/estilos/clientes.css").toExternalForm());
     }
 
     private void blockGridPaneFields(GridPane gridPane) {
