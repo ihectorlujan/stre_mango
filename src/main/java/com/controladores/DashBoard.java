@@ -1,12 +1,9 @@
 package com.controladores;
 
+import com.controladores.clientes.Opcion_clientes;
 import com.controladores.compras.OpcionCompra;
-<<<<<<< HEAD
 import com.controladores.empleados.OpcionEmpleado;
-import com.controladores.producto.OpcionProducto;
-=======
 import com.controladores.productos.OpcionProducto;
->>>>>>> 9d18556b9ac62e110bd3a66914a4674a2c600711
 import com.controladores.proveedores.OpcionProveedores;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
@@ -102,6 +99,21 @@ public class DashBoard {
         opcionHome.setOnMouseClicked(a -> {
             if(a.getButton() == MouseButton.PRIMARY)
                 borderPane.setCenter(centerBox);
+        });
+
+        opcionProductos.setOnMouseClicked(a -> {
+            if(a.getButton()==MouseButton.PRIMARY)
+                borderPane.setCenter(new OpcionProducto());
+        });
+
+        opcionUsuarios.setOnMouseClicked(a -> {
+            if(a.getButton()==MouseButton.PRIMARY)
+                borderPane.setCenter(new Opcion_clientes());
+        });
+
+        opcionEmpleados.setOnMouseClicked(a -> {
+            if(a.getButton()==MouseButton.PRIMARY)
+                borderPane.setCenter(new OpcionEmpleado());
         });
 
         opcionCompras.setOnMouseClicked(a -> {
