@@ -4,39 +4,47 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import tray.notification.TrayNotification;
 
 import java.sql.*;
+import java.util.Objects;
 
 public class Empleado extends RecursiveTreeObject<Empleado> {
+    private IntegerProperty id;
     private StringProperty nombre;
     private StringProperty apellido;
     private IntegerProperty edad;
     private StringProperty telefono;
     private StringProperty correo;
+    private StringProperty sexo;
     private StringProperty nombreCalle;
-    private IntegerProperty nCalle;
+    private StringProperty nCasa;
     private StringProperty codigoPostal;
     private StringProperty asentamiento;
     private StringProperty municipio;
     private StringProperty estado;
     private StringProperty ciudad;
-    private BooleanProperty isDeshabilitado;
+    private BooleanProperty isHabilitado;
 
-    public Empleado(String nombre, String apellido, Integer edad, String telefono, String correo, String nombreCalle, int nCalle, String codigoPostal, String asentamiento, String municipio, String estado, String ciudad, boolean isDeshabilitado) {
+    public Empleado(String nombre, String apellido, Integer edad, String telefono, String correo,String sexo, String nombreCalle, String nCasa, String codigoPostal, String asentamiento, String municipio, String estado, String ciudad, boolean isHabilitado, int id) {
         this.nombre = new SimpleStringProperty(nombre);
         this.apellido = new SimpleStringProperty(apellido);
         this.edad = new SimpleIntegerProperty(edad);
         this.telefono = new SimpleStringProperty(telefono);
         this.correo = new SimpleStringProperty(correo);
         this.nombreCalle = new SimpleStringProperty(nombreCalle);
-        this.nCalle = new SimpleIntegerProperty(nCalle);
+        this.nCasa = new SimpleStringProperty(nCasa);
         this.codigoPostal = new SimpleStringProperty(codigoPostal);
         this.asentamiento = new SimpleStringProperty(asentamiento);
         this.municipio = new SimpleStringProperty(municipio);
         this.estado = new SimpleStringProperty(estado);
         this.ciudad = new SimpleStringProperty(ciudad);
-        this.isDeshabilitado = new SimpleBooleanProperty(isDeshabilitado);
+        this.sexo = new SimpleStringProperty(sexo);
+        this.isHabilitado = new SimpleBooleanProperty(isHabilitado);
+        this.id = new SimpleIntegerProperty(id);
+    }
+
+    public Empleado(int id){
+        this.id = new SimpleIntegerProperty(id);
     }
 
     public String getNombre() {
@@ -111,16 +119,44 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         this.nombreCalle.set(nombreCalle);
     }
 
-    public int getnCalle() {
-        return nCalle.get();
+    public int getId() {
+        return id.get();
     }
 
-    public IntegerProperty nCalleProperty() {
-        return nCalle;
+    public IntegerProperty idProperty() {
+        return id;
     }
 
-    public void setnCalle(int nCalle) {
-        this.nCalle.set(nCalle);
+    public void setId(int id) {
+        this.id.set(id);
+    }
+
+    public String getSexo() {
+        return sexo.get();
+    }
+
+    public StringProperty sexoProperty() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo.set(sexo);
+    }
+
+    public String getnCasa() {
+        return nCasa.get();
+    }
+
+    public StringProperty nCasaProperty() {
+        return nCasa;
+    }
+
+    public void setnCasa(String nCasa) {
+        this.nCasa.set(nCasa);
+    }
+
+    public boolean isIsHabilitado() {
+        return isHabilitado.get();
     }
 
     public String getCodigoPostal() {
@@ -183,24 +219,33 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         this.ciudad.set(ciudad);
     }
 
-    public boolean isIsDeshabilitado() {
-        return isDeshabilitado.get();
+    public boolean getIsHabilitado() {
+        return isHabilitado.get();
     }
 
-    public BooleanProperty isDeshabilitadoProperty() {
-        return isDeshabilitado;
+    public BooleanProperty isHabilitadoProperty() {
+        return isHabilitado;
     }
 
-    public void setIsDeshabilitado(boolean isDeshabilitado) {
-        this.isDeshabilitado.set(isDeshabilitado);
+    public void setIsHabilitado(boolean isHabilitado) {
+        this.isHabilitado.set(isHabilitado);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Empleado empleado = (Empleado) o;
+        return Objects.equals(id, empleado.id);
     }
 
     public static ObservableList<Empleado> llenarEmpleados(Connection connection) {
         try {
             ObservableList<Empleado> list = FXCollections.observableArrayList();
+            ObservableList<Empleado> list1 = FXCollections.observableArrayList();
 
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM getEmpleados()");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM getempleados()");
 
             while(resultSet.next())
                 list.add(new Empleado(resultSet.getString(1),
@@ -209,15 +254,20 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
                         resultSet.getString(4),
                         resultSet.getString(5),
                         resultSet.getString(6),
-                        resultSet.getInt(7),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
                         resultSet.getString(9),
                         resultSet.getString(10),
                         resultSet.getString(11),
                         resultSet.getString(12),
                         resultSet.getString(13),
-                        resultSet.getBoolean(14)));
+                        resultSet.getBoolean(14),
+                        resultSet.getInt(15)
+                ));
 
-            return list.filtered(x -> !x.isDeshabilitado.get());
+            list1.addAll(list.filtered(x -> x.isHabilitado.get()));
+
+            return list1;
         }catch (SQLException a){
             a.printStackTrace();
             return null;
@@ -225,10 +275,11 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
     }
 
     public int eliminarEmpleado(Connection connection) {
-        var query = "UPDATE empleado SET deshabilitado = ?";
+        var query = "UPDATE empleado SET estado = ? WHERE id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setBoolean(1, false);
+            statement.setInt(2,id.get());
             return statement.executeUpdate();
         }catch (SQLException e) {
             e.printStackTrace();

@@ -384,7 +384,7 @@ public class HistorialCompras extends Stage {
         TextField txtId = new TextField(compra.getIdEmpleado() + "");
         TextField txtNombre = new TextField(compra.getNombreEmpleado());
         TextField txtApellido = new TextField(compra.getApellidoEmpleado());
-        TextField txtTotal = new TextField(compra.getMonto() + "");
+        TextField txtTotal = new TextField("$ " + compra.getMonto());
 
         txtId.setEditable(false);
         txtNombre.setEditable(false);

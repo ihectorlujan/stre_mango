@@ -35,6 +35,12 @@
     -fx-background-color: #c6878f;
 }
 
+.jfx-radio-button {
+    -fx-font-fill: black;
+    -fx-font-family: Quicksand;
+    -fx-font-weight: bold;
+}
+
 .tree-table-view {
     -fx-font-fill: black;
     -fx-font-family: Quicksand;

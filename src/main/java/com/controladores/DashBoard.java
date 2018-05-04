@@ -131,6 +131,11 @@ public class DashBoard {
                 borderPane.setCenter(new OpcionProducto());
         });
 
+        acerca.setOnMouseClicked(a -> {
+            if (a.getButton() == MouseButton.PRIMARY)
+                new Acerca();
+        });
+
         //Eventos de icono
         ico.setOnMouseClicked(e -> {
             try {
@@ -178,17 +183,11 @@ public class DashBoard {
 
     private HBox segundoPanelTop() {
         HBox box = new HBox();
-        HBox search = new HBox();
         HBox userInfo = new HBox();
 
         // Primer box
         JFXTextField txtSearch = new JFXTextField();
         Text ico = GlyphsDude.createIcon(FontAwesomeIcon.SEARCH, "18");
-        txtSearch.setPromptText("Buscar");
-        txtSearch.setPadding(new Insets(0,10,0,5));
-        search.setPrefSize(150, Region.USE_COMPUTED_SIZE);
-        search.setMaxWidth(Region.USE_PREF_SIZE);
-        search.getChildren().addAll(txtSearch, ico);
 
         //Segundo Box
         Text icoBell = GlyphsDude.createIcon(FontAwesomeIcon.BELL_ALT, "18");
@@ -204,11 +203,11 @@ public class DashBoard {
         userInfo.getChildren().addAll(icoBell, user, txtUser, icoDown);
 
 
-        search.setAlignment(Pos.CENTER_RIGHT);
+
         userInfo.setAlignment(Pos.CENTER_RIGHT);
         HBox.setHgrow(box, Priority.ALWAYS);
         box.getStyleClass().add("panelWhite");
-        box.getChildren().addAll(search, userInfo);
+        box.getChildren().addAll(userInfo);
 
         return box;
     }
@@ -243,18 +242,14 @@ public class DashBoard {
         //Internal Box
         ico = GlyphsDude.createIcon(FontAwesomeIcon.TH_LIST);
         ico1 = GlyphsDude.createIcon(FontAwesomeIcon.TH_LARGE);
-        JFXTextField txtSearch = new JFXTextField();
-        Text icoSearch = GlyphsDude.createIcon(FontAwesomeIcon.SEARCH, "18");
         HBox.setMargin(ico, new Insets(0,10,0,0));
-        txtSearch.setPromptText("Buscar");
-        txtSearch.setPadding(new Insets(0,10,0,10));
         ico.getStyleClass().add("iconosMenu");
         ico1.getStyleClass().add("iconosMenu");
 
         button.getStyleClass().add("btnEstadistica");
         text.getStyleClass().add("textChino");
 
-        internalBox.getChildren().addAll(ico, ico1, txtSearch, icoSearch);
+        internalBox.getChildren().addAll(ico, ico1);
         internalBox.setPadding(new Insets(5,5,5,5));
         internalBox.setAlignment(Pos.CENTER_RIGHT);
         HBox.setMargin(button, new Insets(0,0,0,10));
