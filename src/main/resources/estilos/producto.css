@@ -1,0 +1,53 @@
+.text_title {
+    -fx-font-family: Quicksand;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.text {
+    -fx-font-family: Quicksand;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+
+.btnRaisedGreenDark {
+    -fx-background-color: #006064;
+    -fx-text-fill: white;
+    -fx-font-family: Quicksand;
+
+    -fx-font-weight: bold;
+
+}
+
+.btnRaisedGreenDarkGrass {
+    -fx-background-color: #33691e;
+    -fx-text-fill: white;
+    -fx-font-family: Quicksand;
+
+    -fx-font-weight: bold;
+}
+
+.white {
+    -fx-background-color: white;
+}
+
+.ico {
+    -fx-fill: #43617c;
+    -fx-font-size: 2;
+}
+
+
+
+.jfx-list-cell:selected{
+    -fx-background-color: #90708c;
+}
+
+.jfx-list-cell{
+    -fx-background-insets: 0.0;
+}
+
+.jfx-list-cell:hover {
+    -fx-background-color: #e3e5e8;
+}
+

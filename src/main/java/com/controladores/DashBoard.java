@@ -1,12 +1,15 @@
 package com.controladores;
 
-import com.controladores.clientes.Opcion_clientes;
 import com.controladores.compras.OpcionCompra;
+<<<<<<< HEAD
 import com.controladores.empleados.OpcionEmpleado;
 import com.controladores.producto.OpcionProducto;
+=======
+import com.controladores.productos.OpcionProducto;
+>>>>>>> 9d18556b9ac62e110bd3a66914a4674a2c600711
 import com.controladores.proveedores.OpcionProveedores;
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXPopup;
+import com.jfoenix.controls.JFXTextField;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.geometry.Insets;
@@ -15,7 +18,6 @@ import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
@@ -26,14 +28,14 @@ import javafx.stage.Stage;
 public class DashBoard {
     private Stage stage = new Stage();
     private BorderPane borderPane = new BorderPane();
-    private Scene scene = new Scene(borderPane, 980,630);
+    private Scene scene = new Scene(borderPane, 970,600);
 
     private HBox topBox = new HBox();
     private VBox leftBox = new VBox();
     private VBox centerBox = new VBox();
 
-    private JFXButton btnIcoLista;
-    private JFXButton btnIcoCuadro;
+    private Text ico;
+    private Text ico1;
 
 
     DashBoard() {
@@ -41,7 +43,7 @@ public class DashBoard {
 
         //Left Box
         leftBox.getStyleClass().add("panelWhite");
-        leftBox.setPrefSize(194, Region.USE_COMPUTED_SIZE);
+        leftBox.setPrefSize(190, Region.USE_COMPUTED_SIZE);
         leftBox.setPadding(new Insets(40,0,0,0));
         HBox opcionHome = opcionMenu(FontAwesomeIcon.CIRCLE_ALT_NOTCH, "Menu", 0);
         HBox opcionCompras = opcionMenu(FontAwesomeIcon.SHOPPING_CART, "Compras", 10);
@@ -107,40 +109,25 @@ public class DashBoard {
                 borderPane.setCenter(new OpcionCompra());
         });
 
-        opcionProductos.setOnMouseClicked(a -> {
-            if(a.getButton()==MouseButton.PRIMARY)
-                borderPane.setCenter(new OpcionProducto());
-        });
-
-        opcionUsuarios.setOnMouseClicked(a -> {
-            if(a.getButton()==MouseButton.PRIMARY)
-                borderPane.setCenter(new Opcion_clientes());
-        });
-
-        opcionEmpleados.setOnMouseClicked(a -> {
-            if(a.getButton()==MouseButton.PRIMARY)
-                borderPane.setCenter(new OpcionEmpleado());
-        });
-
         opcionProveedores.setOnMouseClicked(a ->{
             if(a.getButton()==MouseButton.PRIMARY)
                 borderPane.setCenter(new OpcionProveedores());
         });
 
-        acerca.setOnMouseClicked(a -> {
-            if (a.getButton() == MouseButton.PRIMARY)
-                new Acerca();
+        opcionProductos.setOnMouseClicked(a ->{
+            if(a.getButton() == MouseButton.PRIMARY)
+                borderPane.setCenter(new OpcionProducto());
         });
 
         //Eventos de icono
-        btnIcoLista.setOnMouseClicked(e -> {
+        ico.setOnMouseClicked(e -> {
             try {
                 centerBox.getChildren().remove(eventosRecientes);
                 centerBox.getChildren().add(1, eventosRecientesH);
             }catch (Exception ignored) {}
         });
 
-        btnIcoCuadro.setOnMouseClicked(e -> {
+        ico1.setOnMouseClicked(e -> {
             try {
                 centerBox.getChildren().remove(eventosRecientesH);
                 centerBox.getChildren().add(1, eventosRecientes);
@@ -179,7 +166,17 @@ public class DashBoard {
 
     private HBox segundoPanelTop() {
         HBox box = new HBox();
+        HBox search = new HBox();
         HBox userInfo = new HBox();
+
+        // Primer box
+        JFXTextField txtSearch = new JFXTextField();
+        Text ico = GlyphsDude.createIcon(FontAwesomeIcon.SEARCH, "18");
+        txtSearch.setPromptText("Buscar");
+        txtSearch.setPadding(new Insets(0,10,0,5));
+        search.setPrefSize(150, Region.USE_COMPUTED_SIZE);
+        search.setMaxWidth(Region.USE_PREF_SIZE);
+        search.getChildren().addAll(txtSearch, ico);
 
         //Segundo Box
         Text icoBell = GlyphsDude.createIcon(FontAwesomeIcon.BELL_ALT, "18");
@@ -194,10 +191,12 @@ public class DashBoard {
         HBox.setHgrow(userInfo, Priority.ALWAYS);
         userInfo.getChildren().addAll(icoBell, user, txtUser, icoDown);
 
+
+        search.setAlignment(Pos.CENTER_RIGHT);
         userInfo.setAlignment(Pos.CENTER_RIGHT);
         HBox.setHgrow(box, Priority.ALWAYS);
         box.getStyleClass().add("panelWhite");
-        box.getChildren().addAll(userInfo);
+        box.getChildren().addAll(search, userInfo);
 
         return box;
     }
@@ -227,29 +226,28 @@ public class DashBoard {
         HBox box = new HBox();
         Text text = new Text("Chino Jr");
         HBox internalBox = new HBox();
-        JFXButton btnEstadistica = new JFXButton("Estadisticas");
-        btnIcoLista =  new JFXButton();
-        btnIcoCuadro = new JFXButton();
+        JFXButton button = new JFXButton("Estadisticas");
 
         //Internal Box
-        Text ico = GlyphsDude.createIcon(FontAwesomeIcon.TH_LIST,"1.2em");
-        Text ico1 = GlyphsDude.createIcon(FontAwesomeIcon.TH_LARGE,"1.2em");
+        ico = GlyphsDude.createIcon(FontAwesomeIcon.TH_LIST);
+        ico1 = GlyphsDude.createIcon(FontAwesomeIcon.TH_LARGE);
+        JFXTextField txtSearch = new JFXTextField();
+        Text icoSearch = GlyphsDude.createIcon(FontAwesomeIcon.SEARCH, "18");
+        HBox.setMargin(ico, new Insets(0,10,0,0));
+        txtSearch.setPromptText("Buscar");
+        txtSearch.setPadding(new Insets(0,10,0,10));
         ico.getStyleClass().add("iconosMenu");
         ico1.getStyleClass().add("iconosMenu");
-        btnIcoLista.setGraphic(ico);
-        btnIcoCuadro.setGraphic(ico1);
-        btnIcoLista.setTooltip(new Tooltip("Forma de lista"));
-        btnIcoCuadro.setTooltip(new Tooltip("Forma de cuadros"));
 
-        btnEstadistica.getStyleClass().add("btnEstadistica");
+        button.getStyleClass().add("btnEstadistica");
         text.getStyleClass().add("textChino");
 
-        internalBox.getChildren().addAll(btnIcoLista, btnIcoCuadro);
-        internalBox.setPadding(new Insets(3,5,0,5));
+        internalBox.getChildren().addAll(ico, ico1, txtSearch, icoSearch);
+        internalBox.setPadding(new Insets(5,5,5,5));
         internalBox.setAlignment(Pos.CENTER_RIGHT);
-        HBox.setMargin(btnEstadistica, new Insets(0,0,0,10));
+        HBox.setMargin(button, new Insets(0,0,0,10));
         HBox.setHgrow(internalBox, Priority.ALWAYS);
-        box.getChildren().addAll(text, internalBox, btnEstadistica);
+        box.getChildren().addAll(text, internalBox, button);
 
         return box;
     }
@@ -338,7 +336,5 @@ public class DashBoard {
         icono.getChildren().add(icoFecha);
         return vBox;
     }
-
-
 
 }
