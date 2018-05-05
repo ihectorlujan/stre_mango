@@ -14,7 +14,7 @@ public class Opcion_clientes extends VBox {
     public Opcion_clientes(){
 
         var insetsBase = new Insets(10);
-        var titulo = new Label("Datos del cliente.");
+        var titulo = new Label("Datos del Cliente.");
         var hBoxTitulo = new HBox();
         var hBoxDomicilio = new HBox();
         var hBoxBuscar = new HBox();
@@ -32,7 +32,7 @@ public class Opcion_clientes extends VBox {
         var lTelefono = new Label("Telefono: ");
         var lCelular = new Label("Celular: ");
         var lEmail = new Label("Email: ");
-        var lDomicilio = new Label("Datos domiciliarios del cliente.");
+        var lDomicilio = new Label("Datos domiciliarios del Cliente.");
         var lCalle = new Label("Calle: ");
         var lColonia = new Label("Colonia: ");
         var lMunicipio = new Label("Municipio: ");
