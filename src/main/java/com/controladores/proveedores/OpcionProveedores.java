@@ -112,7 +112,7 @@ public class OpcionProveedores extends VBox {
         provTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         TableColumn<Proveedor,String> colNombre=new TableColumn<>("Razón social");
-        colNombre.setCellValueFactory(c -> c.getValue().razonProperty());
+        colNombre.setCellValueFactory(c -> c.getValue().razonSocialProperty());
 
         TableColumn<Proveedor,String> colId=new TableColumn<>("ID");
         colId.setCellValueFactory(c -> c.getValue().idProperty());
@@ -142,7 +142,7 @@ public class OpcionProveedores extends VBox {
             filteredList.setPredicate(proveedor->{
                 if(text==null||text.isEmpty())
                     return true;
-                String name=proveedor.getRazon().toLowerCase();
+                String name=proveedor.getRazonSocial().toLowerCase();
                 return name.contains(text.toLowerCase());
             } );
         });
