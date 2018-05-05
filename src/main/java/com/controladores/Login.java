@@ -13,7 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class Login extends AnchorPane{
+public class Login extends AnchorPane {
     private JFXButton btnSignIn = new JFXButton("Sign In");
     private JFXButton btnForgetPassword = new JFXButton("Olvide mi contrasena");
     private JFXButton btnRestore = new JFXButton("Restaurar");
@@ -66,6 +66,7 @@ public class Login extends AnchorPane{
             }
         });
 
+        //Hoja de estilos
         getStylesheets().add(getClass().getResource("/estilos/login.css").toExternalForm());
     }
 
@@ -80,8 +81,8 @@ public class Login extends AnchorPane{
 
     private void panePropertiesForgetPassword(AnchorPane apane) {
         icoBack = GlyphsDude.createIcon(FontAwesomeIcon.ARROW_LEFT);
-        Label label = new Label("Ingrese su correo");
-        JFXTextField textField = new JFXTextField();
+        var label = new Label("Ingrese su correo");
+        var textField = new JFXTextField();
 
         icoBack.setTranslateX(32);
         icoBack.setTranslateY(50);

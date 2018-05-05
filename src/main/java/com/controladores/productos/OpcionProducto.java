@@ -6,6 +6,7 @@ import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import com.modelo.Conexion;
 import com.modelo.Producto;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -29,6 +30,8 @@ public class OpcionProducto extends VBox {
     private GridPane panelListaProducto;
     private HBox panelBotones;
 
+    //Conexion
+    Conexion conexion = new Conexion();
 
 
     private ObservableList<Producto> listaProductos;
@@ -52,8 +55,7 @@ public class OpcionProducto extends VBox {
         fillPaneRegistro();
 
 
-        //Ejemplo
-        listaProductos.add(new Producto("7072778","Clavo","1 pulgada",23.5f,34.56f,1,1));
+        //Llenar la tabla
         llenarTabla(tblProductos, listaProductos);
 
         //margenes
@@ -62,6 +64,10 @@ public class OpcionProducto extends VBox {
         VBox.setMargin(panelListaProducto, new Insets(10,10,10,10));
         VBox.setVgrow(panelListaProducto, Priority.ALWAYS);
 
+        //Conexion para llenar los productos
+        conexion.establecerConexion();
+        Producto.llenarProductos(conexion.getConection(), listaProductos);
+        conexion.cerrarConexion();
 
         //agregar los paneles principales
         this.getChildren().addAll(panelTitulo,panelRegistroProducto,panelListaProducto);
@@ -166,7 +172,6 @@ public class OpcionProducto extends VBox {
 
 
     }
-
 
     public void fillPaneRegistro(){
 
@@ -314,14 +319,5 @@ public class OpcionProducto extends VBox {
         });
 
     }
-
-
-
-
-
-
-
-
-
 
 }

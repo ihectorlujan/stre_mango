@@ -2,6 +2,12 @@ package com.modelo;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
+import javafx.collections.ObservableList;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Producto extends RecursiveTreeObject<Producto> {
     private StringProperty cod_barra,nombre,observaciones;
@@ -100,5 +106,24 @@ public class Producto extends RecursiveTreeObject<Producto> {
 
     public void setCantidad_defectuoso(int cantidad_defectuoso) {
         this.cantidad_defectuoso.set(cantidad_defectuoso);
+    }
+
+    public static void llenarProductos(Connection connection, ObservableList<Producto> productos) {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM producto");
+            while (resultSet.next())
+                productos.add(new Producto(resultSet.getString(1),
+                        resultSet.getString(2),
+                        resultSet.getString(7),
+                        resultSet.getFloat(3),
+                        resultSet.getFloat(4),
+                        resultSet.getInt(5),
+                        resultSet.getInt(6))
+                );
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

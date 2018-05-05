@@ -25,49 +25,56 @@ import javafx.scene.text.TextAlignment;
 import java.util.Comparator;
 
 public class OpcionCompra extends VBox{
-    Conexion connection = new Conexion();
+    private Conexion connection = new Conexion();
 
     public OpcionCompra() {
-        HBox primerContenedor = new HBox();
-        HBox opcionesCompra = opciones();
+        //Paneles
+        var hBoxPrimerContenedor = new HBox();
+        var hBoxOpcionesCompra = opciones();
+        var hBoxUltimasCompras = ultimasCompras();
+        var vBoxMasComprados = prodComprados();
+        var vBoxGrafica = grafica();
+
         JFXListView<Compra> listaUltimasCompras = new JFXListView<>();
         ObservableList<Compra> ultimasCompras = FXCollections.observableArrayList();
-        HBox txtUltimasCompras = ultimasCompras();
-        VBox masComprados = prodComprados();
-        VBox grafica = grafica();
+
 
         //Ultimas compras, Y mas Vendidos
         connection.establecerConexion();
         Compra.llenarCompras(connection.getConection(), ultimasCompras);
         connection.cerrarConexion();
 
+        //Anadir 8 elementos a la lista de ultimas compras
         ultimasCompras.stream().limit(8).forEach(x -> listaUltimasCompras.getItems().add(x));
 
+        //Estilos
         listaUltimasCompras.getStyleClass().add("jfx-list-cell");
+        hBoxPrimerContenedor.getStyleClass().add("white");
 
 
-        //
-        primerContenedor.getChildren().addAll(grafica, masComprados);
-        primerContenedor.getStyleClass().add("white");
-        VBox.setMargin(primerContenedor, new Insets(10,10,0,10));
+        hBoxPrimerContenedor.getChildren().addAll(vBoxGrafica, vBoxMasComprados);
+        VBox.setMargin(hBoxPrimerContenedor, new Insets(10,10,0,10));
         VBox.setMargin(listaUltimasCompras, new Insets(0,10,10,10));
-        VBox.setMargin(opcionesCompra, new Insets(10,10,10,10));
-        VBox.setMargin(txtUltimasCompras, new Insets(10,10,10,10));
-        HBox.setHgrow(masComprados, Priority.ALWAYS);
+        VBox.setMargin(hBoxOpcionesCompra, new Insets(10,10,10,10));
+        VBox.setMargin(hBoxUltimasCompras, new Insets(10,10,10,10));
+        HBox.setHgrow(vBoxMasComprados, Priority.ALWAYS);
 
-
-        this.getChildren().addAll(primerContenedor, opcionesCompra, txtUltimasCompras, listaUltimasCompras);
+        this.getChildren().addAll(hBoxPrimerContenedor, hBoxOpcionesCompra, hBoxUltimasCompras, listaUltimasCompras);
         this.getStylesheets().add(getClass().getResource("/estilos/compras.css").toExternalForm());
+
     }
 
     private VBox grafica() {
-        VBox box = new VBox();
-        Text txtMes = new Text("Ultimas 8 Compras");
-        CategoryAxis xAxis = new CategoryAxis();
-        NumberAxis yAxis = new NumberAxis();
+        var box = new VBox();
+        var txtMes = new Text("Ultimas 8 Compras");
+
+        //Grafica
+        var xAxis = new CategoryAxis();
+        var yAxis = new NumberAxis();
         BarChart<String, Number> grafica = new BarChart<>(xAxis, yAxis);
-        ObservableList<Compra> listCompra = FXCollections.observableArrayList();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
+
+        ObservableList<Compra> listCompra = FXCollections.observableArrayList();
 
         xAxis.setLabel("ID");
         yAxis.setLabel("Monto");
@@ -78,14 +85,10 @@ public class OpcionCompra extends VBox{
         connection.cerrarConexion();
 
         listCompra.sort(Comparator.comparing(Compra::getFecha).reversed());
-
-        listCompra.stream().limit(8).forEach(c ->
-                series.getData().add(new XYChart.Data<>(c.getId() + "", c.getMonto()))
-        );
+        listCompra.stream().limit(8).forEach(c -> series.getData().add(new XYChart.Data<>(c.getId() + "", c.getMonto())));
 
         grafica.getData().add(series);
 
-        //
         grafica.setPrefHeight(230);
         txtMes.getStyleClass().add("text");
         VBox.setMargin(txtMes, new Insets(5,0,5,10));
@@ -96,10 +99,14 @@ public class OpcionCompra extends VBox{
     }
 
     private VBox prodComprados() {
-        VBox box = new VBox();
-        Text txtProductos = new Text("Productos mas comprados");
+        var box = new VBox();
+        var txtProductos = new Text("Productos mas comprados");
+
         JFXListView<String> lista = new JFXListView<>();
+
+        //Estilos
         lista.getStyleClass().add("jfx-list-cell");
+        txtProductos.getStyleClass().add("text");
 
         //Establecer la conexion, obtener los datos y cerrar la conexion
         connection.establecerConexion();
@@ -109,11 +116,7 @@ public class OpcionCompra extends VBox{
         for (String x:listMasComprados)
             lista.getItems().add(x);
 
-            //Expanded List
-            //lista.setVerticalGap(10.0);
-            //lista.setExpanded(true);
         txtProductos.setTextAlignment(TextAlignment.CENTER);
-        txtProductos.getStyleClass().add("text");
         VBox.setMargin(lista, new Insets(0,5,5,5));
         VBox.setMargin(txtProductos, new Insets(5,0,5,10));
 

@@ -18,14 +18,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import tray.notification.NotificationType;
 import tray.notification.TrayNotification;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -76,11 +74,11 @@ public class HistorialCompras extends Stage {
         conexion.cerrarConexion();
 
         //Instancias
-        VBox contenedorPrincipal = new VBox();
+        var contenedorPrincipal = new VBox();
         panelEtiquetas = new GridPane();
         panelDatos = new GridPane();
         panelOpciones = new GridPane();
-        JFXTreeTableView tblCompras = new JFXTreeTableView();
+        var tblCompras = new JFXTreeTableView();
 
         //Paneles
         panelEtiquetas();
@@ -121,15 +119,15 @@ public class HistorialCompras extends Stage {
 
 
     private void panelEtiquetas() {
-        Label lblHcompras = new Label("Historial de compras");
-        GridPane panelIco = new GridPane();
-        DateFormat date = new SimpleDateFormat("dd-MM-yyyy");
-        Text icoFecha = GlyphsDude.createIcon(FontAwesomeIcon.CALENDAR,"14px");
-        Label lblFecha = new Label("  " + date.format(new Date()));
-        ColumnConstraints column1$Etiquetas = new ColumnConstraints(10,543,543);
-        ColumnConstraints column2$Etiquetas = new ColumnConstraints(10,188,296);
-        ColumnConstraints column1$Ico = new ColumnConstraints(10,100, Double.MAX_VALUE);
-        RowConstraints row = new RowConstraints(10,30.0,Double.MAX_VALUE);
+        var lblHcompras = new Label("Historial de compras");
+        var panelIco = new GridPane();
+        var date = new SimpleDateFormat("dd-MM-yyyy");
+        var icoFecha = GlyphsDude.createIcon(FontAwesomeIcon.CALENDAR,"14px");
+        var lblFecha = new Label("  " + date.format(new Date()));
+        var column1$Etiquetas = new ColumnConstraints(10,543,543);
+        var column2$Etiquetas = new ColumnConstraints(10,188,296);
+        var column1$Ico = new ColumnConstraints(10,100, Double.MAX_VALUE);
+        var row = new RowConstraints(10,30.0,Double.MAX_VALUE);
 
         //Estilos
         icoFecha.getStyleClass().add("ico");
@@ -154,22 +152,22 @@ public class HistorialCompras extends Stage {
     }
 
     private void panelDatos() {
-        Label lblId = new Label("ID:");
-        Label lblFecha = new Label("Fecha:");
-        Label lblHora = new Label("Hora:");
-        Label lblEmpleado = new Label("ID Empleado:");
-        Label lblProveedor = new Label("Proveedor:");
-        Label lblDetalles = new Label("Detalles de la compra");
+        var lblId = new Label("ID:");
+        var lblFecha = new Label("Fecha:");
+        var lblHora = new Label("Hora:");
+        var lblEmpleado = new Label("ID Empleado:");
+        var lblProveedor = new Label("Proveedor:");
+        var lblDetalles = new Label("Detalles de la compra");
         txtID = new TextField();
         datePicker = new JFXDatePicker();
         timePicker = new JFXTimePicker();
         txtEmpleado = new TextField();
         txtProveedor = new TextField();
         btnDetalles = new JFXButton("Ver detalles");
-        ColumnConstraints column1$Datos = new ColumnConstraints(10,100, Double.MAX_VALUE);
-        ColumnConstraints column2$Datos = new ColumnConstraints(10,100, Double.MAX_VALUE);
-        ColumnConstraints column3$Datos = new ColumnConstraints(10,100, Double.MAX_VALUE);
-        ColumnConstraints column4$Datos = new ColumnConstraints(10,100, Double.MAX_VALUE);
+        var column1$Datos = new ColumnConstraints(10,100, Double.MAX_VALUE);
+        var column2$Datos = new ColumnConstraints(10,100, Double.MAX_VALUE);
+        var column3$Datos = new ColumnConstraints(10,100, Double.MAX_VALUE);
+        var column4$Datos = new ColumnConstraints(10,100, Double.MAX_VALUE);
 
         panelDatos.add(lblId, 0,0);
         panelDatos.add(lblFecha,0,1);
@@ -198,29 +196,29 @@ public class HistorialCompras extends Stage {
 
     private void panelOpciones() {
         //panelOpciones
-        GridPane paneOpciones1 = new GridPane();
-        GridPane paneOpciones2 = new GridPane();
-        ColumnConstraints column1$Opcion = new ColumnConstraints(10,538,551);
-        ColumnConstraints column2$Opcion = new ColumnConstraints(10,139,318);
-        ColumnConstraints column1$Opciones1 = new ColumnConstraints(10,236,276);
-        ColumnConstraints column2$Opciones1 = new ColumnConstraints(10,143,189);
-        ColumnConstraints column3$Opciones1 = new ColumnConstraints(10,143,189);
-        ColumnConstraints column1$Opciones2 = new ColumnConstraints(10,100,Double.MAX_VALUE);
-        ColumnConstraints column2$Opciones2 = new ColumnConstraints(10,100,Double.MAX_VALUE);
+        var paneOpciones1 = new GridPane();
+        var paneOpciones2 = new GridPane();
+        var column1$Opcion = new ColumnConstraints(10,538,551);
+        var column2$Opcion = new ColumnConstraints(10,139,318);
+        var column1$Opciones1 = new ColumnConstraints(10,236,276);
+        var column2$Opciones1 = new ColumnConstraints(10,143,189);
+        var column3$Opciones1 = new ColumnConstraints(10,143,189);
+        var column1$Opciones2 = new ColumnConstraints(10,100,Double.MAX_VALUE);
+        var column2$Opciones2 = new ColumnConstraints(10,100,Double.MAX_VALUE);
 
         //paneOpciones1
-        HBox box1 = new HBox();
-        Label lblBuscar = new Label("Buscar por:");
+        var box1 = new HBox();
+        var lblBuscar = new Label("Buscar por:");
         txtBuscar = new TextField();
         box1.getChildren().addAll(lblBuscar, txtBuscar);
 
-        HBox box2 = new HBox();
-        Label lblDe = new Label("De:");
+        var box2 = new HBox();
+        var lblDe = new Label("De:");
         pickerDateBuscar = new JFXDatePicker();
         box2.getChildren().addAll(lblDe, pickerDateBuscar);
 
-        HBox box3 = new HBox();
-        Label lblA = new Label("A:");
+        var box3 = new HBox();
+        var lblA = new Label("A:");
         pickerDateBuscar2 = new JFXDatePicker();
         box3.getChildren().addAll(lblA, pickerDateBuscar2);
 
@@ -373,18 +371,18 @@ public class HistorialCompras extends Stage {
     }
 
     private void initPopup(Compra compra) {
-        VBox vBox = new VBox();
-        GridPane pane = new GridPane();
-        GridPane totalPane = new GridPane();
+        var vBox = new VBox();
+        var pane = new GridPane();
+        var totalPane = new GridPane();
 
-        Label lblId = new Label("ID Empleado:");
-        Label lblNombre = new Label("Nombre:");
-        Label lblApellido = new Label("Apellido:");
-        Label lblTotal = new Label("Monto total de la compra:");
-        TextField txtId = new TextField(compra.getIdEmpleado() + "");
-        TextField txtNombre = new TextField(compra.getNombreEmpleado());
-        TextField txtApellido = new TextField(compra.getApellidoEmpleado());
-        TextField txtTotal = new TextField("$ " + compra.getMonto());
+        var lblId = new Label("ID Empleado:");
+        var lblNombre = new Label("Nombre:");
+        var lblApellido = new Label("Apellido:");
+        var lblTotal = new Label("Monto total de la compra:");
+        var txtId = new TextField(compra.getIdEmpleado() + "");
+        var txtNombre = new TextField(compra.getNombreEmpleado());
+        var txtApellido = new TextField(compra.getApellidoEmpleado());
+        var txtTotal = new TextField("$ " + compra.getMonto());
 
         txtId.setEditable(false);
         txtNombre.setEditable(false);
@@ -423,12 +421,10 @@ public class HistorialCompras extends Stage {
     }
 
     private void buscarTbl(TextField text, JFXTreeTableView<Compra> tbl) {
-        text.textProperty().addListener((value, oldValue, newValue) -> {
-            tbl.setPredicate(c ->
-                    c.getValue().getProveedor().toLowerCase().contains(newValue.toLowerCase()) ||
-                            String.valueOf(c.getValue().getId()).contains(newValue)
-            );
-        });
+        text.textProperty().addListener((value, oldValue, newValue) -> tbl.setPredicate(c ->
+                c.getValue().getProveedor().toLowerCase().contains(newValue.toLowerCase()) ||
+                        String.valueOf(c.getValue().getId()).contains(newValue)
+        ));
     }
 
     private void buscarPorFecha(JFXDatePicker date1, JFXDatePicker date2, JFXTreeTableView<Compra> table) {

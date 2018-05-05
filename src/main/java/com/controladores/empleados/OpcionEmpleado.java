@@ -68,10 +68,11 @@ public class OpcionEmpleado extends VBox {
         var btnAnadir = new JFXButton();
         var btnEditar = new JFXButton();
         var btnEliminar = new JFXButton();
-        var btnMas = new JFXButton("Mas");
+        var btnMas = new JFXButton();
         var icoEdit = GlyphsDude.createIcon(FontAwesomeIcon.EDIT,"14px");
         var icoAdd = GlyphsDude.createIcon(FontAwesomeIcon.USER_PLUS,"14px");
         var icoDelete = GlyphsDude.createIcon(FontAwesomeIcon.TRASH_ALT,"14px");
+        var icoInfo = GlyphsDude.createIcon(FontAwesomeIcon.INFO,"14px");
         var txtFiltro = new TextField();
         ObservableList<Empleado> listEmpleados;
 
@@ -101,10 +102,11 @@ public class OpcionEmpleado extends VBox {
         txtFiltro.setPrefWidth(180);
 
         //Buttons and Icons
-        setStyleIcons(icoAdd, icoDelete, icoEdit);
+        setStyleIcons(icoAdd, icoDelete, icoEdit, icoInfo);
         btnAnadir.setGraphic(icoAdd);
         btnEditar.setGraphic(icoEdit);
         btnEliminar.setGraphic(icoDelete);
+        btnMas.setGraphic(icoInfo);
 
         //GridPane
             //Columns
@@ -167,7 +169,7 @@ public class OpcionEmpleado extends VBox {
         //Acciones de los botones
         btnEliminar.setOnAction(x -> deleteUser(listEmpleados, table));
         btnEditar.setOnAction(this::noFunciona);
-        btnAnadir.setOnAction(this::noFunciona);
+        btnAnadir.setOnAction(this::addEmpleado);
         btnMas.setOnAction(x -> {
             initPopUpCodigoPostal();
             popupCodigoPostal.show(txtCodPostal);
@@ -206,9 +208,6 @@ public class OpcionEmpleado extends VBox {
         pane.setPadding(new Insets(10));
 
         popupCodigoPostal = new JFXPopup(pane);
-    }
-
-    private void deshabilitarEmpleado(ActionEvent e) {
     }
 
     private void noFunciona(ActionEvent e) {
@@ -364,5 +363,9 @@ public class OpcionEmpleado extends VBox {
     private void setStyleIcons(Text... text) {
         for(Text t: text)
             t.getStyleClass().add("ico");
+    }
+
+    private void addEmpleado(ActionEvent e) {
+        new AgregarEmpleado();
     }
 }
