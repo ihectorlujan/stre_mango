@@ -44,7 +44,6 @@ public class OpcionEmpleado extends VBox {
     Label lblMunicipio = new Label("Municipio:");
     JFXRadioButton rbHombre = new JFXRadioButton("Hombre");
     JFXRadioButton rbMujer = new JFXRadioButton("Mujer");
-    JFXComboBox<Integer> cmbEdad = new JFXComboBox<>();
     JFXPopup popupCodigoPostal;
     JFXPopup popupEstaSeguro;
 
@@ -89,8 +88,6 @@ public class OpcionEmpleado extends VBox {
         ObservableList<Empleado> listEmpleados;
 
         //Llenar cmb de datos
-        llenarCmb(cmbEdad);
-        cmbEdad.setEditable(false);
         txtCodPostal.setEditable(false);
 
         //hBox Search
@@ -115,7 +112,8 @@ public class OpcionEmpleado extends VBox {
         txtNombreCalle.setPrefWidth(250);
         txtNoCasa.setPrefWidth(60);
         txtCodPostal.setPrefWidth(60);
-        txtEdad.setPadding(new Insets(8,0,0,0));
+        txtEdad.setPrefWidth(40);
+        txtEdad.setEditable(false);
 
         //HBox domicilio
         hBoxDomicilio.getChildren().add(lblDatosDomiciliaros);
@@ -130,7 +128,7 @@ public class OpcionEmpleado extends VBox {
 
         //Hbox Sexo
         hBoxSexo.getChildren().addAll(lblSexo,rbHombre, rbMujer);
-        hBoxSexo.setPadding(new Insets(8,0,0,0));
+        hBoxSexo.setPadding(new Insets(5,0,0,0));
         HBox.setMargin(rbHombre, new Insets(0,10,0,10));
 
         //Hbox Codigo postal
@@ -158,7 +156,8 @@ public class OpcionEmpleado extends VBox {
         HBox.setMargin(lblID, new Insets(0,10,0,0));
 
         //HBox edad
-        hBoxEdad.getChildren().addAll(lblEdad, cmbEdad);
+        hBoxEdad.getChildren().addAll(lblEdad, txtEdad);
+        hBoxEdad.setAlignment(Pos.BASELINE_LEFT);
         HBox.setMargin(lblEdad, new Insets(0,10,0,0));
 
         //GridPane Datos del empleado
@@ -443,7 +442,7 @@ public class OpcionEmpleado extends VBox {
                 txtCiudad.setText(newValue.getValue().getCiudad());
                 txtMunicipio.setText(newValue.getValue().getMunicipio());
                 txtTipoAsentamiento.setText(newValue.getValue().getTipoAsentamiento());
-                cmbEdad.setValue(newValue.getValue().getEdad());
+                txtEdad.setText(newValue.getValue().getEdad()+"");
             }
         }));
     }
@@ -461,11 +460,6 @@ public class OpcionEmpleado extends VBox {
         gridPane.getChildren()
                 .filtered(x -> x instanceof TextField)
                 .forEach(x -> ((TextField) x).setEditable(false));
-    }
-
-    private void llenarCmb(JFXComboBox<Integer> cmbEdad) {
-        for (int i = 14; i < 60; i++)
-            cmbEdad.getItems().add(i);
     }
 
     private void setStyleIcons(Text... text) {
