@@ -6,8 +6,6 @@ import com.modelo.Conexion;
 import com.modelo.empleado.Empleado;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -23,9 +21,9 @@ public class OpcionEmpleado extends VBox {
 
     Conexion connection = new Conexion();
 
-    TextField txtID = new TextField();
     TextField txtNombre = new TextField();
-    TextField txtApellido = new TextField();
+    TextField txtApellidoPaterno = new TextField();
+    TextField txtApellidoMaterno = new TextField();
     TextField txtEdad = new TextField();
     TextField txtTelefono = new TextField();
     TextField txtCorreo = new TextField();
@@ -36,28 +34,32 @@ public class OpcionEmpleado extends VBox {
     TextField txtAsentamiento = new TextField();
     TextField txtCiudad = new TextField();
     TextField txtMunicipio = new TextField();
+    Label lblIdN = new Label("10");
     Label lblEstado = new Label("Estado:");
     Label lblAsentamiento = new Label("Asentamiento:");
     Label lblCiudad = new Label("Ciudad:");
     Label lblMunicipio = new Label("Municipio:");
     JFXRadioButton rbHombre = new JFXRadioButton("Hombre");
     JFXRadioButton rbMujer = new JFXRadioButton("Mujer");
+    JFXComboBox<Integer> cmbEdad = new JFXComboBox<>();
     JFXPopup popupCodigoPostal;
 
     public OpcionEmpleado() {
         var bottomInsets = new Insets(0,0,10,0);
         var txtDatos = new Label("Datos Personales");
         var gridPane = new GridPane();
+        var gridPaneDomicilio = new GridPane();
         var lblID = new Label("ID:");
         var lblNombre = new Label("Nombre:");
-        var lblApellido = new Label("Apellido:");
+        var lblApellidoPaterno = new Label("Apellido Paterno:");
+        var lblApellidoMaterno = new Label("Apellido Materno:");
         var lblEdad = new Label("Edad:");
         var lblSexo = new Label("Sexo:");
         var lblTelefono = new Label("Telefono:");
         var lblCorreo = new Label("Correo:");
         var lblNombreCalle = new Label("Calle:");
         var lblNoCasa = new Label("No de casa:");
-        var lblCodigoPostal = new Label("Codigo Postal:");
+        var lblCodigoPostal = new Label("C.P:");
         var lblBuscar = new Label("Buscar:");
         var toggleGroup = new ToggleGroup();
         var hBox = new HBox();
@@ -65,6 +67,8 @@ public class OpcionEmpleado extends VBox {
         var hBoxDatos = new HBox();
         var hBoxSexo = new HBox();
         var hBoxCodigoPostal = new HBox();
+        var hBoxId = new HBox(5);
+        var hBoxEdad = new HBox();
         var btnAnadir = new JFXButton();
         var btnEditar = new JFXButton();
         var btnEliminar = new JFXButton();
@@ -76,14 +80,22 @@ public class OpcionEmpleado extends VBox {
         var txtFiltro = new TextField();
         ObservableList<Empleado> listEmpleados;
 
+        //TextFields properties
+        txtNombreCalle.setPrefWidth(250);
+        txtNoCasa.setPrefWidth(60);
+        txtCodPostal.setPrefWidth(60);
+        txtEdad.setPadding(new Insets(8,0,0,0));
+
         //Radio Buttons
         rbHombre.setToggleGroup(toggleGroup);
         rbMujer.setToggleGroup(toggleGroup);
         rbHombre.setDisable(true);
         rbMujer.setDisable(true);
-        hBoxSexo.getChildren().addAll(rbHombre, rbMujer);
+
+        //Hbox Sexo
+        hBoxSexo.getChildren().addAll(lblSexo,rbHombre, rbMujer);
         hBoxSexo.setPadding(new Insets(8,0,0,0));
-        HBox.setMargin(rbHombre, new Insets(0,10,0,0));
+        HBox.setMargin(rbHombre, new Insets(0,10,0,10));
 
         //Codigo postal
         hBoxCodigoPostal.getChildren().addAll(txtCodPostal, btnMas);
@@ -108,36 +120,40 @@ public class OpcionEmpleado extends VBox {
         btnEliminar.setGraphic(icoDelete);
         btnMas.setGraphic(icoInfo);
 
-        //GridPane
+        //HBox id
+        hBoxId.getChildren().addAll(lblID, lblIdN);
+        HBox.setMargin(lblID, new Insets(0,10,0,0));
+
+        //HBox edad
+        hBoxEdad.getChildren().addAll(lblEdad, cmbEdad);
+        HBox.setMargin(lblEdad, new Insets(0,10,0,0));
+
+        //GridPane Datos del empleado
             //Columns
         var column1 = new ColumnConstraints();
         var column2 = new ColumnConstraints();
         var column3 = new ColumnConstraints();
         var column4 = new ColumnConstraints();
+        var column5 = new ColumnConstraints();
+        var column6 = new ColumnConstraints();
 
-        gridPane.add(lblID,0,0);
+        gridPane.add(hBoxId,0,0);
         gridPane.add(lblNombre,0,1);
-        gridPane.add(lblApellido,0,2);
-        gridPane.add(lblEdad,0,3);
-        gridPane.add(lblSexo,0,4);
+        gridPane.add(lblApellidoPaterno,0,2);
+        gridPane.add(lblApellidoMaterno,0,3);
 
-        gridPane.add(txtID,1,0);
         gridPane.add(txtNombre,1,1);
-        gridPane.add(txtApellido,1,2);
-        gridPane.add(txtEdad,1,3);
-        gridPane.add(hBoxSexo,1,4);
+        gridPane.add(txtApellidoPaterno,1,2);
+        gridPane.add(txtApellidoMaterno,1,3);
 
-        gridPane.add(lblTelefono,2,0);
-        gridPane.add(lblCorreo,2,1);
-        gridPane.add(lblNombreCalle,2,2);
-        gridPane.add(lblNoCasa,2,3);
-        gridPane.add(lblCodigoPostal,2,4);
+        gridPane.add(hBoxEdad,2,1);
+        gridPane.add(lblTelefono,2,2);
+        gridPane.add(lblCorreo,2,3);
 
-        gridPane.add(txtTelefono,3,0);
-        gridPane.add(txtCorreo, 3,1);
-        gridPane.add(txtNombreCalle, 3,2);
-        gridPane.add(txtNoCasa, 3,3);
-        gridPane.add(hBoxCodigoPostal, 3,4);
+        gridPane.add(hBoxSexo,3,1);
+
+        gridPane.add(txtTelefono,3,2);
+        gridPane.add(txtCorreo, 3,3);
 
         gridPane.getColumnConstraints().addAll(column1, column2, column3, column4);
         gridPane.getColumnConstraints().forEach(x -> x.setHgrow(Priority.SOMETIMES));
@@ -147,6 +163,22 @@ public class OpcionEmpleado extends VBox {
         gridPane.setVgap(4);
         gridPane.getStyleClass().add("panelWhite");
         blockGridPaneFields(gridPane);
+
+        //Datos del empleado, domicicilio
+        gridPaneDomicilio.add(lblNombreCalle, 0,0);
+        gridPaneDomicilio.add(lblNoCasa,3,0);
+        gridPaneDomicilio.add(lblCodigoPostal,5,0);
+
+        gridPaneDomicilio.add(txtNombreCalle,1,0);
+        gridPaneDomicilio.add(txtNoCasa,4,0);
+        gridPaneDomicilio.add(hBoxCodigoPostal,6,0);
+
+        gridPaneDomicilio.getStyleClass().add("panelWhite");
+        gridPaneDomicilio.getColumnConstraints().addAll(column1,column2,column3,column4,column5,column6);
+        gridPaneDomicilio.getColumnConstraints().forEach(x -> x.setHgrow(Priority.SOMETIMES));
+        gridPaneDomicilio.setHgap(20);
+        blockGridPaneFields(gridPaneDomicilio);
+        gridPaneDomicilio.setPadding(new Insets(10));
 
         //HBox and hBoxSearch
         hBoxSearch.getChildren().addAll(lblBuscar,txtFiltro);
@@ -178,10 +210,11 @@ public class OpcionEmpleado extends VBox {
         VBox.setMargin(hBoxDatos, bottomInsets);
         VBox.setMargin(txtDatos, bottomInsets);
         VBox.setMargin(gridPane, bottomInsets);
+        VBox.setMargin(gridPaneDomicilio, bottomInsets);
         VBox.setMargin(hBox, bottomInsets);
 
         setPadding(new Insets(10));
-        getChildren().addAll(hBoxDatos, gridPane, hBox, table);
+        getChildren().addAll(hBoxDatos, gridPane, gridPaneDomicilio, hBox, table);
         getStylesheets().add(getClass().getResource("/estilos/empleados.css").toExternalForm());
     }
 
@@ -225,7 +258,6 @@ public class OpcionEmpleado extends VBox {
 
         var clmID = new JFXTreeTableColumn<Empleado, Integer>("ID");
         var clmNombre = new JFXTreeTableColumn<Empleado, String>("Nombre");
-        var clmApellido = new JFXTreeTableColumn<Empleado, String>("Apellido");
         var clmTelefono = new JFXTreeTableColumn<Empleado, String>("Telefono");
         var clmCorreo = new JFXTreeTableColumn<Empleado, String>("Correo");
         var clmMunicipio = new JFXTreeTableColumn<Empleado, String>("Municipio");
@@ -246,15 +278,6 @@ public class OpcionEmpleado extends VBox {
                 return param.getValue().getValue().nombreProperty();
             else
                 return clmNombre.getComputedValue(param);
-        });
-
-        clmApellido.setResizable(false);
-        clmApellido.setPrefWidth(200);
-        clmApellido.setCellValueFactory((TreeTableColumn.CellDataFeatures<Empleado, String> param) -> {
-            if (clmApellido.validateValue(param))
-                return param.getValue().getValue().apellidoProperty();
-            else
-                return clmApellido.getComputedValue(param);
         });
 
         clmTelefono.setResizable(false);
@@ -286,14 +309,14 @@ public class OpcionEmpleado extends VBox {
 
         tableView.setShowRoot(false);
         tableView.setEditable(false);
-        tableView.getColumns().setAll(clmID, clmNombre, clmApellido, clmMunicipio, clmTelefono, clmCorreo);
+        tableView.getColumns().setAll(clmID, clmNombre, clmMunicipio, clmTelefono, clmCorreo);
 
         return tableView;
     }
 
     private void deleteUser(ObservableList<Empleado> list, JFXTreeTableView tableView) {
         try {
-            var temporalityEmployeed = new Empleado(Integer.parseInt(txtID.getText()));
+            var temporalityEmployeed = new Empleado(Integer.parseInt(lblIdN.getText()));
             connection.establecerConexion();
             int resultado = temporalityEmployeed.eliminarEmpleado(connection.getConection());
             connection.cerrarConexion();
@@ -324,9 +347,10 @@ public class OpcionEmpleado extends VBox {
     private void establecerCampos(JFXTreeTableView<Empleado> tableView) {
         tableView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             if(newValue != null) {
-                txtID.setText(newValue.getValue().getId()+"");
+                lblIdN.setText(newValue.getValue().getId()+"");
                 txtNombre.setText(newValue.getValue().getNombre());
-                txtApellido.setText(newValue.getValue().getApellido());
+                txtApellidoPaterno.setText(newValue.getValue().getApellidoPaterno());
+                txtApellidoMaterno.setText(newValue.getValue().getApellidoMaterno());
                 txtEdad.setText(newValue.getValue().getEdad()+"");
                 if (newValue.getValue().getSexo().equals("hombre"))
                     rbHombre.setSelected(true);

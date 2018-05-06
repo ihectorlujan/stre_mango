@@ -9,7 +9,6 @@ public class Proveedor {
 
     private StringProperty id;
     private StringProperty razonSocial;
-    private StringProperty email;
     private StringProperty phone;
     private StringProperty correo;
     private StringProperty calle;
@@ -22,10 +21,9 @@ public class Proveedor {
     private StringProperty tipoAsentamiento;
     private StringProperty isHabilitado;
 
-    public Proveedor(String id, String razonSocial, String email, String phone, String correo, String calle, String noCasa, Integer codigoPostal, String estado, String ciudad, String municipio, String asentamiento, String tipoAsentamiento, String isHabilitado) {
+    public Proveedor(String id, String razonSocial, String phone, String correo, String calle, String noCasa, Integer codigoPostal, String estado, String ciudad, String municipio, String asentamiento, String tipoAsentamiento, String isHabilitado) {
         this.id = new SimpleStringProperty(id);
         this.razonSocial = new SimpleStringProperty(razonSocial);
-        this.email = new SimpleStringProperty(email);
         this.phone = new SimpleStringProperty(phone);
         this.correo = new SimpleStringProperty(correo);
         this.calle = new SimpleStringProperty(calle);
@@ -49,18 +47,6 @@ public class Proveedor {
 
     public void setId(String id) {
         this.id.set(id);
-    }
-
-    public String getEmail() {
-        return email.get();
-    }
-
-    public StringProperty emailProperty() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email.set(email);
     }
 
     public String getPhone() {

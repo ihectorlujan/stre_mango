@@ -27,7 +27,7 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
     private StringProperty tipoAsentamiento;
     private BooleanProperty isHabilitado;
 
-    public Empleado(int id, String nombre, String apellidoPaterno, String apellidoMaterno, Integer edad, String telefono, String correo,String sexo, String nombreCalle, String nCasa, String codigoPostal, String asentamiento, String municipio, String estado, String ciudad, String tipoAsentamiento, boolean isHabilitado) {
+    public Empleado(int id, String nombre, String apellidoPaterno, String apellidoMaterno, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa, String codigoPostal, String estado, String ciudad, String municipio, String asentamiento, String tipoAsentamiento, boolean isHabilitado) {
         this.nombre = new SimpleStringProperty(nombre);
         this.edad = new SimpleIntegerProperty(edad);
         this.apellidoMaterno = new SimpleStringProperty(apellidoMaterno);
@@ -270,32 +270,32 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
     public static ObservableList<Empleado> llenarEmpleados(Connection connection) {
         try {
             ObservableList<Empleado> list = FXCollections.observableArrayList();
-            ObservableList<Empleado> list1 = FXCollections.observableArrayList();
 
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM getempleados()");
 
-//            while(resultSet.next())
-//                list.add(new Empleado(resultSet.getString(1),
-//                        resultSet.getString(2),
-//                        resultSet.getInt(3),
-//                        resultSet.getString(4),
-//                        resultSet.getString(5),
-//                        resultSet.getString(6),
-//                        resultSet.getString(7),
-//                        resultSet.getString(8),
-//                        resultSet.getString(9),
-//                        resultSet.getString(10),
-//                        resultSet.getString(11),
-//                        resultSet.getString(12),
-//                        resultSet.getString(13),
-//                        resultSet.getBoolean(14),
-//                        resultSet.getInt(15)
-//                ));
+            while(resultSet.next())
+                list.add(new Empleado(
+                        resultSet.getInt("id"),
+                        resultSet.getString("nombre"),
+                        resultSet.getString("apellido_paterno"),
+                        resultSet.getString("apellido_materno"),
+                        resultSet.getInt("edad"),
+                        resultSet.getString("sexo"),
+                        resultSet.getString("telefono"),
+                        resultSet.getString("correo"),
+                        resultSet.getString("nom_calle"),
+                        resultSet.getString("num_casa"),
+                        resultSet.getString("codigo"),
+                        resultSet.getString("c_estado"),
+                        resultSet.getString("ciudad"),
+                        resultSet.getString("municipio"),
+                        resultSet.getString("asentamiento"),
+                        resultSet.getString("tipo_asentamiento"),
+                        resultSet.getBoolean("estado")
+                ));
 
-            list1.addAll(list.filtered(x -> x.isHabilitado.get()));
-
-            return list1;
+            return list;
         }catch (SQLException a){
             a.printStackTrace();
             return null;

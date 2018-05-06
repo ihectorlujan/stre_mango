@@ -18,9 +18,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-
-import javax.swing.*;
 
 public class OpcionProducto extends VBox {
 
@@ -135,15 +132,15 @@ public class OpcionProducto extends VBox {
             else
                 return clmExistencia.getComputedValue(param);
         });
-
-        clmDefectuoso.setResizable(true);
-        clmDefectuoso.setPrefWidth(150);
-        clmDefectuoso.setCellValueFactory((TreeTableColumn.CellDataFeatures<Producto, Integer> param) -> {
-            if (clmDefectuoso.validateValue(param))
-                return param.getValue().getValue().cantidad_defectuosoProperty().asObject();
-            else
-                return clmDefectuoso.getComputedValue(param);
-        });
+//
+//        clmDefectuoso.setResizable(true);
+//        clmDefectuoso.setPrefWidth(150);
+//        clmDefectuoso.setCellValueFactory((TreeTableColumn.CellDataFeatures<Producto, Integer> param) -> {
+//            if (clmDefectuoso.validateValue(param))
+//                return param.getValue().getValue().cantidad_defectuosoProperty().asObject();
+//            else
+//                return clmDefectuoso.getComputedValue(param);
+//        });
 
 
         clmObservaciones.setResizable(false);
@@ -308,12 +305,12 @@ public class OpcionProducto extends VBox {
                 !(txtfPrecioVenta.getText().isEmpty()) && !(txtfExistencia.getText().isEmpty())  &&
                     !(txtfCanDefectuoso.getText().isEmpty())){
 
-                listaProductos.add(new Producto(txtfCodigoBarras.getText(),
-                        txtfNombre.getText(),txtfObservaciones.getText(),
-                        Float.parseFloat(txtfPrecioCompra.getText()),
-                        Float.parseFloat(txtfPrecioVenta.getText()),
-                        Integer.parseInt(txtfExistencia.getText()),
-                        Integer.parseInt(txtfCanDefectuoso.getText())));
+//                listaProductos.add(new Producto(txtfCodigoBarras.getText(),
+//                        txtfNombre.getText(),txtfObservaciones.getText(),
+//                        Float.parseFloat(txtfPrecioCompra.getText()),
+//                        Float.parseFloat(txtfPrecioVenta.getText()),
+//                        Integer.parseInt(txtfExistencia.getText()),
+//                        Integer.parseInt(txtfCanDefectuoso.getText())));
 
             }
         });
