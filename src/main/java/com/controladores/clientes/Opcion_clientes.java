@@ -2,16 +2,24 @@ package com.controladores.clientes;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import com.modelo.empleado.Empleado;
+import com.modelo.Conexion;
+import com.modelo.cliente.Cliente;
+import com.modelo.cliente.Cliente;
+import de.jensd.fx.glyphs.GlyphsDude;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 
 
 public class Opcion_clientes extends VBox {
+
+    Conexion connection = new Conexion();
+
     public Opcion_clientes(){
 
         var insetsBase = new Insets(10);
@@ -19,8 +27,8 @@ public class Opcion_clientes extends VBox {
         var hBoxTitulo = new HBox();
         var hBoxDomicilio = new HBox();
         var hBoxBusqueda = new HBox();
+        var hBoxBotones = new HBox();
         var hBoxLista = new HBox();
-        var hBoxTabla = new HBox();
         var hBoxSpace = new HBox();
         var hBoxSpace2 = new HBox();
         var hBoxSpace3 = new HBox();
@@ -34,34 +42,38 @@ public class Opcion_clientes extends VBox {
         var lSexoH = new Label("Hombre: ");
         var lSexoM = new Label("Mujer: ");
         var lTelefono = new Label("Telefono: ");
-        var lCelular = new Label("Celular: ");
         var lEmail = new Label("Email: ");
         var lDomicilio = new Label("Datos domiciliarios del Cliente.");
         var lCalle = new Label("Calle: ");
         var lNCasa = new Label("Numero de casa: ");
         var lCP = new Label("C.P: ");
-        var lEstado = new Label("Estado: ");
         var lBuscar = new Label("Buscar: ");
         var lId = new Label("ID: ");
         var lIdContainer = new Label("13");
-        var lLista = new Label("Lista de empleados.");
+        var lLista = new Label("Lista de Clientes.");
         var tNombre = new TextField();
         var tApellidoP = new TextField();
         var tApellidoM = new TextField();
         var tTelefono = new TextField();
-        var tCelular = new TextField();
         var tEmail = new TextField();
         var tCalle = new TextField();
         var tNcasa = new TextField();
         var tCP = new TextField();
-        var tEstado = new TextField();
         var tBuscar = new TextField();
         var cboxEdad = new ComboBox<Integer>();
         var rbSexoH = new RadioButton();
-        var rbSexoM = new RadioButton();   //Group - empleado femenino
+        var rbSexoM = new RadioButton();   //Group - Cliente femenino
+        var btnAnadir = new JFXButton();
+        var btnEditar = new JFXButton();
+        var btnEliminar = new JFXButton();
+        var icoEdit = GlyphsDude.createIcon(FontAwesomeIcon.EDIT,"14px");
+        var icoAdd = GlyphsDude.createIcon(FontAwesomeIcon.USER_PLUS,"14px");
+        var icoDelete = GlyphsDude.createIcon(FontAwesomeIcon.TRASH_ALT,"14px");
         var btnMas = new JFXButton();
+        var icoInfo = GlyphsDude.createIcon(FontAwesomeIcon.INFO,"14px");
+
         cboxEdad.getItems().addAll(18,19,20,21,22,23,24);
-        ObservableList<Empleado> listEmpleados = FXCollections.observableArrayList();
+        ObservableList<Cliente> listClientes = null;
 
         // Barra de titulo y busqueda.
         hBoxTitulo.getChildren().addAll(titulo, hBoxBusqueda);
@@ -122,12 +134,18 @@ public class Opcion_clientes extends VBox {
         gridPane2.add(tNcasa,3,0);
         gridPane2.add(lCP,4,0);
         hBoxSpace4.getChildren().addAll(tCP, btnMas);
+        HBox.setMargin(btnMas,new Insets(0,0,0,10));
         gridPane2.add(hBoxSpace4,5,0);
 
-        // Barra de lista de empleados.
-        hBoxLista.getChildren().add(lLista);
+        // Barra de lista de Clientes.
+        hBoxLista.getChildren().addAll(lLista, hBoxBotones);
+        hBoxBotones.getChildren().addAll(btnAnadir, btnEditar, btnEliminar);
+        hBoxBotones.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(hBoxBotones, Priority.ALWAYS);
         hBoxLista.setPadding(new Insets(10,10,10,10));
         hBoxLista.getStyleClass().add("panelWhite");
+        HBox.setMargin(btnEditar, new Insets(0,0,0,10));
+        HBox.setMargin(btnEliminar, new Insets(0,0,0,10));
 
         // Agrega las columnas al GridPane.
         gridPane.getColumnConstraints().addAll(columna1, columna2, columna3, columna4);
@@ -147,15 +165,25 @@ public class Opcion_clientes extends VBox {
         gridPane2.getStyleClass().add("panelWhite");
         blockGridPaneFields(gridPane2);
 
+        // Botones e iconos.
+        setStyleIcons(icoAdd, icoDelete, icoEdit, icoInfo);
+        btnAnadir.setGraphic(icoAdd);
+        btnEditar.setGraphic(icoEdit);
+        btnEliminar.setGraphic(icoDelete);
+        btnMas.setGraphic(icoInfo);
 
         // Margen entre el titulo y el recuadro de informacion.
         VBox.setMargin(gridPane, new Insets(10,0,10,0));
         VBox.setMargin(gridPane2, new Insets(10,0,10,0));
-        //VBox.setMargin(hBoxLista, new Insets(10,0,10,0));
+        VBox.setMargin(hBoxLista, new Insets(0,0,10,0));
 
+        // Conexion con base de datos.
+        connection.establecerConexion();
+        listClientes = Cliente.llenarClientes(connection.getConection());
+        connection.cerrarConexion();
 
         // Tabla de clientes.
-        var table = createTable(listEmpleados);
+        var table = createTable(listClientes);
 
         // Agrega los nodos () al VBox.
         getChildren().addAll(hBoxTitulo, gridPane, hBoxDomicilio, gridPane2, hBoxLista, table);
@@ -164,6 +192,7 @@ public class Opcion_clientes extends VBox {
 
         //Hoja de estilos
         getStylesheets().add(getClass().getResource("/estilos/clientes.css").toExternalForm());
+
     }
 
     private void blockGridPaneFields(GridPane gridPane) {
@@ -172,56 +201,82 @@ public class Opcion_clientes extends VBox {
                 .forEach(x -> ((TextField) x).setEditable(false));
     }
 
-    private JFXTreeTableView createTable(ObservableList<Empleado> list) {
-        final TreeItem<Empleado> root = new RecursiveTreeItem<>(list, RecursiveTreeObject::getChildren);
+    private JFXTreeTableView createTable(ObservableList<Cliente> list) {
+        final TreeItem<Cliente> root = new RecursiveTreeItem<>(list, RecursiveTreeObject::getChildren);
 
         var tableView = new JFXTreeTableView<>(root);
 
-        var clmNombre = new JFXTreeTableColumn<Empleado, String>("Nombre");
-        var clmApellido = new JFXTreeTableColumn<Empleado, String>("Apellido paterno");
-        var clmTelefono = new JFXTreeTableColumn<Empleado, String>("Telefono materno");
-        var clmCorreo = new JFXTreeTableColumn<Empleado, String>("Direccion");
+        var clmNombre = new JFXTreeTableColumn<Cliente, String>("Nombre");
+        var clmApellidoP = new JFXTreeTableColumn<Cliente, String>("Apellido paterno");
+        var clmApellidoM = new JFXTreeTableColumn<Cliente, String>("Apellido materno");
+        var clmEdad = new JFXTreeTableColumn<Cliente, Integer>("Edad");
+        var clmTel = new JFXTreeTableColumn<Cliente, String>("Telefono");
+        var clmCorreo = new JFXTreeTableColumn<Cliente, String>("Correo");
+
 
         clmNombre.setResizable(false);
         clmNombre.setPrefWidth(195);
-        clmNombre.setCellValueFactory((TreeTableColumn.CellDataFeatures<Empleado, String> param) -> {
+        clmNombre.setCellValueFactory((TreeTableColumn.CellDataFeatures<Cliente, String> param) -> {
             if (clmNombre.validateValue(param))
                 return param.getValue().getValue().nombreProperty();
             else
                 return clmNombre.getComputedValue(param);
         });
 
-        clmApellido.setResizable(false);
-        clmApellido.setPrefWidth(195);
-        clmApellido.setCellValueFactory((TreeTableColumn.CellDataFeatures<Empleado, String> param) -> {
-            if (clmApellido.validateValue(param))
-                return param.getValue().getValue().nombreProperty();
+        clmApellidoP.setResizable(false);
+        clmApellidoP.setPrefWidth(195);
+        clmApellidoP.setCellValueFactory((TreeTableColumn.CellDataFeatures<Cliente, String> param) -> {
+            if (clmApellidoP.validateValue(param))
+                return param.getValue().getValue().apellido_paternoProperty();
             else
-                return clmApellido.getComputedValue(param);
+                return clmApellidoP.getComputedValue(param);
         });
 
-        clmTelefono.setResizable(false);
-        clmTelefono.setPrefWidth(180);
-        clmTelefono.setCellValueFactory((TreeTableColumn.CellDataFeatures<Empleado, String> param) -> {
-            if (clmTelefono.validateValue(param))
-                return param.getValue().getValue().nombreProperty();
+        clmApellidoM.setResizable(false);
+        clmApellidoM.setPrefWidth(180);
+        clmApellidoM.setCellValueFactory((TreeTableColumn.CellDataFeatures<Cliente, String> param) -> {
+            if (clmApellidoM.validateValue(param))
+                return param.getValue().getValue().apellido_maternoProperty();
             else
-                return clmTelefono.getComputedValue(param);
+                return clmApellidoM.getComputedValue(param);
+        });
+
+        clmEdad.setResizable(false);
+        clmEdad.setPrefWidth(190);
+        clmEdad.setCellValueFactory((TreeTableColumn.CellDataFeatures<Cliente, Integer> param) -> {
+            if (clmEdad.validateValue(param))
+                return param.getValue().getValue().edadProperty().asObject();
+            else
+                return clmEdad.getComputedValue(param);
+        });
+
+        clmTel.setResizable(false);
+        clmTel.setPrefWidth(195);
+        clmTel.setCellValueFactory((TreeTableColumn.CellDataFeatures<Cliente, String> param) -> {
+            if (clmTel.validateValue(param))
+                return param.getValue().getValue().telefonoProperty();
+            else
+                return clmTel.getComputedValue(param);
         });
 
         clmCorreo.setResizable(false);
-        clmCorreo.setPrefWidth(190);
-        clmCorreo.setCellValueFactory((TreeTableColumn.CellDataFeatures<Empleado, String> param) -> {
+        clmCorreo.setPrefWidth(195);
+        clmCorreo.setCellValueFactory((TreeTableColumn.CellDataFeatures<Cliente, String> param) -> {
             if (clmCorreo.validateValue(param))
-                return param.getValue().getValue().nombreProperty();
+                return param.getValue().getValue().correoProperty();
             else
                 return clmCorreo.getComputedValue(param);
         });
 
         tableView.setShowRoot(false);
         tableView.setEditable(false);
-        tableView.getColumns().setAll(clmNombre, clmApellido, clmTelefono, clmCorreo);
+        tableView.getColumns().setAll(clmNombre, clmApellidoP, clmApellidoM, clmEdad, clmTel, clmCorreo);
 
         return tableView;
+    }
+
+    private void setStyleIcons(Text... text) {
+        for(Text t: text)
+            t.getStyleClass().add("ico");
     }
 }
