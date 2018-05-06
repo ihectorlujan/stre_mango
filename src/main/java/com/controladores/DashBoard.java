@@ -4,6 +4,7 @@ import com.controladores.clientes.Opcion_clientes;
 import com.controladores.compras.OpcionCompra;
 import com.controladores.empleados.OpcionEmpleado;
 //import com.controladores.productos.OpcionProducto;
+import com.controladores.proveedores.OpcionProveedor;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import de.jensd.fx.glyphs.GlyphsDude;
@@ -130,7 +131,7 @@ public class DashBoard {
 
         opcionProveedores.setOnMouseClicked(a ->{
             if(a.getButton()==MouseButton.PRIMARY){}
-                //borderPanePrincipal.setCenter(new OpcionProveedores());
+                borderPanePrincipal.setCenter(new OpcionProveedor());
         });
 
         opcionProductos.setOnMouseClicked(a ->{
