@@ -6,6 +6,7 @@ import com.modelo.empleado.Empleado;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
@@ -17,27 +18,33 @@ public class Opcion_clientes extends VBox {
         var titulo = new Label("Datos del Cliente.");
         var hBoxTitulo = new HBox();
         var hBoxDomicilio = new HBox();
-        var hBoxBuscar = new HBox();
+        var hBoxBusqueda = new HBox();
+        var hBoxLista = new HBox();
         var hBoxTabla = new HBox();
-        var hBoxSeparacion = new HBox();
-        var hBoxSeparacion2 = new HBox();
+        var hBoxSpace = new HBox();
+        var hBoxSpace2 = new HBox();
+        var hBoxSpace3 = new HBox();
+        var hBoxSpace4 = new HBox();
         var gridPane = new GridPane();
         var gridPane2 = new GridPane();
         var lnombre = new Label("Nombre: ");
         var lApellidoP = new Label("Apellido paterno: ");
         var lApellidoM = new Label("Apellido materno: ");
         var lEdad = new Label("Edad: ");
-        var lSexoM = new Label("Masculino: ");
-        var lSexoF = new Label("Femenino: ");
+        var lSexoH = new Label("Hombre: ");
+        var lSexoM = new Label("Mujer: ");
         var lTelefono = new Label("Telefono: ");
         var lCelular = new Label("Celular: ");
         var lEmail = new Label("Email: ");
         var lDomicilio = new Label("Datos domiciliarios del Cliente.");
         var lCalle = new Label("Calle: ");
-        var lColonia = new Label("Colonia: ");
-        var lMunicipio = new Label("Municipio: ");
+        var lNCasa = new Label("Numero de casa: ");
+        var lCP = new Label("C.P: ");
         var lEstado = new Label("Estado: ");
         var lBuscar = new Label("Buscar: ");
+        var lId = new Label("ID: ");
+        var lIdContainer = new Label("13");
+        var lLista = new Label("Lista de empleados.");
         var tNombre = new TextField();
         var tApellidoP = new TextField();
         var tApellidoM = new TextField();
@@ -45,76 +52,87 @@ public class Opcion_clientes extends VBox {
         var tCelular = new TextField();
         var tEmail = new TextField();
         var tCalle = new TextField();
-        var tColonia = new TextField();
-        var tMunicipio = new TextField();
+        var tNcasa = new TextField();
+        var tCP = new TextField();
         var tEstado = new TextField();
         var tBuscar = new TextField();
         var cboxEdad = new ComboBox<Integer>();
-        var rbSexoM = new RadioButton();
-        var rbSexoF = new RadioButton();   //Group - empleado femenino
+        var rbSexoH = new RadioButton();
+        var rbSexoM = new RadioButton();   //Group - empleado femenino
+        var btnMas = new JFXButton();
         cboxEdad.getItems().addAll(18,19,20,21,22,23,24);
         ObservableList<Empleado> listEmpleados = FXCollections.observableArrayList();
 
-        // Barra de titulo.
-        hBoxTitulo.getChildren().add(titulo);
+        // Barra de titulo y busqueda.
+        hBoxTitulo.getChildren().addAll(titulo, hBoxBusqueda);
+        hBoxBusqueda.getChildren().addAll(lBuscar, tBuscar);
+        hBoxBusqueda.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(hBoxBusqueda, Priority.ALWAYS);
+        lBuscar.setPadding(new Insets(0,10,0,0));
         hBoxTitulo.setPadding(new Insets(10,10,10,10));
         hBoxTitulo.getStyleClass().add("panelWhite");
 
-        // Recuadro de informacion.
+        // Cuadriculas de informacion.
         var columna1 = new ColumnConstraints();
         var columna2 = new ColumnConstraints();
         var columna3 = new ColumnConstraints();
         var columna4 = new ColumnConstraints();
+        var columna5 = new ColumnConstraints();
+        var columna6 = new ColumnConstraints();
 
         // Datos del GridPane.
-        gridPane.add(lnombre,0,0);
-        gridPane.add(tNombre,1,0);
-        gridPane.add(lApellidoP,2,0);
-        gridPane.add(tApellidoP,3,0);
+        // Primera columna.
+        hBoxSpace.getChildren().addAll(lId, lIdContainer);
+        lId.setPadding(new Insets(0,10,0,0));
+        gridPane.add(hBoxSpace,0,0);
+        gridPane.add(lnombre,0,1);
+        gridPane.add(tNombre,1,1);
+        gridPane.add(lApellidoP,0,2);
+        gridPane.add(tApellidoP,1,2);
+        gridPane.add(lApellidoM,0,3);
+        gridPane.add(tApellidoM,1,3);
 
-        gridPane.add(lApellidoM,0,1);
-        gridPane.add(tApellidoM,1,1);
-        gridPane.add(hBoxSeparacion,2,1);
-        gridPane.add(hBoxSeparacion2,3,1);
-        hBoxSeparacion.getChildren().addAll(lEdad,cboxEdad);
+        // Segunda columna.
+        hBoxSpace2.getChildren().addAll(lEdad,cboxEdad);
         lEdad.setPadding(new Insets(0,10,0,0));
-        hBoxSeparacion2.getChildren().addAll(lSexoM, rbSexoM, lSexoF, rbSexoF);
-        rbSexoM.setPadding(new Insets(0,10,0,0));
-
-        gridPane.add(lTelefono,0,2);
-        gridPane.add(tTelefono,1,2);
-        gridPane.add(lCelular,2,2);
-        gridPane.add(tCelular,3,2);
-
-        gridPane.add(lEmail,0,3);
-        gridPane.add(tEmail,1,3);
+        gridPane.add(hBoxSpace2,2,1);
+        hBoxSpace3.getChildren().addAll(lSexoH, rbSexoH, lSexoM, rbSexoM);
+        rbSexoH.setPadding(new Insets(0,10,0,0));
+        gridPane.add(hBoxSpace3,3,1);
+        gridPane.add(lTelefono,2,2);
+        gridPane.add(tTelefono,3,2);
+        gridPane.add(lEmail,2,3);
+        gridPane.add(tEmail,3,3);
 
         // Barra de datos domiciliarios.
         hBoxDomicilio.getChildren().add(lDomicilio);
         hBoxDomicilio.setPadding(new Insets(10,10,10,10));
         hBoxDomicilio.getStyleClass().add("panelWhite");
 
-        // Segundo recuadro de informacion.
-        var column1 = new ColumnConstraints();
-        var column2 = new ColumnConstraints();
-        var column3 = new ColumnConstraints();
-        var column4 = new ColumnConstraints();
 
         // Datos del GridPane2.
+
+        tCalle.setPrefWidth(250);
+        tNcasa.setPrefWidth(60);
+        tCP.setPrefWidth(60);
+
         gridPane2.add(lCalle,0,0);
         gridPane2.add(tCalle,1,0);
-        gridPane2.add(lColonia,2,0);
-        gridPane2.add(tColonia,3,0);
+        gridPane2.add(lNCasa,2,0);
+        gridPane2.add(tNcasa,3,0);
+        gridPane2.add(lCP,4,0);
+        hBoxSpace4.getChildren().addAll(tCP, btnMas);
+        gridPane2.add(hBoxSpace4,5,0);
 
-        gridPane2.add(lMunicipio,0,1);
-        gridPane2.add(tMunicipio,1,1);
-        gridPane2.add(lEstado,2,1);
-        gridPane2.add(tEstado,3,1);
+        // Barra de lista de empleados.
+        hBoxLista.getChildren().add(lLista);
+        hBoxLista.setPadding(new Insets(10,10,10,10));
+        hBoxLista.getStyleClass().add("panelWhite");
 
         // Agrega las columnas al GridPane.
         gridPane.getColumnConstraints().addAll(columna1, columna2, columna3, columna4);
         gridPane.getColumnConstraints().forEach(x -> x.setHgrow(Priority.SOMETIMES));
-        gridPane2.getColumnConstraints().addAll(column1, column2, column3, column4);
+        gridPane2.getColumnConstraints().addAll(columna1, columna2, columna3, columna4, columna5, columna6);
         gridPane2.getColumnConstraints().forEach(x -> x.setHgrow(Priority.SOMETIMES));
 
         gridPane.setPadding(new Insets(10));
@@ -133,18 +151,14 @@ public class Opcion_clientes extends VBox {
         // Margen entre el titulo y el recuadro de informacion.
         VBox.setMargin(gridPane, new Insets(10,0,10,0));
         VBox.setMargin(gridPane2, new Insets(10,0,10,0));
+        //VBox.setMargin(hBoxLista, new Insets(10,0,10,0));
 
-        // Barra de busqueda.
-        hBoxBuscar.getChildren().addAll(lBuscar, tBuscar);
-        lBuscar.setPadding(new Insets(0,10,0,0));
-        hBoxBuscar.setPadding(new Insets(10,10,10,10));
-        hBoxBuscar.getStyleClass().add("panelWhite");
 
         // Tabla de clientes.
         var table = createTable(listEmpleados);
 
         // Agrega los nodos () al VBox.
-        getChildren().addAll(hBoxTitulo, gridPane, hBoxDomicilio, gridPane2, hBoxBuscar, table);
+        getChildren().addAll(hBoxTitulo, gridPane, hBoxDomicilio, gridPane2, hBoxLista, table);
 
         setPadding(insetsBase);
 

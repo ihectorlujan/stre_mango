@@ -19,9 +19,10 @@ public class Cliente extends RecursiveTreeObject <Cliente> {
     private StringProperty ciudad;
     private StringProperty municipio;
     private StringProperty asentamiento;
+    private StringProperty tipo_asentamiento;
     private BooleanProperty isHabilitado;
 
-    public Cliente(Integer id, String nombre, String apellido_paterno, String apellido_materno, Integer edad, String sexo, String telefono, String correo, String nCalle, String nCasa, String codigoPostal, String estado, String ciudad, String municipio, String asentamiento, Boolean isHabilitado) {
+    public Cliente(Integer id, String nombre, String apellido_paterno, String apellido_materno, Integer edad, String sexo, String telefono, String correo, String nCalle, String nCasa, String codigoPostal, String estado, String ciudad, String municipio, String asentamiento, Boolean isHabilitado, String tipo_asentamiento) {
         this.id = new SimpleIntegerProperty(id);
         this.nombre = new SimpleStringProperty(nombre);
         this.apellido_paterno = new SimpleStringProperty(apellido_paterno);
@@ -39,6 +40,7 @@ public class Cliente extends RecursiveTreeObject <Cliente> {
         this.ciudad = new SimpleStringProperty(ciudad);
         this.sexo = new SimpleStringProperty(sexo);
         this.isHabilitado = new SimpleBooleanProperty(isHabilitado);
+        this.tipo_asentamiento = new SimpleStringProperty(tipo_asentamiento);
     }
 
     public int getId() {
@@ -231,5 +233,17 @@ public class Cliente extends RecursiveTreeObject <Cliente> {
 
     public void setIsHabilitado(boolean isHabilitado) {
         this.isHabilitado.set(isHabilitado);
+    }
+
+    public String getTipo_asentamiento() {
+        return tipo_asentamiento.get();
+    }
+
+    public StringProperty tipo_asentamientoProperty() {
+        return tipo_asentamiento;
+    }
+
+    public void setTipo_asentamiento(String tipo_asentamiento) {
+        this.tipo_asentamiento.set(tipo_asentamiento);
     }
 }
