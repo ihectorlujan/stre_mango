@@ -12,16 +12,15 @@ import java.sql.Statement;
 public class Producto extends RecursiveTreeObject<Producto> {
     private StringProperty cod_barra,nombre,observaciones;
     private FloatProperty precio_compra,precio_venta;
-    private IntegerProperty existencia,cantidad_defectuoso;
+    private IntegerProperty existencia;
 
-    public Producto(String cod_barra, String nombre, String observaciones, float precio_compra, float precio_venta, int existencia, int cantidad_defectuoso) {
+    public Producto(String cod_barra, String nombre, String observaciones, float precio_compra, float precio_venta, int existencia) {
         this.cod_barra = new SimpleStringProperty(cod_barra);
         this.nombre = new SimpleStringProperty(nombre);
         this.observaciones = new SimpleStringProperty(observaciones);
         this.precio_compra = new SimpleFloatProperty(precio_compra);
         this.precio_venta = new SimpleFloatProperty(precio_venta);
         this.existencia = new SimpleIntegerProperty(existencia);
-        this.cantidad_defectuoso = new SimpleIntegerProperty(cantidad_defectuoso);
     }
 
     public String getCod_barra() {
@@ -96,18 +95,6 @@ public class Producto extends RecursiveTreeObject<Producto> {
         this.existencia.set(existencia);
     }
 
-    public int getCantidad_defectuoso() {
-        return cantidad_defectuoso.get();
-    }
-
-    public IntegerProperty cantidad_defectuosoProperty() {
-        return cantidad_defectuoso;
-    }
-
-    public void setCantidad_defectuoso(int cantidad_defectuoso) {
-        this.cantidad_defectuoso.set(cantidad_defectuoso);
-    }
-
     public static void llenarProductos(Connection connection, ObservableList<Producto> productos) {
         try {
             Statement statement = connection.createStatement();
@@ -118,9 +105,8 @@ public class Producto extends RecursiveTreeObject<Producto> {
                         resultSet.getString(7),
                         resultSet.getFloat(3),
                         resultSet.getFloat(4),
-                        resultSet.getInt(5),
-                        resultSet.getInt(6))
-                );
+                        resultSet.getInt(5)
+                ));
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -11,24 +11,28 @@ import java.util.Objects;
 public class Empleado extends RecursiveTreeObject<Empleado> {
     private IntegerProperty id;
     private StringProperty nombre;
-    private StringProperty apellido;
+    private StringProperty apellidoPaterno;
+    private StringProperty apellidoMaterno;
     private IntegerProperty edad;
+    private StringProperty sexo;
     private StringProperty telefono;
     private StringProperty correo;
-    private StringProperty sexo;
     private StringProperty nombreCalle;
     private StringProperty nCasa;
     private StringProperty codigoPostal;
-    private StringProperty asentamiento;
-    private StringProperty municipio;
     private StringProperty estado;
     private StringProperty ciudad;
+    private StringProperty municipio;
+    private StringProperty asentamiento;
+    private StringProperty tipoAsentamiento;
     private BooleanProperty isHabilitado;
 
-    public Empleado(String nombre, String apellido, Integer edad, String telefono, String correo,String sexo, String nombreCalle, String nCasa, String codigoPostal, String asentamiento, String municipio, String estado, String ciudad, boolean isHabilitado, int id) {
+    public Empleado(int id, String nombre, String apellidoPaterno, String apellidoMaterno, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa, String codigoPostal, String estado, String ciudad, String municipio, String asentamiento, String tipoAsentamiento, boolean isHabilitado) {
         this.nombre = new SimpleStringProperty(nombre);
-        this.apellido = new SimpleStringProperty(apellido);
         this.edad = new SimpleIntegerProperty(edad);
+        this.apellidoMaterno = new SimpleStringProperty(apellidoMaterno);
+        this.apellidoPaterno = new SimpleStringProperty(apellidoPaterno);
+        this.tipoAsentamiento = new SimpleStringProperty(tipoAsentamiento);
         this.telefono = new SimpleStringProperty(telefono);
         this.correo = new SimpleStringProperty(correo);
         this.nombreCalle = new SimpleStringProperty(nombreCalle);
@@ -57,18 +61,6 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
 
     public void setNombre(String nombre) {
         this.nombre.set(nombre);
-    }
-
-    public String getApellido() {
-        return apellido.get();
-    }
-
-    public StringProperty apellidoProperty() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido.set(apellido);
     }
 
     public int getEdad() {
@@ -231,6 +223,42 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         this.isHabilitado.set(isHabilitado);
     }
 
+    public String getApellidoPaterno() {
+        return apellidoPaterno.get();
+    }
+
+    public StringProperty apellidoPaternoProperty() {
+        return apellidoPaterno;
+    }
+
+    public void setApellidoPaterno(String apellidoPaterno) {
+        this.apellidoPaterno.set(apellidoPaterno);
+    }
+
+    public String getApellidoMaterno() {
+        return apellidoMaterno.get();
+    }
+
+    public StringProperty apellidoMaternoProperty() {
+        return apellidoMaterno;
+    }
+
+    public void setApellidoMaterno(String apellidoMaterno) {
+        this.apellidoMaterno.set(apellidoMaterno);
+    }
+
+    public String getTipoAsentamiento() {
+        return tipoAsentamiento.get();
+    }
+
+    public StringProperty tipoAsentamientoProperty() {
+        return tipoAsentamiento;
+    }
+
+    public void setTipoAsentamiento(String tipoAsentamiento) {
+        this.tipoAsentamiento.set(tipoAsentamiento);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -242,32 +270,32 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
     public static ObservableList<Empleado> llenarEmpleados(Connection connection) {
         try {
             ObservableList<Empleado> list = FXCollections.observableArrayList();
-            ObservableList<Empleado> list1 = FXCollections.observableArrayList();
 
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM getempleados()");
 
             while(resultSet.next())
-                list.add(new Empleado(resultSet.getString(1),
-                        resultSet.getString(2),
-                        resultSet.getInt(3),
-                        resultSet.getString(4),
-                        resultSet.getString(5),
-                        resultSet.getString(6),
-                        resultSet.getString(7),
-                        resultSet.getString(8),
-                        resultSet.getString(9),
-                        resultSet.getString(10),
-                        resultSet.getString(11),
-                        resultSet.getString(12),
-                        resultSet.getString(13),
-                        resultSet.getBoolean(14),
-                        resultSet.getInt(15)
+                list.add(new Empleado(
+                        resultSet.getInt("id"),
+                        resultSet.getString("nombre"),
+                        resultSet.getString("apellido_paterno"),
+                        resultSet.getString("apellido_materno"),
+                        resultSet.getInt("edad"),
+                        resultSet.getString("sexo"),
+                        resultSet.getString("telefono"),
+                        resultSet.getString("correo"),
+                        resultSet.getString("nom_calle"),
+                        resultSet.getString("num_casa"),
+                        resultSet.getString("codigo"),
+                        resultSet.getString("c_estado"),
+                        resultSet.getString("ciudad"),
+                        resultSet.getString("municipio"),
+                        resultSet.getString("asentamiento"),
+                        resultSet.getString("tipo_asentamiento"),
+                        resultSet.getBoolean("estado")
                 ));
 
-            list1.addAll(list.filtered(x -> x.isHabilitado.get()));
-
-            return list1;
+            return list;
         }catch (SQLException a){
             a.printStackTrace();
             return null;

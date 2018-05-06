@@ -25,6 +25,7 @@ import javafx.scene.text.TextAlignment;
 import java.util.Comparator;
 
 public class OpcionCompra extends VBox{
+
     private Conexion connection = new Conexion();
 
     public OpcionCompra() {
@@ -125,29 +126,29 @@ public class OpcionCompra extends VBox{
     }
 
     private HBox opciones() {
-        HBox box = new HBox();
-        HBox textBox = new HBox();
-        JFXButton btnAddCompra = new JFXButton();
-        JFXButton btnHistorial = new JFXButton();
-        Text icoCompra = GlyphsDude.createIcon(FontAwesomeIcon.PLUS);
-        Text icoHistorial = GlyphsDude.createIcon(FontAwesomeIcon.HISTORY);
-        Text text = new Text("Opciones");
+        var box = new HBox();
+        var textBox = new HBox();
+        var btnAddCompra = new JFXButton();
+        var btnHistorial = new JFXButton();
+        var icoCompra = GlyphsDude.createIcon(FontAwesomeIcon.PLUS);
+        var icoHistorial = GlyphsDude.createIcon(FontAwesomeIcon.HISTORY);
+        var text = new Text("Opciones");
 
         //Buttons
         btnAddCompra.setGraphic(icoCompra);
         btnHistorial.setGraphic(icoHistorial);
         btnAddCompra.setRipplerFill(Color.web("#90708c"));
         btnHistorial.setRipplerFill(Color.web("#90708c"));
-        icoCompra.getStyleClass().add("ico");
-        icoHistorial.getStyleClass().add("ico");
 
         //Styles
         btnAddCompra.getStyleClass().add("button-raised");
         btnHistorial.getStyleClass().add("button-raised");
         text.getStyleClass().add("text");
         box.getStyleClass().add("white");
+        icoCompra.getStyleClass().add("ico");
+        icoHistorial.getStyleClass().add("ico");
 
-        //Acciones
+        //Eventos
         btnAddCompra.setOnAction(e -> new AgregarCompra());
 
         btnHistorial.setOnAction(e -> new HistorialCompras());
@@ -164,20 +165,22 @@ public class OpcionCompra extends VBox{
         textBox.setAlignment(Pos.CENTER_LEFT);
         box.getChildren().addAll(textBox,btnAddCompra, btnHistorial);
         box.setAlignment(Pos.CENTER_RIGHT);
+
         return box;
     }
 
     private HBox ultimasCompras() {
-        HBox box = new HBox();
-        Text text = new Text("Ultimas 8 compras");
+        var box = new HBox();
+        var text = new Text("Ultimas 8 compras");
 
-        //
-        HBox.setHgrow(text, Priority.ALWAYS);
+        //Estilos
         text.getStyleClass().add("text");
+        box.getStyleClass().add("white");
+
+        HBox.setHgrow(text, Priority.ALWAYS);
         HBox.setMargin(text, new Insets(0,0,0,10));
 
         box.getChildren().add(text);
-        box.getStyleClass().add("white");
 
         return box;
     }

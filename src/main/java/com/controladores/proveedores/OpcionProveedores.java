@@ -112,7 +112,7 @@ public class OpcionProveedores extends VBox {
         provTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         TableColumn<Proveedor,String> colNombre=new TableColumn<>("Razón social");
-        colNombre.setCellValueFactory(c -> c.getValue().razonProperty());
+        colNombre.setCellValueFactory(c -> c.getValue().razonSocialProperty());
 
         TableColumn<Proveedor,String> colId=new TableColumn<>("ID");
         colId.setCellValueFactory(c -> c.getValue().idProperty());
@@ -120,7 +120,7 @@ public class OpcionProveedores extends VBox {
         colId.setMinWidth(60);
 
         TableColumn<Proveedor,String> colEmail=new TableColumn<>("Email");
-        colEmail.setCellValueFactory(c -> c.getValue().emailProperty());
+        colEmail.setCellValueFactory(c -> c.getValue().correoProperty());
 
         TableColumn<Proveedor,String> colTel=new TableColumn<>("Teléfono");
         colTel.setCellValueFactory(c -> c.getValue().phoneProperty());
@@ -142,7 +142,7 @@ public class OpcionProveedores extends VBox {
             filteredList.setPredicate(proveedor->{
                 if(text==null||text.isEmpty())
                     return true;
-                String name=proveedor.getRazon().toLowerCase();
+                String name=proveedor.getRazonSocial().toLowerCase();
                 return name.contains(text.toLowerCase());
             } );
         });
@@ -186,16 +186,16 @@ public class OpcionProveedores extends VBox {
         for(String i:nombres){proveedores.add(new Proveedor(i,"P2231M","Empresa.SA de CV.","exaple@outloock.com",3));}
         */
 
-        proveedores.add(new Proveedor("Alejandra´s Shop","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
-        proveedores.add(new Proveedor("Peke´s.INC","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
-        proveedores.add(new Proveedor("GaiSenseiParts","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
-        proveedores.add(new Proveedor("Cejotas Machines","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
-        proveedores.add(new Proveedor("Motto Surtidoras","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
-        proveedores.add(new Proveedor("Mauricia´s shape","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
-        proveedores.add(new Proveedor("Filemona parts","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
-        proveedores.add(new Proveedor("Ospeck Bauer´s","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
-        proveedores.add(new Proveedor("Morgan Filtrer","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
-        proveedores.add(new Proveedor("Zoila-Zerda","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
+//        proveedores.add(new Proveedor("Alejandra´s Shop","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
+//        proveedores.add(new Proveedor("Peke´s.INC","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
+//        proveedores.add(new Proveedor("GaiSenseiParts","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
+//        proveedores.add(new Proveedor("Cejotas Machines","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
+//        proveedores.add(new Proveedor("Motto Surtidoras","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
+//        proveedores.add(new Proveedor("Mauricia´s shape","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
+//        proveedores.add(new Proveedor("Filemona parts","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
+//        proveedores.add(new Proveedor("Ospeck Bauer´s","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
+//        proveedores.add(new Proveedor("Morgan Filtrer","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
+//        proveedores.add(new Proveedor("Zoila-Zerda","P2231M","Empresa.SA de CV.","exaple@outloock.com","9518646527"));
 
         return FXCollections.observableArrayList(proveedores);
     }
