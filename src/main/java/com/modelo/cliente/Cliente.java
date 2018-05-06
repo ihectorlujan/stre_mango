@@ -2,6 +2,13 @@ package com.modelo.cliente;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Cliente extends RecursiveTreeObject <Cliente> {
     private IntegerProperty id;
@@ -32,7 +39,7 @@ public class Cliente extends RecursiveTreeObject <Cliente> {
         this.telefono = new SimpleStringProperty(telefono);
         this.correo = new SimpleStringProperty(correo);
         this.nCalle = new SimpleStringProperty(nCalle);
-        this.nCalle = new SimpleStringProperty(nCasa);
+        this.nCasa = new SimpleStringProperty(nCasa);
         this.codigoPostal = new SimpleStringProperty(codigoPostal);
         this.asentamiento = new SimpleStringProperty(asentamiento);
         this.municipio = new SimpleStringProperty(municipio);
@@ -245,5 +252,39 @@ public class Cliente extends RecursiveTreeObject <Cliente> {
 
     public void setTipo_asentamiento(String tipo_asentamiento) {
         this.tipo_asentamiento.set(tipo_asentamiento);
+    }
+
+    public static ObservableList<Cliente> llenarClientes(Connection connection){
+        try{
+            ObservableList<Cliente> lista = FXCollections.observableArrayList();
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("select * from get_clientes()");
+            while (resultSet.next()){
+                lista.add(new Cliente(
+                        resultSet.getInt("id"),
+                        resultSet.getString("nombre"),
+                        resultSet.getString("apellido_paterno"),
+                        resultSet.getString("apellido_materno"),
+                        resultSet.getInt("edad"),
+                        resultSet.getString("sexo"),
+                        resultSet.getString("telefono"),
+                        resultSet.getString("correo"),
+                        resultSet.getString("nom_calle"),
+                        resultSet.getString("num_casa"),
+                        resultSet.getString("d_codigo"),
+                        resultSet.getString("d_estado"),
+                        resultSet.getString("d_ciudad"),
+                        resultSet.getString("d_mnpio"),
+                        resultSet.getString("d_asenta"),
+                        resultSet.getBoolean("estado"),
+                        resultSet.getString("d_tipo_asenta")
+                ));
+            }
+            return lista;
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

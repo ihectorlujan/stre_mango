@@ -23,6 +23,10 @@
     -fx-font-weight: bold;
 }
 
+.ico {
+    -fx-fill: white;
+}
+
 .tree-table-view:focused .tree-table-row-cell:selected .tree-table-cell {
     -fx-text-fill: white;
     -fx-font-family: Quicksand;
@@ -46,4 +50,13 @@
     -fx-alignment: center;
     -fx-border-color: white !important;
     -fx-border-width: 0 !important;
+}
+
+.jfx-button {
+    -fx-background-color: #43617c;
+    -fx-text-fill: white;
+    -fx-font-family: Quicksand;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -jfx-button-type: RAISED;
 }
