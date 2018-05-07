@@ -60,7 +60,7 @@ public class CodigoPostal {
 
     @Override
     public String toString() {
-        return codigo.get() + " " + municipio.get() + "  " + asentamiento.get();
+        return codigo.get() + " " + asentamiento.get();
     }
 
     public static  void getCodigosPostales(Connection connection, ObservableList<CodigoPostal> list) {

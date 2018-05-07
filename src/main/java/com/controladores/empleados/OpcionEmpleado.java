@@ -46,6 +46,8 @@ public class OpcionEmpleado extends VBox {
     JFXRadioButton rbMujer = new JFXRadioButton("Mujer");
     JFXPopup popupCodigoPostal;
     JFXPopup popupEstaSeguro;
+    static ObservableList<Empleado> listEmpleados;
+    private Empleado empleado = null;
 
     public OpcionEmpleado() {
         var bottomInsets = new Insets(0,0,10,0);
@@ -85,7 +87,6 @@ public class OpcionEmpleado extends VBox {
         var icoDelete = GlyphsDude.createIcon(FontAwesomeIcon.TRASH_ALT,"14px");
         var icoInfo = GlyphsDude.createIcon(FontAwesomeIcon.INFO,"14px");
         var txtFiltro = new TextField();
-        ObservableList<Empleado> listEmpleados;
 
         //Llenar cmb de datos
         txtCodPostal.setEditable(false);
@@ -230,8 +231,11 @@ public class OpcionEmpleado extends VBox {
             initPopUpEliminar(listEmpleados, table);
             popupEstaSeguro.show(btnEliminar, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.RIGHT);
         });
-        btnEditar.setOnAction(this::noFunciona);
+
+        btnEditar.setOnAction(x -> editEmpleado(empleado));
+
         btnAnadir.setOnAction(this::addEmpleado);
+
         btnMas.setOnAction(x -> {
             initPopUpCodigoPostal();
             popupCodigoPostal.show(btnMas, JFXPopup.PopupVPosition.BOTTOM, JFXPopup.PopupHPosition.RIGHT);
@@ -423,6 +427,7 @@ public class OpcionEmpleado extends VBox {
     private void establecerCampos(JFXTreeTableView<Empleado> tableView) {
         tableView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             if(newValue != null) {
+                empleado = newValue.getValue();
                 lblIdN.setText(newValue.getValue().getId()+"");
                 txtNombre.setText(newValue.getValue().getNombre());
                 txtApellidoPaterno.setText(newValue.getValue().getApellidoPaterno());
@@ -465,6 +470,10 @@ public class OpcionEmpleado extends VBox {
     private void setStyleIcons(Text... text) {
         for(Text t: text)
             t.getStyleClass().add("ico");
+    }
+
+    private void editEmpleado(Empleado x) {
+        new AgregarEmpleado(x);
     }
 
     private void addEmpleado(ActionEvent e) {
