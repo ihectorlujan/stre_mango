@@ -4,6 +4,9 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Duration;
+import tray.notification.NotificationType;
+import tray.notification.TrayNotification;
 
 import java.sql.*;
 import java.util.Objects;
@@ -45,6 +48,31 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         this.sexo = new SimpleStringProperty(sexo);
         this.isHabilitado = new SimpleBooleanProperty(isHabilitado);
         this.id = new SimpleIntegerProperty(id);
+    }
+
+    public Empleado(String nombre, String apellidoPaterno, String apellidoMaterno, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa) {
+        this.nombre = new SimpleStringProperty(nombre);
+        this.edad = new SimpleIntegerProperty(edad);
+        this.apellidoMaterno = new SimpleStringProperty(apellidoMaterno);
+        this.apellidoPaterno = new SimpleStringProperty(apellidoPaterno);
+        this.telefono = new SimpleStringProperty(telefono);
+        this.correo = new SimpleStringProperty(correo);
+        this.nombreCalle = new SimpleStringProperty(nombreCalle);
+        this.nCasa = new SimpleStringProperty(nCasa);
+        this.sexo = new SimpleStringProperty(sexo);
+    }
+
+    public Empleado(int id, String nombre, String apellidoPaterno, String apellidoMaterno, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa) {
+        this.id = new SimpleIntegerProperty(id);
+        this.nombre = new SimpleStringProperty(nombre);
+        this.edad = new SimpleIntegerProperty(edad);
+        this.apellidoMaterno = new SimpleStringProperty(apellidoMaterno);
+        this.apellidoPaterno = new SimpleStringProperty(apellidoPaterno);
+        this.telefono = new SimpleStringProperty(telefono);
+        this.correo = new SimpleStringProperty(correo);
+        this.nombreCalle = new SimpleStringProperty(nombreCalle);
+        this.nCasa = new SimpleStringProperty(nCasa);
+        this.sexo = new SimpleStringProperty(sexo);
     }
 
     public Empleado(int id){
@@ -267,6 +295,43 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         return Objects.equals(id, empleado.id);
     }
 
+    public static Empleado getLastEmpleado(Connection connection) {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM getempleados() limit 1");
+
+            Empleado x = null;
+
+            if (resultSet.next()) {
+                x = new Empleado(
+                        resultSet.getInt("id"),
+                        resultSet.getString("nombre"),
+                        resultSet.getString("apellido_paterno"),
+                        resultSet.getString("apellido_materno"),
+                        resultSet.getInt("edad"),
+                        resultSet.getString("sexo"),
+                        resultSet.getString("telefono"),
+                        resultSet.getString("correo"),
+                        resultSet.getString("nom_calle"),
+                        resultSet.getString("num_casa"),
+                        resultSet.getString("codigo"),
+                        resultSet.getString("c_estado"),
+                        resultSet.getString("ciudad"),
+                        resultSet.getString("municipio"),
+                        resultSet.getString("asentamiento"),
+                        resultSet.getString("tipo_asentamiento"),
+                        resultSet.getBoolean("estado")
+                );
+            }
+
+            return x;
+
+        } catch (SQLException a) {
+            a.printStackTrace();
+        }
+        return null;
+    }
+
     public static ObservableList<Empleado> llenarEmpleados(Connection connection) {
         try {
             ObservableList<Empleado> list = FXCollections.observableArrayList();
@@ -313,5 +378,96 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    public static int addEmpleado(Connection connection, Empleado empleado, String cp, String asenta) {
+        try {
+            var queryCodigoPostal = "SELECT id FROM codigo_postal WHERE d_codigo = '" + cp + "' and d_asenta = '" + asenta +"'";
+            var insertQuery = "INSERT INTO empleado (nombre, apellido_paterno, apellido_materno, edad, telefono, correo, sexo, nom_calle, num_casa, estado, id_codigo_postal)\n" +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            var idCodiPostal = 0;
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(queryCodigoPostal);
+
+            if (resultSet.next())
+                idCodiPostal = resultSet.getInt(1);
+            else {
+                TrayNotification trayNotification = new TrayNotification();
+                trayNotification.setTitle("Codigo postal incorrecto");
+                trayNotification.setMessage("Verifique el formato del codigo postal");
+                trayNotification.setNotificationType(NotificationType.ERROR);
+                trayNotification.showAndDismiss(Duration.millis(3000));
+            }
+
+            if (idCodiPostal != 0) {
+                PreparedStatement statementP = connection.prepareStatement(insertQuery);
+                statementP.setString(1, empleado.getNombre());
+                statementP.setString(2, empleado.getApellidoPaterno());
+                statementP.setString(3, empleado.getApellidoMaterno());
+                statementP.setInt(4, empleado.getEdad());
+                statementP.setString(5, empleado.getTelefono());
+                statementP.setString(6, empleado.getCorreo());
+                statementP.setString(7,empleado.getSexo());
+                statementP.setString(8,empleado.getNombreCalle());
+                statementP.setString(9, empleado.getnCasa());
+                statementP.setBoolean(10,true);
+                statementP.setInt(11, idCodiPostal);
+                return  statementP.executeUpdate();
+            }
+
+            return 0;
+        } catch (SQLException ignored) {ignored.printStackTrace();}
+
+        return 0;
+    }
+
+    public static int updateEmpleado(Connection connection, Empleado empleado, String cp, String asenta) {
+        var queryCodigoPostal = "SELECT id FROM codigo_postal WHERE d_codigo = '" + cp + "' and d_asenta = '" + asenta +"'";
+        var query = "UPDATE empleado\n" +
+                " SET nombre=?, apellido_paterno=?, apellido_materno=?,edad=?, telefono=?, correo=?, sexo=?, nom_calle=?, num_casa=?, estado=?, id_codigo_postal=?\n" +
+                " WHERE id = ?";
+
+        var idCodiPostal = 0;
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(queryCodigoPostal);
+
+
+            if (resultSet.next())
+                idCodiPostal = resultSet.getInt(1);
+            else {
+                TrayNotification trayNotification = new TrayNotification();
+                trayNotification.setTitle("Codigo postal incorrecto");
+                trayNotification.setMessage("Verifique el formato del codigo postal");
+                trayNotification.setNotificationType(NotificationType.ERROR);
+                trayNotification.showAndDismiss(Duration.millis(3000));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            PreparedStatement statementP = connection.prepareStatement(query);
+            statementP.setString(1, empleado.getNombre());
+            statementP.setString(2, empleado.getApellidoPaterno());
+            statementP.setString(3, empleado.getApellidoMaterno());
+            statementP.setInt(4, empleado.getEdad());
+            statementP.setString(5, empleado.getTelefono());
+            statementP.setString(6, empleado.getCorreo());
+            statementP.setString(7, empleado.getSexo());
+            statementP.setString(8, empleado.getNombreCalle());
+            statementP.setString(9, empleado.getnCasa());
+            statementP.setBoolean(10, true);
+            statementP.setInt(11, idCodiPostal);
+            statementP.setInt(12, empleado.getId());
+            return statementP.executeUpdate();
+
+        } catch (SQLException e) {
+
+        }
+        return 0;
     }
 }

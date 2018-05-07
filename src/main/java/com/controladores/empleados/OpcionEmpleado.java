@@ -44,9 +44,10 @@ public class OpcionEmpleado extends VBox {
     Label lblMunicipio = new Label("Municipio:");
     JFXRadioButton rbHombre = new JFXRadioButton("Hombre");
     JFXRadioButton rbMujer = new JFXRadioButton("Mujer");
-    JFXComboBox<Integer> cmbEdad = new JFXComboBox<>();
     JFXPopup popupCodigoPostal;
     JFXPopup popupEstaSeguro;
+    static ObservableList<Empleado> listEmpleados;
+    private Empleado empleado = null;
 
     public OpcionEmpleado() {
         var bottomInsets = new Insets(0,0,10,0);
@@ -86,11 +87,8 @@ public class OpcionEmpleado extends VBox {
         var icoDelete = GlyphsDude.createIcon(FontAwesomeIcon.TRASH_ALT,"14px");
         var icoInfo = GlyphsDude.createIcon(FontAwesomeIcon.INFO,"14px");
         var txtFiltro = new TextField();
-        ObservableList<Empleado> listEmpleados;
 
         //Llenar cmb de datos
-        llenarCmb(cmbEdad);
-        cmbEdad.setEditable(false);
         txtCodPostal.setEditable(false);
 
         //hBox Search
@@ -115,7 +113,8 @@ public class OpcionEmpleado extends VBox {
         txtNombreCalle.setPrefWidth(250);
         txtNoCasa.setPrefWidth(60);
         txtCodPostal.setPrefWidth(60);
-        txtEdad.setPadding(new Insets(8,0,0,0));
+        txtEdad.setPrefWidth(40);
+        txtEdad.setEditable(false);
 
         //HBox domicilio
         hBoxDomicilio.getChildren().add(lblDatosDomiciliaros);
@@ -130,7 +129,7 @@ public class OpcionEmpleado extends VBox {
 
         //Hbox Sexo
         hBoxSexo.getChildren().addAll(lblSexo,rbHombre, rbMujer);
-        hBoxSexo.setPadding(new Insets(8,0,0,0));
+        hBoxSexo.setPadding(new Insets(5,0,0,0));
         HBox.setMargin(rbHombre, new Insets(0,10,0,10));
 
         //Hbox Codigo postal
@@ -158,7 +157,8 @@ public class OpcionEmpleado extends VBox {
         HBox.setMargin(lblID, new Insets(0,10,0,0));
 
         //HBox edad
-        hBoxEdad.getChildren().addAll(lblEdad, cmbEdad);
+        hBoxEdad.getChildren().addAll(lblEdad, txtEdad);
+        hBoxEdad.setAlignment(Pos.BASELINE_LEFT);
         HBox.setMargin(lblEdad, new Insets(0,10,0,0));
 
         //GridPane Datos del empleado
@@ -231,8 +231,11 @@ public class OpcionEmpleado extends VBox {
             initPopUpEliminar(listEmpleados, table);
             popupEstaSeguro.show(btnEliminar, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.RIGHT);
         });
-        btnEditar.setOnAction(this::noFunciona);
+
+        btnEditar.setOnAction(x -> editEmpleado(empleado));
+
         btnAnadir.setOnAction(this::addEmpleado);
+
         btnMas.setOnAction(x -> {
             initPopUpCodigoPostal();
             popupCodigoPostal.show(btnMas, JFXPopup.PopupVPosition.BOTTOM, JFXPopup.PopupHPosition.RIGHT);
@@ -424,6 +427,7 @@ public class OpcionEmpleado extends VBox {
     private void establecerCampos(JFXTreeTableView<Empleado> tableView) {
         tableView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             if(newValue != null) {
+                empleado = newValue.getValue();
                 lblIdN.setText(newValue.getValue().getId()+"");
                 txtNombre.setText(newValue.getValue().getNombre());
                 txtApellidoPaterno.setText(newValue.getValue().getApellidoPaterno());
@@ -443,7 +447,7 @@ public class OpcionEmpleado extends VBox {
                 txtCiudad.setText(newValue.getValue().getCiudad());
                 txtMunicipio.setText(newValue.getValue().getMunicipio());
                 txtTipoAsentamiento.setText(newValue.getValue().getTipoAsentamiento());
-                cmbEdad.setValue(newValue.getValue().getEdad());
+                txtEdad.setText(newValue.getValue().getEdad()+"");
             }
         }));
     }
@@ -463,14 +467,13 @@ public class OpcionEmpleado extends VBox {
                 .forEach(x -> ((TextField) x).setEditable(false));
     }
 
-    private void llenarCmb(JFXComboBox<Integer> cmbEdad) {
-        for (int i = 14; i < 60; i++)
-            cmbEdad.getItems().add(i);
-    }
-
     private void setStyleIcons(Text... text) {
         for(Text t: text)
             t.getStyleClass().add("ico");
+    }
+
+    private void editEmpleado(Empleado x) {
+        new AgregarEmpleado(x);
     }
 
     private void addEmpleado(ActionEvent e) {
