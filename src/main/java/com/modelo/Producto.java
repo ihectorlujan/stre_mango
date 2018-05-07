@@ -4,10 +4,7 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Producto extends RecursiveTreeObject<Producto> {
     private StringProperty cod_barra,nombre,observaciones;
@@ -21,6 +18,10 @@ public class Producto extends RecursiveTreeObject<Producto> {
         this.precio_compra = new SimpleFloatProperty(precio_compra);
         this.precio_venta = new SimpleFloatProperty(precio_venta);
         this.existencia = new SimpleIntegerProperty(existencia);
+    }
+
+    public Producto(String cod_barra){
+        this.cod_barra = new SimpleStringProperty(cod_barra);
     }
 
     public String getCod_barra() {
@@ -102,7 +103,7 @@ public class Producto extends RecursiveTreeObject<Producto> {
             while (resultSet.next())
                 productos.add(new Producto(resultSet.getString(1),
                         resultSet.getString(2),
-                        resultSet.getString(7),
+                        resultSet.getString(6),
                         resultSet.getFloat(3),
                         resultSet.getFloat(4),
                         resultSet.getInt(5)
@@ -112,4 +113,59 @@ public class Producto extends RecursiveTreeObject<Producto> {
             e.printStackTrace();
         }
     }
+
+    public int eliminarProducto(Connection conexion){
+        String query = "delete from producto where cod_barra = ?";
+
+        try{
+            PreparedStatement statement = conexion.prepareStatement(query);
+            statement.setString(1,cod_barra.get());
+            return statement.executeUpdate();
+        }catch(SQLException e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int insertarProducto(Connection conexion){
+
+        String query = "insert into " +
+                "producto(cod_barra,nombre,precio_compra,precio_venta,existencia,observaciones)" +
+                " values(?,?,?,?,?,?)";
+        try {
+            PreparedStatement statement = conexion.prepareStatement(query);
+            statement.setString(1,cod_barra.get());
+            statement.setString(2,nombre.get());
+            statement.setFloat(3,precio_compra.get());
+            statement.setFloat(4,precio_venta.get());
+            statement.setInt(5,existencia.get());
+            statement.setString(6,observaciones.get());
+            return statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int editarProducto(Connection conexion){
+
+        String query = "update producto set nombre = ?, precio_compra = ?,precio_venta = ?," +
+                "existencia = ?,observaciones = ? where cod_barra = ?";
+        try {
+            PreparedStatement statement = conexion.prepareStatement(query);
+
+            statement.setString(1,nombre.get());
+            statement.setFloat(2,precio_compra.get());
+            statement.setFloat(3,precio_venta.get());
+            statement.setInt(4,existencia.get());
+            statement.setString(5,observaciones.get());
+            statement.setString(6,cod_barra.get());
+            return statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+
 }
