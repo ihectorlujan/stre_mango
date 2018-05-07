@@ -9,6 +9,9 @@ public class Conexion {
     private final String URL = "jdbc:postgresql://localhost/gary94746?currentSchema=p_refaccionaria";
     private final String USER = "postgres";
     private final String PASSWORD = "silver";
+    //private final String URL = "jdbc:postgresql://35.188.15.154/refaccionaria?currentSchema=p_refaccionaria";
+    //private final String USER = "chino_jr";
+    //private final String PASSWORD = "chinoOaxaca";
 
     public void establecerConexion() {
         try {
