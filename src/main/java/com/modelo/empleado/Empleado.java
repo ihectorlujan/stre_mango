@@ -1,21 +1,19 @@
 package com.modelo.empleado;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import com.validators.Messages;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.util.Duration;
 import tray.notification.NotificationType;
-import tray.notification.TrayNotification;
-
 import java.sql.*;
 import java.util.Objects;
 
 public class Empleado extends RecursiveTreeObject<Empleado> {
     private IntegerProperty id;
     private StringProperty nombre;
-    private StringProperty apellidoPaterno;
-    private StringProperty apellidoMaterno;
+    private StringProperty primerApellido;
+    private StringProperty segundoApellido;
     private IntegerProperty edad;
     private StringProperty sexo;
     private StringProperty telefono;
@@ -28,13 +26,12 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
     private StringProperty municipio;
     private StringProperty asentamiento;
     private StringProperty tipoAsentamiento;
-    private BooleanProperty isHabilitado;
 
-    public Empleado(int id, String nombre, String apellidoPaterno, String apellidoMaterno, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa, String codigoPostal, String estado, String ciudad, String municipio, String asentamiento, String tipoAsentamiento, boolean isHabilitado) {
+    public Empleado(int id, String nombre, String primerApellido, String apellidoMaterno, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa, String codigoPostal, String estado, String ciudad, String municipio, String asentamiento, String tipoAsentamiento) {
         this.nombre = new SimpleStringProperty(nombre);
         this.edad = new SimpleIntegerProperty(edad);
-        this.apellidoMaterno = new SimpleStringProperty(apellidoMaterno);
-        this.apellidoPaterno = new SimpleStringProperty(apellidoPaterno);
+        this.segundoApellido = new SimpleStringProperty(apellidoMaterno);
+        this.primerApellido = new SimpleStringProperty(primerApellido);
         this.tipoAsentamiento = new SimpleStringProperty(tipoAsentamiento);
         this.telefono = new SimpleStringProperty(telefono);
         this.correo = new SimpleStringProperty(correo);
@@ -46,15 +43,15 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         this.estado = new SimpleStringProperty(estado);
         this.ciudad = new SimpleStringProperty(ciudad);
         this.sexo = new SimpleStringProperty(sexo);
-        this.isHabilitado = new SimpleBooleanProperty(isHabilitado);
         this.id = new SimpleIntegerProperty(id);
     }
 
-    public Empleado(String nombre, String apellidoPaterno, String apellidoMaterno, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa) {
+    public Empleado(int id, String nombre, String primerApellido, String segundoApellido, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa) {
+        this.id = new SimpleIntegerProperty(id);
         this.nombre = new SimpleStringProperty(nombre);
         this.edad = new SimpleIntegerProperty(edad);
-        this.apellidoMaterno = new SimpleStringProperty(apellidoMaterno);
-        this.apellidoPaterno = new SimpleStringProperty(apellidoPaterno);
+        this.primerApellido = new SimpleStringProperty(primerApellido);
+        this.segundoApellido = new SimpleStringProperty(segundoApellido);
         this.telefono = new SimpleStringProperty(telefono);
         this.correo = new SimpleStringProperty(correo);
         this.nombreCalle = new SimpleStringProperty(nombreCalle);
@@ -62,12 +59,11 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         this.sexo = new SimpleStringProperty(sexo);
     }
 
-    public Empleado(int id, String nombre, String apellidoPaterno, String apellidoMaterno, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa) {
-        this.id = new SimpleIntegerProperty(id);
+    public Empleado(String nombre, String primerApellido, String apellidoMaterno, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa) {
         this.nombre = new SimpleStringProperty(nombre);
         this.edad = new SimpleIntegerProperty(edad);
-        this.apellidoMaterno = new SimpleStringProperty(apellidoMaterno);
-        this.apellidoPaterno = new SimpleStringProperty(apellidoPaterno);
+        this.segundoApellido = new SimpleStringProperty(apellidoMaterno);
+        this.primerApellido = new SimpleStringProperty(primerApellido);
         this.telefono = new SimpleStringProperty(telefono);
         this.correo = new SimpleStringProperty(correo);
         this.nombreCalle = new SimpleStringProperty(nombreCalle);
@@ -175,10 +171,6 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         this.nCasa.set(nCasa);
     }
 
-    public boolean isIsHabilitado() {
-        return isHabilitado.get();
-    }
-
     public String getCodigoPostal() {
         return codigoPostal.get();
     }
@@ -239,40 +231,28 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         this.ciudad.set(ciudad);
     }
 
-    public boolean getIsHabilitado() {
-        return isHabilitado.get();
+    public String getPrimerApellido() {
+        return primerApellido.get();
     }
 
-    public BooleanProperty isHabilitadoProperty() {
-        return isHabilitado;
+    public StringProperty primerApellidoProperty() {
+        return primerApellido;
     }
 
-    public void setIsHabilitado(boolean isHabilitado) {
-        this.isHabilitado.set(isHabilitado);
+    public void setPrimerApellido(String primerApellido) {
+        this.primerApellido.set(primerApellido);
     }
 
-    public String getApellidoPaterno() {
-        return apellidoPaterno.get();
+    public String getSegundoApellido() {
+        return segundoApellido.get();
     }
 
-    public StringProperty apellidoPaternoProperty() {
-        return apellidoPaterno;
+    public StringProperty segundoApellidoProperty() {
+        return segundoApellido;
     }
 
-    public void setApellidoPaterno(String apellidoPaterno) {
-        this.apellidoPaterno.set(apellidoPaterno);
-    }
-
-    public String getApellidoMaterno() {
-        return apellidoMaterno.get();
-    }
-
-    public StringProperty apellidoMaternoProperty() {
-        return apellidoMaterno;
-    }
-
-    public void setApellidoMaterno(String apellidoMaterno) {
-        this.apellidoMaterno.set(apellidoMaterno);
+    public void setSegundoApellido(String segundoApellido) {
+        this.segundoApellido.set(segundoApellido);
     }
 
     public String getTipoAsentamiento() {
@@ -295,56 +275,19 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         return Objects.equals(id, empleado.id);
     }
 
-    public static Empleado getLastEmpleado(Connection connection) {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM getempleados() limit 1");
-
-            Empleado x = null;
-
-            if (resultSet.next()) {
-                x = new Empleado(
-                        resultSet.getInt("id"),
-                        resultSet.getString("nombre"),
-                        resultSet.getString("apellido_paterno"),
-                        resultSet.getString("apellido_materno"),
-                        resultSet.getInt("edad"),
-                        resultSet.getString("sexo"),
-                        resultSet.getString("telefono"),
-                        resultSet.getString("correo"),
-                        resultSet.getString("nom_calle"),
-                        resultSet.getString("num_casa"),
-                        resultSet.getString("codigo"),
-                        resultSet.getString("c_estado"),
-                        resultSet.getString("ciudad"),
-                        resultSet.getString("municipio"),
-                        resultSet.getString("asentamiento"),
-                        resultSet.getString("tipo_asentamiento"),
-                        resultSet.getBoolean("estado")
-                );
-            }
-
-            return x;
-
-        } catch (SQLException a) {
-            a.printStackTrace();
-        }
-        return null;
-    }
-
     public static ObservableList<Empleado> llenarEmpleados(Connection connection) {
         try {
             ObservableList<Empleado> list = FXCollections.observableArrayList();
 
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM getempleados()");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM get_empleados()");
 
             while(resultSet.next())
                 list.add(new Empleado(
                         resultSet.getInt("id"),
                         resultSet.getString("nombre"),
-                        resultSet.getString("apellido_paterno"),
-                        resultSet.getString("apellido_materno"),
+                        resultSet.getString("primer_apellido"),
+                        resultSet.getString("segundo_apellido"),
                         resultSet.getInt("edad"),
                         resultSet.getString("sexo"),
                         resultSet.getString("telefono"),
@@ -356,9 +299,9 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
                         resultSet.getString("ciudad"),
                         resultSet.getString("municipio"),
                         resultSet.getString("asentamiento"),
-                        resultSet.getString("tipo_asentamiento"),
-                        resultSet.getBoolean("estado")
-                ));
+                        resultSet.getString("tipo_asentamiento")
+                        )
+                );
 
             return list;
         }catch (SQLException a){
@@ -380,71 +323,81 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         }
     }
 
-    public static int addEmpleado(Connection connection, Empleado empleado, String cp, String asenta) {
+    public static Empleado addEmpleado(Connection connection, Empleado empleado, String cp, String asenta) {
         try {
             var queryCodigoPostal = "SELECT id FROM codigo_postal WHERE d_codigo = '" + cp + "' and d_asenta = '" + asenta +"'";
-            var insertQuery = "INSERT INTO empleado (nombre, apellido_paterno, apellido_materno, edad, telefono, correo, sexo, nom_calle, num_casa, estado, id_codigo_postal)\n" +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             var idCodiPostal = 0;
+            var message = new Messages();
 
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(queryCodigoPostal);
 
             if (resultSet.next())
                 idCodiPostal = resultSet.getInt(1);
-            else {
-                TrayNotification trayNotification = new TrayNotification();
-                trayNotification.setTitle("Codigo postal incorrecto");
-                trayNotification.setMessage("Verifique el formato del codigo postal");
-                trayNotification.setNotificationType(NotificationType.ERROR);
-                trayNotification.showAndDismiss(Duration.millis(3000));
-            }
+            else
+                message.setMessage("Codigo postal incorrecto","Verifique el formato del codigo postal",NotificationType.ERROR);
 
             if (idCodiPostal != 0) {
-                PreparedStatement statementP = connection.prepareStatement(insertQuery);
-                statementP.setString(1, empleado.getNombre());
-                statementP.setString(2, empleado.getApellidoPaterno());
-                statementP.setString(3, empleado.getApellidoMaterno());
-                statementP.setInt(4, empleado.getEdad());
-                statementP.setString(5, empleado.getTelefono());
-                statementP.setString(6, empleado.getCorreo());
-                statementP.setString(7,empleado.getSexo());
-                statementP.setString(8,empleado.getNombreCalle());
-                statementP.setString(9, empleado.getnCasa());
-                statementP.setBoolean(10,true);
-                statementP.setInt(11, idCodiPostal);
-                return  statementP.executeUpdate();
+                var employee_added = "SELECT * FROM get_employee_added('" +
+                        empleado.getNombre() +
+                        "','"+ empleado.getPrimerApellido() +"'" +
+                        ",'"+ empleado.getSegundoApellido() +"'" +
+                        ","+ empleado.getEdad() +"" +
+                        ",'"+ empleado.getTelefono() +"'" +
+                        ",'"+ empleado.getCorreo() +"'" +
+                        ",'"+ empleado.getSexo() +"'" +
+                        ",'"+ empleado.getNombreCalle() +"'" +
+                        ",'"+ empleado.getnCasa() +"'" +
+                        ",'true',"+ idCodiPostal +")";
+
+                var statementP = connection.createStatement();
+                var resultSet1 = statementP.executeQuery(employee_added);
+
+                if (resultSet1.next())
+                    return new Empleado(
+                            resultSet1.getInt("id"),
+                            resultSet1.getString("nombre"),
+                            resultSet1.getString("primer_apellido"),
+                            resultSet1.getString("segundo_apellido"),
+                            resultSet1.getInt("edad"),
+                            resultSet1.getString("sexo"),
+                            resultSet1.getString("telefono"),
+                            resultSet1.getString("correo"),
+                            resultSet1.getString("nom_calle"),
+                            resultSet1.getString("num_casa"),
+                            resultSet1.getString("codigo"),
+                            resultSet1.getString("c_estado"),
+                            resultSet1.getString("ciudad"),
+                            resultSet1.getString("municipio"),
+                            resultSet1.getString("asentamiento"),
+                            resultSet1.getString("tipo_asentamiento")
+                    );
             }
 
-            return 0;
+            return null;
         } catch (SQLException ignored) {ignored.printStackTrace();}
 
-        return 0;
+        return null;
     }
 
     public static int updateEmpleado(Connection connection, Empleado empleado, String cp, String asenta) {
         var queryCodigoPostal = "SELECT id FROM codigo_postal WHERE d_codigo = '" + cp + "' and d_asenta = '" + asenta +"'";
         var query = "UPDATE empleado\n" +
-                " SET nombre=?, apellido_paterno=?, apellido_materno=?,edad=?, telefono=?, correo=?, sexo=?, nom_calle=?, num_casa=?, estado=?, id_codigo_postal=?\n" +
+                " SET nombre=?, primer_apellido=?, segundo_apellido=?,edad=?, telefono=?, correo=?, sexo=?, nom_calle=?, num_casa=?, estado=?, id_codigo_postal=?\n" +
                 " WHERE id = ?";
+        var message = new Messages();
 
         var idCodiPostal = 0;
 
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(queryCodigoPostal);
-
-
             if (resultSet.next())
                 idCodiPostal = resultSet.getInt(1);
-            else {
-                TrayNotification trayNotification = new TrayNotification();
-                trayNotification.setTitle("Codigo postal incorrecto");
-                trayNotification.setMessage("Verifique el formato del codigo postal");
-                trayNotification.setNotificationType(NotificationType.ERROR);
-                trayNotification.showAndDismiss(Duration.millis(3000));
-            }
-        } catch (SQLException e) {
+            else
+                message.setMessage("Codigo postal incorrecto","Verifique el formato del codigo postal",NotificationType.ERROR);
+
+            } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -452,8 +405,8 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         try {
             PreparedStatement statementP = connection.prepareStatement(query);
             statementP.setString(1, empleado.getNombre());
-            statementP.setString(2, empleado.getApellidoPaterno());
-            statementP.setString(3, empleado.getApellidoMaterno());
+            statementP.setString(2, empleado.getPrimerApellido());
+            statementP.setString(3, empleado.getSegundoApellido());
             statementP.setInt(4, empleado.getEdad());
             statementP.setString(5, empleado.getTelefono());
             statementP.setString(6, empleado.getCorreo());
@@ -466,7 +419,7 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
             return statementP.executeUpdate();
 
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return 0;
     }

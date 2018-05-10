@@ -350,7 +350,7 @@ public class HistorialCompras extends Stage {
                 btnDetalles.setDisable(false);
 
                 initPopup(newValue.getValue());
-                btnDetalles.setOnAction(e -> popup.show(panelDatos));
+                btnDetalles.setOnAction(e -> popup.show(btnDetalles, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.RIGHT));
             }
 
         });

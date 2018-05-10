@@ -4,6 +4,7 @@ import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.modelo.Conexion;
 import com.modelo.empleado.Empleado;
+import com.validators.Messages;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.collections.ObservableList;
@@ -22,32 +23,35 @@ public class OpcionEmpleado extends VBox {
 
     Conexion connection = new Conexion();
 
-    TextField txtNombre = new TextField();
-    TextField txtApellidoPaterno = new TextField();
-    TextField txtApellidoMaterno = new TextField();
-    TextField txtEdad = new TextField();
-    TextField txtTelefono = new TextField();
-    TextField txtCorreo = new TextField();
-    TextField txtEstado = new TextField();
-    TextField txtNombreCalle = new TextField();
-    TextField txtNoCasa = new TextField();
-    TextField txtCodPostal = new TextField();
-    TextField txtAsentamiento = new TextField();
-    TextField txtTipoAsentamiento = new TextField();
-    TextField txtCiudad = new TextField();
-    TextField txtMunicipio = new TextField();
-    Label lblIdN = new Label("10");
-    Label lblEstado = new Label("Estado:");
-    Label lblTipoAsentamiento = new Label("Tipo: ");
-    Label lblAsentamiento = new Label("Asentamiento:");
-    Label lblCiudad = new Label("Ciudad:");
-    Label lblMunicipio = new Label("Municipio:");
-    JFXRadioButton rbHombre = new JFXRadioButton("Hombre");
-    JFXRadioButton rbMujer = new JFXRadioButton("Mujer");
-    JFXPopup popupCodigoPostal;
-    JFXPopup popupEstaSeguro;
-    static ObservableList<Empleado> listEmpleados;
+    private TextField txtNombre = new TextField();
+    private TextField txtApellidoPaterno = new TextField();
+    private TextField txtApellidoMaterno = new TextField();
+    private TextField txtEdad = new TextField();
+    private TextField txtTelefono = new TextField();
+    private TextField txtCorreo = new TextField();
+    private TextField txtEstado = new TextField();
+    private TextField txtNombreCalle = new TextField();
+    private TextField txtNoCasa = new TextField();
+    private TextField txtCodPostal = new TextField();
+    private TextField txtAsentamiento = new TextField();
+    private TextField txtTipoAsentamiento = new TextField();
+    private TextField txtCiudad = new TextField();
+    private TextField txtMunicipio = new TextField();
+    private Label lblIdN = new Label("10");
+    private Label lblEstado = new Label("Estado:");
+    private Label lblTipoAsentamiento = new Label("Tipo: ");
+    private Label lblAsentamiento = new Label("Asentamiento:");
+    private Label lblCiudad = new Label("Ciudad:");
+    private Label lblMunicipio = new Label("Municipio:");
+    private JFXRadioButton rbHombre = new JFXRadioButton("Hombre");
+    private JFXRadioButton rbMujer = new JFXRadioButton("Mujer");
+    private JFXPopup popupCodigoPostal;
+    private JFXPopup popupEstaSeguro;
+    private Messages messages = new Messages();
     private Empleado empleado = null;
+
+    static JFXTreeTableView table = null;
+    static ObservableList<Empleado> listEmpleados;
 
     public OpcionEmpleado() {
         var bottomInsets = new Insets(0,0,10,0);
@@ -222,7 +226,7 @@ public class OpcionEmpleado extends VBox {
         HBox.setHgrow(hBoxListaEmpleado, Priority.ALWAYS);
 
         //Table
-        var table = createTable(listEmpleados);
+        table = createTable(listEmpleados);
         buscarTbl(txtFiltro, table);
         establecerCampos(table);
 
@@ -402,25 +406,12 @@ public class OpcionEmpleado extends VBox {
             connection.cerrarConexion();
             if (resultado == 1) {
                 list.remove(tableView.getSelectionModel().getSelectedIndex());
-                TrayNotification trayNotification = new TrayNotification();
-                trayNotification.setTitle("Completado");
-                trayNotification.setMessage("Se elimino satisfactoriamente");
-                trayNotification.setNotificationType(NotificationType.SUCCESS);
-                trayNotification.showAndDismiss(Duration.millis(3000));
-            } else {
-                TrayNotification trayNotification = new TrayNotification();
-                trayNotification.setTitle("Algo salio mal...");
-                trayNotification.setMessage("Intentelo mas tarde");
-                trayNotification.setNotificationType(NotificationType.ERROR);
-                trayNotification.showAndDismiss(Duration.millis(3000));
+                messages.setMessage("Completado","Se elimino satisfactoriamente", NotificationType.SUCCESS);
+            } else
+                messages.setMessage("Algo salio mal...","Intentelo mas tarde", NotificationType.ERROR);
 
-            }
         }catch (NumberFormatException e) {
-            TrayNotification trayNotification = new TrayNotification();
-            trayNotification.setTitle("No selecciono registro");
-            trayNotification.setMessage("Seleccione el empleado a eliminar");
-            trayNotification.setNotificationType(NotificationType.ERROR);
-            trayNotification.showAndDismiss(Duration.millis(3000));
+            messages.setMessage("No selecciono registro", "Seleccione el registro a eliminar", NotificationType.ERROR);
         }
     }
 
@@ -430,8 +421,8 @@ public class OpcionEmpleado extends VBox {
                 empleado = newValue.getValue();
                 lblIdN.setText(newValue.getValue().getId()+"");
                 txtNombre.setText(newValue.getValue().getNombre());
-                txtApellidoPaterno.setText(newValue.getValue().getApellidoPaterno());
-                txtApellidoMaterno.setText(newValue.getValue().getApellidoMaterno());
+                txtApellidoPaterno.setText(newValue.getValue().getPrimerApellido());
+                txtApellidoMaterno.setText(newValue.getValue().getSegundoApellido());
                 txtEdad.setText(newValue.getValue().getEdad()+"");
                 if (newValue.getValue().getSexo().equals("hombre"))
                     rbHombre.setSelected(true);
