@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.TreeItem;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
@@ -55,7 +56,6 @@ public class AgregarEmpleado extends Stage {
     private TextField txtTelefono = new TextField();
     private TextField txtTelefono1 = new TextField();
     private TextField txtTelefono2 = new TextField();
-    private TextField txtTelefono3 = new TextField();
     private TextField txtCorreo = new TextField();
     private TextField txtCalle = new TextField();
     private TextField txtNoCasa = new TextField();
@@ -163,7 +163,7 @@ public class AgregarEmpleado extends Stage {
         txtTelefono.setText(telefono[0]);
         txtTelefono1.setText(telefono[1]);
         txtTelefono2.setText(telefono[2]);
-        txtCorreo.setText(empleado.getTelefono());
+        txtCorreo.setText(empleado.getCorreo());
         txtCalle.setText(empleado.getNombreCalle());
         txtNoCasa.setText(empleado.getnCasa());
         txtCodigoPostal.setText(empleado.getCodigoPostal() + " " + empleado.getAsentamiento());
@@ -185,7 +185,7 @@ public class AgregarEmpleado extends Stage {
         loadPostalCodes();
         verificaciones();
 
-        JFXButton btnAgregar = new JFXButton("Agregar");
+        JFXButton btnAgregar = new JFXButton("Aceptar");
 
         //Add styles
         btnAgregar.getStyleClass().add("btnRaisedBlue");
@@ -251,7 +251,6 @@ public class AgregarEmpleado extends Stage {
         txtTelefono.addEventFilter(KeyEvent.ANY, handler.onlyNumbers());
         txtTelefono1.addEventFilter(KeyEvent.ANY, handler.onlyNumbers());
         txtTelefono2.addEventFilter(KeyEvent.ANY, handler.onlyNumbers());
-        txtTelefono3.addEventFilter(KeyEvent.ANY, handler.onlyNumbers());
 
         txtTelefono.addEventHandler(KeyEvent.ANY, e -> {
             if(txtTelefono.getText().length() > 2) {
@@ -413,8 +412,10 @@ public class AgregarEmpleado extends Stage {
         var success  = Empleado.updateEmpleado(conexion.getConection(), x,cod[0], asenta);
         conexion.cerrarConexion();
 
-        if (success == 1) {
-            OpcionEmpleado.listEmpleados.set(OpcionEmpleado.table.getSelectionModel().getSelectedIndex(), x);
+        if (success != null) {
+            OpcionEmpleado.listEmpleados.removeIf(l -> l.getId() == success.getId());
+            OpcionEmpleado.listEmpleados.add(success);
+            OpcionEmpleado.table.getSelectionModel().getSelectedIndex();
             messages.setMessage("Empleado editado", "El empleado se edito satisfactoriamente", NotificationType.SUCCESS);
             this.close();
         }else

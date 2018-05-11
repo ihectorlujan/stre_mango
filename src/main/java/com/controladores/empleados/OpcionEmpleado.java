@@ -9,6 +9,7 @@ import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,6 +19,8 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import tray.notification.NotificationType;
 import tray.notification.TrayNotification;
+
+import javax.swing.event.HyperlinkEvent;
 
 public class OpcionEmpleado extends VBox {
 
@@ -304,7 +307,7 @@ public class OpcionEmpleado extends VBox {
         var btnAceptar = new JFXButton("Eliminar");
         var btnCancelar = new JFXButton("Cancelar");
 
-        btnAceptar.setOnAction(x -> deleteUser(list, tableView));
+        btnAceptar.setOnAction(x -> deleteUser(list));
         btnCancelar.setOnAction(x -> popupEstaSeguro.hide());
 
         gridPane.add(btnAceptar, 0,0);
@@ -398,14 +401,16 @@ public class OpcionEmpleado extends VBox {
         return tableView;
     }
 
-    private void deleteUser(ObservableList<Empleado> list, JFXTreeTableView tableView) {
+    private void deleteUser(ObservableList<Empleado> list) {
         try {
             var temporalityEmployeed = new Empleado(Integer.parseInt(lblIdN.getText()));
+
             connection.establecerConexion();
-            int resultado = temporalityEmployeed.eliminarEmpleado(connection.getConection());
+            var resultado = temporalityEmployeed.eliminarEmpleado(connection.getConection());
             connection.cerrarConexion();
-            if (resultado == 1) {
-                list.remove(tableView.getSelectionModel().getSelectedIndex());
+
+            if (resultado != null) {
+                list.removeIf(x -> x.getId() == resultado.getId());
                 messages.setMessage("Completado","Se elimino satisfactoriamente", NotificationType.SUCCESS);
             } else
                 messages.setMessage("Algo salio mal...","Intentelo mas tarde", NotificationType.ERROR);

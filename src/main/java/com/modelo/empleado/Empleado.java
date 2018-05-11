@@ -275,6 +275,14 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         return Objects.equals(id, empleado.id);
     }
 
+    @Override
+    public String toString() {
+        return "Empleado{" +
+                "id=" + id +
+                ", nombre=" + nombre +
+                '}';
+    }
+
     public static ObservableList<Empleado> llenarEmpleados(Connection connection) {
         try {
             ObservableList<Empleado> list = FXCollections.observableArrayList();
@@ -310,17 +318,23 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         }
     }
 
-    public int eliminarEmpleado(Connection connection) {
+    public Empleado eliminarEmpleado(Connection connection) {
+
         var query = "UPDATE empleado SET estado = ? WHERE id = ?";
+
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setBoolean(1, false);
             statement.setInt(2,id.get());
-            return statement.executeUpdate();
+
+            if (statement.executeUpdate() == 1)
+                return new Empleado(id.get());
+
         }catch (SQLException e) {
             e.printStackTrace();
-            return 0;
+            return null;
         }
+        return null;
     }
 
     public static Empleado addEmpleado(Connection connection, Empleado empleado, String cp, String asenta) {
@@ -380,13 +394,9 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         return null;
     }
 
-    public static int updateEmpleado(Connection connection, Empleado empleado, String cp, String asenta) {
+    public static Empleado updateEmpleado(Connection connection, Empleado empleado, String cp, String asenta) {
         var queryCodigoPostal = "SELECT id FROM codigo_postal WHERE d_codigo = '" + cp + "' and d_asenta = '" + asenta +"'";
-        var query = "UPDATE empleado\n" +
-                " SET nombre=?, primer_apellido=?, segundo_apellido=?,edad=?, telefono=?, correo=?, sexo=?, nom_calle=?, num_casa=?, estado=?, id_codigo_postal=?\n" +
-                " WHERE id = ?";
         var message = new Messages();
-
         var idCodiPostal = 0;
 
         try {
@@ -395,32 +405,52 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
             if (resultSet.next())
                 idCodiPostal = resultSet.getInt(1);
             else
-                message.setMessage("Codigo postal incorrecto","Verifique el formato del codigo postal",NotificationType.ERROR);
-
-            } catch (SQLException e) {
-            e.printStackTrace();
-        }
+                message.setMessage("Codigo postal incorrecto", "Verifique el formato del codigo postal", NotificationType.ERROR);
 
 
-        try {
-            PreparedStatement statementP = connection.prepareStatement(query);
-            statementP.setString(1, empleado.getNombre());
-            statementP.setString(2, empleado.getPrimerApellido());
-            statementP.setString(3, empleado.getSegundoApellido());
-            statementP.setInt(4, empleado.getEdad());
-            statementP.setString(5, empleado.getTelefono());
-            statementP.setString(6, empleado.getCorreo());
-            statementP.setString(7, empleado.getSexo());
-            statementP.setString(8, empleado.getNombreCalle());
-            statementP.setString(9, empleado.getnCasa());
-            statementP.setBoolean(10, true);
-            statementP.setInt(11, idCodiPostal);
-            statementP.setInt(12, empleado.getId());
-            return statementP.executeUpdate();
+            if (idCodiPostal != 0) {
 
+                var employee_added = "SELECT * FROM get_employee_edited(" +
+                        "" + empleado.getId() + "," +
+                        "'" + empleado.getNombre() +
+                        "','" + empleado.getPrimerApellido() + "'" +
+                        ",'" + empleado.getSegundoApellido() + "'" +
+                        "," + empleado.getEdad() + "" +
+                        ",'" + empleado.getTelefono() + "'" +
+                        ",'" + empleado.getCorreo() + "'" +
+                        ",'" + empleado.getSexo() + "'" +
+                        ",'" + empleado.getNombreCalle() + "'" +
+                        ",'" + empleado.getnCasa() + "'" +
+                        ",'true'," + idCodiPostal + ")";
+
+                var statement1 = connection.createStatement();
+                var resultSet1 = statement1.executeQuery(employee_added);
+
+                if (resultSet1.next())
+                    return new Empleado(
+                            resultSet1.getInt("id"),
+                            resultSet1.getString("nombre"),
+                            resultSet1.getString("primer_apellido"),
+                            resultSet1.getString("segundo_apellido"),
+                            resultSet1.getInt("edad"),
+                            resultSet1.getString("sexo"),
+                            resultSet1.getString("telefono"),
+                            resultSet1.getString("correo"),
+                            resultSet1.getString("nom_calle"),
+                            resultSet1.getString("num_casa"),
+                            resultSet1.getString("codigo"),
+                            resultSet1.getString("c_estado"),
+                            resultSet1.getString("ciudad"),
+                            resultSet1.getString("municipio"),
+                            resultSet1.getString("asentamiento"),
+                            resultSet1.getString("tipo_asentamiento")
+                    );
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
+        e.printStackTrace();
+    }
+
+    return null;
+
     }
 }
