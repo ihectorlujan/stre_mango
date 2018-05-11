@@ -31,7 +31,7 @@ public class Conexion {
         return conection;
     }
 
-    public void setConection(Connection conection) {
+    public void setConection (Connection conection) {
         this.conection = conection;
     }
 

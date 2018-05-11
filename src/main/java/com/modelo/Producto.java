@@ -99,7 +99,7 @@ public class Producto extends RecursiveTreeObject<Producto> {
     public static void llenarProductos(Connection connection, ObservableList<Producto> productos) {
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM producto");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM producto where estado = true");
             while (resultSet.next())
                 productos.add(new Producto(resultSet.getString(1),
                         resultSet.getString(2),
@@ -113,7 +113,7 @@ public class Producto extends RecursiveTreeObject<Producto> {
             e.printStackTrace();
         }
     }
-
+    /*
     public int eliminarProducto(Connection conexion){
         String query = "delete from producto where cod_barra = ?";
 
@@ -126,12 +126,26 @@ public class Producto extends RecursiveTreeObject<Producto> {
             return 0;
         }
     }
+    */
+    public int eliminarProducto(Connection conexion){
+        String query = "update producto set estado = ? where cod_barra = ?";
+
+        try{
+            PreparedStatement statement = conexion.prepareStatement(query);
+            statement.setBoolean(1,false);
+            statement.setString(2,cod_barra.get());
+            return statement.executeUpdate();
+        }catch(SQLException e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
 
     public int insertarProducto(Connection conexion){
 
         String query = "insert into " +
-                "producto(cod_barra,nombre,precio_compra,precio_venta,existencia,observaciones)" +
-                " values(?,?,?,?,?,?)";
+                "producto(cod_barra,nombre,precio_compra,precio_venta,existencia,observaciones,estado)" +
+                " values(?,?,?,?,?,?,?)";
         try {
             PreparedStatement statement = conexion.prepareStatement(query);
             statement.setString(1,cod_barra.get());
@@ -140,6 +154,7 @@ public class Producto extends RecursiveTreeObject<Producto> {
             statement.setFloat(4,precio_venta.get());
             statement.setInt(5,existencia.get());
             statement.setString(6,observaciones.get());
+            statement.setBoolean(7,true);
             return statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

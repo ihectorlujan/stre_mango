@@ -63,8 +63,7 @@ public class OpcionProducto extends VBox {
 
 
         JFXTreeTableView tblProductos = new JFXTreeTableView();
-        tblProductos.getStyleClass().add("jfx-list-cell");
-        panelListaProducto.setPadding(new Insets(10));
+        panelListaProducto.getStyleClass().add("white");
         panelListaProducto.getChildren().add(tblProductos);
         fillPanelTitulo();
         panelBuscar = fillPanelBuscar();
@@ -77,6 +76,7 @@ public class OpcionProducto extends VBox {
         //margenes
         VBox.setMargin(panelTitulo, new Insets(10,10,10,10));
         VBox.setMargin(panelRegistroProducto, new Insets(0,10,10,10));
+        VBox.setMargin(panelBuscar,new Insets(0,10,0,10));
         VBox.setMargin(panelListaProducto, new Insets(20,10,5,10));
         VBox.setVgrow(panelListaProducto, Priority.ALWAYS);
 
@@ -205,7 +205,7 @@ public class OpcionProducto extends VBox {
         });
 
         clmObservaciones.setResizable(false);
-        clmObservaciones.setPrefWidth(350);
+        clmObservaciones.setPrefWidth(380);
         clmObservaciones.setCellValueFactory((TreeTableColumn.CellDataFeatures<Producto, String> param) -> {
             if (clmObservaciones.validateValue(param))
                 return param.getValue().getValue().observacionesProperty();
@@ -228,12 +228,46 @@ public class OpcionProducto extends VBox {
         Text icoSearch = GlyphsDude.createIcon(FontAwesomeIcon.SEARCH);
         Label bus = new Label();
         bus.setGraphic(icoSearch);
-        HBox.setMargin(txtfSearch,new Insets(0,5,0,10));
-        boxSearch.setAlignment(Pos.CENTER_LEFT);
-        boxSearch.setPadding(new Insets(0,0,0,10));
-        boxSearch.getChildren().addAll(txtfSearch,bus);
-        return boxSearch;
+        HBox.setMargin(txtfSearch,new Insets(0,10,0,10));
 
+        // Panel contenedor de los botones aceptar y editar
+        /*Button aceptar propiedades*/
+        Text icoAceptar = GlyphsDude.createIcon(FontAwesomeIcon.PLUS);
+        btnAceptar = new JFXButton();
+        btnAceptar.setGraphic(icoAceptar);
+        icoAceptar.setFill(Color.WHITE);
+        btnAceptar.setTooltip(new Tooltip("Aceptar"));
+
+
+
+        /*Button editar propiedades*/
+        Text icoEditar = GlyphsDude.createIcon(FontAwesomeIcon.EDIT);
+        btnEditar = new JFXButton();
+        btnEditar.setGraphic(icoEditar);
+        icoEditar.setFill(Color.WHITE);
+        btnEditar.setTooltip(new Tooltip("Editar"));
+
+        /*Button eliminar propiedades*/
+        Text icoEliminar = GlyphsDude.createIcon(FontAwesomeIcon.REMOVE);
+        btnEliminar = new JFXButton();
+        btnEliminar.setGraphic(icoEliminar);
+        icoEliminar.setFill(Color.WHITE);
+        btnEliminar.setTooltip(new Tooltip("Eliminar"));
+
+        /*Insertar en el panel de botones*/
+        panelBotones.setAlignment(Pos.BASELINE_RIGHT);
+        panelBotones.setPadding(new Insets(5,10,5,10));
+        panelBotones.getChildren().addAll(btnAceptar,btnEditar,btnEliminar);
+
+        HBox.setHgrow(panelBotones,Priority.ALWAYS);
+        HBox.setMargin(btnAceptar,new Insets(5,5,5,5));
+        HBox.setMargin(btnEditar,new Insets(5,5,5,5));
+        HBox.setHgrow(boxSearch,Priority.ALWAYS);
+        boxSearch.setAlignment(Pos.CENTER_LEFT);
+        boxSearch.getStyleClass().add("white");
+        boxSearch.getChildren().addAll(txtfSearch,bus,panelBotones);
+
+        return boxSearch;
 
     }
 
@@ -260,9 +294,10 @@ public class OpcionProducto extends VBox {
         panelTitulo.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(panelTitulo,Priority.SOMETIMES);
         panelTitulo.getChildren().addAll(title);
-        panelTitulo.getStyleClass().add("panelWhite");
+        panelTitulo.getStyleClass().add("white");
         title.getStyleClass().add("text_title");
         panelTitulo.setPadding(new Insets(10,10,0,10));
+
 
 
     }
@@ -284,6 +319,7 @@ public class OpcionProducto extends VBox {
         BorderPane panelCodigo = new BorderPane();
         panelCodigo.setTop(txtCodigoBarras);
         panelCodigo.setCenter(txtfCodigoBarras);
+        //panelCodigo.setPrefSize(400,190);
 
 
         //segundo panel del nombre fila 1 columna 2
@@ -335,40 +371,7 @@ public class OpcionProducto extends VBox {
 
 
 
-        // Panel contenedor de los botones aceptar y editar
-        /*Button aceptar propiedades*/
-        Text icoAceptar = GlyphsDude.createIcon(FontAwesomeIcon.CHECK);
-        btnAceptar = new JFXButton();
-        btnAceptar.setGraphic(icoAceptar);
-        btnAceptar.getStyleClass().add("btnRaisedGreenDark");
-        icoAceptar.setFill(Color.WHITE);
-        btnAceptar.setTooltip(new Tooltip("Aceptar"));
 
-
-
-        /*Button editar propiedades*/
-        Text icoEditar = GlyphsDude.createIcon(FontAwesomeIcon.EDIT);
-        btnEditar = new JFXButton();
-        btnEditar.setGraphic(icoEditar);
-        btnEditar.getStyleClass().add("btnRaisedGreenDarkGrass");
-        icoEditar.setFill(Color.WHITE);
-        btnEditar.setTooltip(new Tooltip("Editar"));
-
-        /*Button eliminar propiedades*/
-        Text icoEliminar = GlyphsDude.createIcon(FontAwesomeIcon.REMOVE);
-        btnEliminar = new JFXButton();
-        btnEliminar.setGraphic(icoEliminar);
-        btnEliminar.getStyleClass().add("btnRaisedRed");
-        icoEliminar.setFill(Color.WHITE);
-        btnEliminar.setTooltip(new Tooltip("Eliminar"));
-
-        /*Insertar en el panel de botones*/
-        panelBotones.setAlignment(Pos.CENTER);
-        panelBotones.getChildren().addAll(btnAceptar,btnEditar,btnEliminar);
-
-        HBox.setHgrow(panelBotones,Priority.ALWAYS);
-        HBox.setMargin(btnAceptar,new Insets(5,5,5,5));
-        HBox.setMargin(btnEditar,new Insets(5,5,5,5));
 
         //Insertar los paneles a los constraints
         GridPane.setConstraints(panelCodigo,0,0);
@@ -378,13 +381,13 @@ public class OpcionProducto extends VBox {
         GridPane.setConstraints(panelCompra,0,1);
         GridPane.setConstraints(panelVenta,1,1);
         GridPane.setConstraints(panelExistence,2,1);
-        GridPane.setConstraints(panelBotones,3,1);
+        //GridPane.setConstraints(panelBotones,3,1);
 
 
 
 
         panelRegistroProducto.getColumnConstraints().addAll(columna1,columna2,columna3);
-        panelRegistroProducto.getChildren().addAll(panelCodigo, panelNomb, panelObservacion, panelCompra,panelVenta,panelExistence,panelBotones);
+        panelRegistroProducto.getChildren().addAll(panelCodigo, panelNomb, panelObservacion, panelCompra,panelVenta,panelExistence);
         panelRegistroProducto.setVgap(15);
         panelRegistroProducto.setHgap(10);
         panelRegistroProducto.setPadding(new Insets(10));
