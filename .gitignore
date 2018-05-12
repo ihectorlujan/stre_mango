@@ -2,4 +2,6 @@
 StreMango.iml
 target/
 mango.iml
+out/
+src/main/META-INF/
 
