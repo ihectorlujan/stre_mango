@@ -439,13 +439,13 @@ public class OpcionProducto extends VBox {
             if (resultSuccess == 1) {
                 listp.add(product);
                 clearFields();
-                message.setMessage("Completado","Se agregó exitosamente!",NotificationType.SUCCESS);
+                message.setMessage("Completado","Se agregó correctamente!",NotificationType.SUCCESS);
             } else {
                 message.setMessage("Algo salio mal","Intentelo de nuevo",NotificationType.ERROR);
 
             }
         }else{
-            message.setMessage("Campos no introducidos","Por favor llene los campos!",NotificationType.INFORMATION);
+            message.setMessage("Campos no introducidos","Por favor llene los campos",NotificationType.INFORMATION);
         }
     }
     public void clearFields(){
@@ -466,13 +466,13 @@ public class OpcionProducto extends VBox {
             conexion.cerrarConexion();
             if (resultSuccess == 1) {
                 listP.remove(producto);
-                message.setMessage("Completado","Se eliminó correctamente!",NotificationType.SUCCESS);
+                message.setMessage("Completado","Se eliminó correctamente",NotificationType.SUCCESS);
             } else {
                 message.setMessage("Algo salio mal","Intentelo de nuevo",NotificationType.ERROR);
             }
 
         }catch (NumberFormatException e) {
-            message.setMessage("No selecciono ningun registro","Seleccione el producto a eliminar",NotificationType.WARNING);
+            message.setMessage("No selecciono ningun registro","Seleccione un producto a eliminar",NotificationType.WARNING);
         }
 
     }
