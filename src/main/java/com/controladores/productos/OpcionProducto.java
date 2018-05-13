@@ -28,7 +28,7 @@ public class OpcionProducto extends VBox {
     private GridPane panelRegistroProducto;
     private GridPane panelListaProducto;
     private HBox panelBotones;
-    private HBox panelBuscar;
+    private HBox panelButtons;
 
     //textfields
     private TextField txtfCodigoBarras;
@@ -38,7 +38,7 @@ public class OpcionProducto extends VBox {
     private TextField txtfPrecioVenta;
     private TextField txtfExistencia;
 
-    private JFXTextField txtfSearch;
+    private TextField txtfSearch;
     //buttons
     private JFXButton btnAceptar;
     private JFXButton btnEditar;
@@ -66,7 +66,7 @@ public class OpcionProducto extends VBox {
         panelListaProducto.getStyleClass().add("white");
         panelListaProducto.getChildren().add(tblProductos);
         fillPanelTitulo();
-        panelBuscar = fillPanelBuscar();
+        panelButtons = fillPanelButtons();
         fillPaneRegistro();
 
 
@@ -76,7 +76,7 @@ public class OpcionProducto extends VBox {
         //margenes
         VBox.setMargin(panelTitulo, new Insets(10,10,10,10));
         VBox.setMargin(panelRegistroProducto, new Insets(0,10,10,10));
-        VBox.setMargin(panelBuscar,new Insets(0,10,0,10));
+        VBox.setMargin(panelButtons,new Insets(0,10,0,10));
         VBox.setMargin(panelListaProducto, new Insets(20,10,5,10));
         VBox.setVgrow(panelListaProducto, Priority.ALWAYS);
 
@@ -86,11 +86,10 @@ public class OpcionProducto extends VBox {
         conexion.cerrarConexion();
 
         //agregar los paneles principales
-        this.getChildren().addAll(panelTitulo,panelRegistroProducto,panelBuscar,panelListaProducto);
+        this.getChildren().addAll(panelTitulo,panelRegistroProducto,panelButtons,panelListaProducto);
 
         // Fuente de Estilos
         this.getStylesheets().add(getClass().getResource("/estilos/producto.css").toExternalForm());
-
 
 
         /*Eventos de los botones aceptar y editar*/
@@ -220,25 +219,14 @@ public class OpcionProducto extends VBox {
     }
 
 
-    private HBox fillPanelBuscar(){
-        HBox boxSearch = new HBox();
-        txtfSearch = new JFXTextField();
-        txtfSearch.setTooltip(new Tooltip("Buscar productos"));
-        txtfSearch.setPromptText("Buscar");
-        Text icoSearch = GlyphsDude.createIcon(FontAwesomeIcon.SEARCH);
-        Label bus = new Label();
-        bus.setGraphic(icoSearch);
-        HBox.setMargin(txtfSearch,new Insets(0,10,0,10));
-
-        // Panel contenedor de los botones aceptar y editar
+    private HBox fillPanelButtons(){
+        HBox box = new HBox();
         /*Button aceptar propiedades*/
         Text icoAceptar = GlyphsDude.createIcon(FontAwesomeIcon.PLUS);
         btnAceptar = new JFXButton();
         btnAceptar.setGraphic(icoAceptar);
         icoAceptar.setFill(Color.WHITE);
         btnAceptar.setTooltip(new Tooltip("Aceptar"));
-
-
 
         /*Button editar propiedades*/
         Text icoEditar = GlyphsDude.createIcon(FontAwesomeIcon.EDIT);
@@ -262,12 +250,10 @@ public class OpcionProducto extends VBox {
         HBox.setHgrow(panelBotones,Priority.ALWAYS);
         HBox.setMargin(btnAceptar,new Insets(5,5,5,5));
         HBox.setMargin(btnEditar,new Insets(5,5,5,5));
-        HBox.setHgrow(boxSearch,Priority.ALWAYS);
-        boxSearch.setAlignment(Pos.CENTER_LEFT);
-        boxSearch.getStyleClass().add("white");
-        boxSearch.getChildren().addAll(txtfSearch,bus,panelBotones);
+        HBox.setHgrow(box,Priority.ALWAYS);
+        box.getChildren().add(panelBotones);
 
-        return boxSearch;
+        return box;
 
     }
 
@@ -291,109 +277,105 @@ public class OpcionProducto extends VBox {
 
     private void fillPanelTitulo() {
         Text title=new Text("Productos");
-        panelTitulo.setAlignment(Pos.CENTER_LEFT);
-        HBox.setHgrow(panelTitulo,Priority.SOMETIMES);
-        panelTitulo.getChildren().addAll(title);
-        panelTitulo.getStyleClass().add("white");
         title.getStyleClass().add("text_title");
-        panelTitulo.setPadding(new Insets(10,10,0,10));
+        panelTitulo.getStyleClass().add("white");
+        panelTitulo.setAlignment(Pos.CENTER_LEFT);
+        panelTitulo.setPadding(new Insets(0,0,0,10));
+        HBox.setHgrow(panelTitulo,Priority.ALWAYS);
 
+        HBox search = new HBox();
+        txtfSearch = new TextField();
+        txtfSearch.setTooltip(new Tooltip("Buscar productos"));
+        txtfSearch.setPromptText("Buscar");
+        Text icoSearch = GlyphsDude.createIcon(FontAwesomeIcon.SEARCH);
+        Label bus = new Label();
+        bus.setGraphic(icoSearch);
+        HBox.setMargin(txtfSearch,new Insets(0,10,0,10));
+
+        search.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(search,Priority.ALWAYS);
+        search.setPadding(new Insets(5,10,5,0));
+        search.getChildren().addAll(txtfSearch,bus);
+
+        panelTitulo.getChildren().addAll(title,search);
 
 
     }
 
     public void fillPaneRegistro(){
 
+        ColumnConstraints columna1 = new ColumnConstraints(10,100,200);
+        ColumnConstraints columna2 = new ColumnConstraints(10,200,250);
+        ColumnConstraints columna3 = new ColumnConstraints(10,120,200);
+        ColumnConstraints columna4 = new ColumnConstraints(10,90,200);
+        ColumnConstraints columna5 = new ColumnConstraints(10,120,200);
+        ColumnConstraints columna6 = new ColumnConstraints();
 
-        ColumnConstraints columna1 = new ColumnConstraints(10,538,551);
-        ColumnConstraints columna2 = new ColumnConstraints(10,538,551);
-        ColumnConstraints columna3 = new ColumnConstraints(10,538,551);
-        columna1.setHgrow(Priority.ALWAYS);
-        columna2.setHgrow(Priority.ALWAYS);
-        columna3.setHgrow(Priority.ALWAYS);
-
-        //Primer panel del codigo de barras fila 1 columna 1
+        //codigo de barras
         Text txtCodigoBarras = new Text("Codigo");
         txtCodigoBarras.getStyleClass().add("text");
         txtfCodigoBarras = new TextField();
-        BorderPane panelCodigo = new BorderPane();
-        panelCodigo.setTop(txtCodigoBarras);
-        panelCodigo.setCenter(txtfCodigoBarras);
-        //panelCodigo.setPrefSize(400,190);
 
-
-        //segundo panel del nombre fila 1 columna 2
+        //nombre
         Text txtNombre = new Text("Nombre");
         txtNombre.getStyleClass().add("text");
         txtfNombre = new TextField();
-        BorderPane panelNomb = new BorderPane();
-        panelNomb.setTop(txtNombre);
-        panelNomb.setCenter(txtfNombre);
 
-        //Tercer panel de observaciones fila 1 columna 3
+        //observaciones
         Text txtObservaciones = new Text("Observaciones");
         txtObservaciones.getStyleClass().add("text");
         txtfObservaciones = new TextField();
-        BorderPane panelObservacion = new BorderPane();
-        panelObservacion.setTop(txtObservaciones);
-        panelObservacion.setCenter(txtfObservaciones);
-
+        txtfObservaciones.setPrefWidth(220);
 
         //--------------------------------------------------------------------
 
-        //Primer panel del precioCompra fila 2 columna 1
+        //precioCompra
         Text txtPrecioCompra = new Text("Precio de compra");
         txtPrecioCompra.getStyleClass().add("text");
         txtfPrecioCompra = new TextField();
-        BorderPane panelCompra = new BorderPane();
-        panelCompra.setTop(txtPrecioCompra);
-        panelCompra.setCenter(txtfPrecioCompra);
 
-        // Segundo panel del precioVenta fila 2 columna 2
+        //precioVenta
         Text txtPrecioVenta = new Text("Precio de venta");
         txtPrecioVenta.getStyleClass().add("text");
         txtfPrecioVenta = new TextField();
-        BorderPane panelVenta = new BorderPane();
-        panelVenta.setTop(txtPrecioVenta);
-        panelVenta.setCenter(txtfPrecioVenta);
 
-        // Tercer panel de existencia
+        //existencia
         Text txtExistencia = new Text("Existencia");
         txtExistencia.getStyleClass().add("text");
+        HBox exist = new HBox();
         txtfExistencia = new TextField();
-        BorderPane panelExistence = new BorderPane();
-        panelExistence.setTop(txtExistencia);
-        panelExistence.setCenter(txtfExistencia);
+        txtfExistencia.setPrefColumnCount(5);
+        exist.getChildren().add(txtfExistencia);
 
         //----------------------------------------------------------------------
 
-
-
-
-
-
-
         //Insertar los paneles a los constraints
-        GridPane.setConstraints(panelCodigo,0,0);
-        GridPane.setConstraints(panelNomb,1,0);
-        GridPane.setConstraints(panelObservacion,2,0);
+        panelRegistroProducto.add(txtCodigoBarras,0,0);
+        panelRegistroProducto.add(txtfCodigoBarras,1,0);
 
-        GridPane.setConstraints(panelCompra,0,1);
-        GridPane.setConstraints(panelVenta,1,1);
-        GridPane.setConstraints(panelExistence,2,1);
-        //GridPane.setConstraints(panelBotones,3,1);
+        panelRegistroProducto.add(txtPrecioCompra,2,0);
+        panelRegistroProducto.add(txtfPrecioCompra,3,0);
 
+        panelRegistroProducto.add(txtObservaciones,4,0);
+        panelRegistroProducto.add(txtfObservaciones,5,0);
 
+        panelRegistroProducto.add(txtNombre,0,1);
+        panelRegistroProducto.add(txtfNombre,1,1);
 
+        panelRegistroProducto.add(txtPrecioVenta,2,1);
+        panelRegistroProducto.add(txtfPrecioVenta,3,1);
 
-        panelRegistroProducto.getColumnConstraints().addAll(columna1,columna2,columna3);
-        panelRegistroProducto.getChildren().addAll(panelCodigo, panelNomb, panelObservacion, panelCompra,panelVenta,panelExistence);
-        panelRegistroProducto.setVgap(15);
+        panelRegistroProducto.add(txtExistencia,4,1);
+        panelRegistroProducto.add(exist,5,1);
+
+        panelRegistroProducto.getColumnConstraints().forEach(x -> x.setHgrow(Priority.SOMETIMES));
+        panelRegistroProducto.getColumnConstraints().addAll(columna1,columna2,columna3,columna4,columna5,columna6);
+        panelRegistroProducto.setVgap(20);
         panelRegistroProducto.setHgap(10);
+        panelRegistroProducto.setAlignment(Pos.CENTER);
         panelRegistroProducto.setPadding(new Insets(10));
 
         panelRegistroProducto.getStyleClass().add("white");
-
 
     }
 
@@ -516,8 +498,6 @@ public class OpcionProducto extends VBox {
             trayNotification.setNotificationType(NotificationType.ERROR);
             trayNotification.showAndDismiss(Duration.millis(2000));
         }
-
-
 
     }
 
