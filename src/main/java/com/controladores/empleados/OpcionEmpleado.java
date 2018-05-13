@@ -9,7 +9,6 @@ import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,8 +18,6 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import tray.notification.NotificationType;
 import tray.notification.TrayNotification;
-
-import javax.swing.event.HyperlinkEvent;
 
 public class OpcionEmpleado extends VBox {
 
@@ -40,7 +37,7 @@ public class OpcionEmpleado extends VBox {
     private TextField txtTipoAsentamiento = new TextField();
     private TextField txtCiudad = new TextField();
     private TextField txtMunicipio = new TextField();
-    private Label lblIdN = new Label("10");
+    private Label lblIdN = new Label("");
     private Label lblEstado = new Label("Estado:");
     private Label lblTipoAsentamiento = new Label("Tipo: ");
     private Label lblAsentamiento = new Label("Asentamiento:");
@@ -65,8 +62,8 @@ public class OpcionEmpleado extends VBox {
         var gridPaneDomicilio = new GridPane();
         var lblID = new Label("ID:");
         var lblNombre = new Label("Nombre:");
-        var lblApellidoPaterno = new Label("Apellido Paterno:");
-        var lblApellidoMaterno = new Label("Apellido Materno:");
+        var lblApellidoPaterno = new Label("Primer Apellido:");
+        var lblApellidoMaterno = new Label("Segundo Apellido:");
         var lblEdad = new Label("Edad:");
         var lblSexo = new Label("Sexo:");
         var lblTelefono = new Label("Telefono:");
@@ -90,13 +87,19 @@ public class OpcionEmpleado extends VBox {
         var btnEliminar = new JFXButton();
         var btnMas = new JFXButton();
         var icoEdit = GlyphsDude.createIcon(FontAwesomeIcon.EDIT,"14px");
-        var icoAdd = GlyphsDude.createIcon(FontAwesomeIcon.USER_PLUS,"14px");
+        var icoAdd = GlyphsDude.createIcon(FontAwesomeIcon.PLUS,"14px");
         var icoDelete = GlyphsDude.createIcon(FontAwesomeIcon.TRASH_ALT,"14px");
         var icoInfo = GlyphsDude.createIcon(FontAwesomeIcon.INFO,"14px");
         var txtFiltro = new TextField();
 
         //Llenar cmb de datos
         txtCodPostal.setEditable(false);
+
+        //Tooltips
+        btnAnadir.setTooltip(new Tooltip("Agregar empleado"));
+        btnEditar.setTooltip(new Tooltip("Editar empleado"));
+        btnEliminar.setTooltip(new Tooltip("Eliminar empleado"));
+        btnMas.setTooltip(new Tooltip("Mas detalles"));
 
         //hBox Search
         hBoxSearch.getChildren().addAll(lblBuscar, txtFiltro);
@@ -469,10 +472,15 @@ public class OpcionEmpleado extends VBox {
     }
 
     private void editEmpleado(Empleado x) {
-        new AgregarEmpleado(x);
+        try{
+            new ventanaEmpleado(x);
+        }catch (Exception e) {
+            messages.setMessage("Seleccione empleado", "No selecciono ningun empleado", NotificationType.INFORMATION);
+        }
+
     }
 
     private void addEmpleado(ActionEvent e) {
-        new AgregarEmpleado();
+        new ventanaEmpleado();
     }
 }

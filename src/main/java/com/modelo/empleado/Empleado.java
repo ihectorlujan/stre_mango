@@ -337,21 +337,9 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         return null;
     }
 
-    public static Empleado addEmpleado(Connection connection, Empleado empleado, String cp, String asenta) {
+    public static Empleado addEmpleado(Connection connection, Empleado empleado, int idCodigoPostal) {
         try {
-            var queryCodigoPostal = "SELECT id FROM codigo_postal WHERE d_codigo = '" + cp + "' and d_asenta = '" + asenta +"'";
-            var idCodiPostal = 0;
-            var message = new Messages();
-
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(queryCodigoPostal);
-
-            if (resultSet.next())
-                idCodiPostal = resultSet.getInt(1);
-            else
-                message.setMessage("Codigo postal incorrecto","Verifique el formato del codigo postal",NotificationType.ERROR);
-
-            if (idCodiPostal != 0) {
+            if (idCodigoPostal != 0) {
                 var employee_added = "SELECT * FROM get_employee_added('" +
                         empleado.getNombre() +
                         "','"+ empleado.getPrimerApellido() +"'" +
@@ -362,7 +350,7 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
                         ",'"+ empleado.getSexo() +"'" +
                         ",'"+ empleado.getNombreCalle() +"'" +
                         ",'"+ empleado.getnCasa() +"'" +
-                        ",'true',"+ idCodiPostal +")";
+                        ",'true',"+ idCodigoPostal +")";
 
                 var statementP = connection.createStatement();
                 var resultSet1 = statementP.executeQuery(employee_added);
@@ -394,63 +382,47 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         return null;
     }
 
-    public static Empleado updateEmpleado(Connection connection, Empleado empleado, String cp, String asenta) {
-        var queryCodigoPostal = "SELECT id FROM codigo_postal WHERE d_codigo = '" + cp + "' and d_asenta = '" + asenta +"'";
-        var message = new Messages();
-        var idCodiPostal = 0;
-
+    public static Empleado updateEmpleado(Connection connection, Empleado empleado, int idCodigoPostal) {
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(queryCodigoPostal);
-            if (resultSet.next())
-                idCodiPostal = resultSet.getInt(1);
-            else
-                message.setMessage("Codigo postal incorrecto", "Verifique el formato del codigo postal", NotificationType.ERROR);
+            var employee_added = "SELECT * FROM get_employee_edited(" +
+                    "" + empleado.getId() + "," +
+                    "'" + empleado.getNombre() +
+                    "','" + empleado.getPrimerApellido() + "'" +
+                    ",'" + empleado.getSegundoApellido() + "'" +
+                    "," + empleado.getEdad() + "" +
+                    ",'" + empleado.getTelefono() + "'" +
+                    ",'" + empleado.getCorreo() + "'" +
+                    ",'" + empleado.getSexo() + "'" +
+                    ",'" + empleado.getNombreCalle() + "'" +
+                    ",'" + empleado.getnCasa() + "'" +
+                    ",'true'," + idCodigoPostal + ")";
 
+            var statement1 = connection.createStatement();
+            var resultSet1 = statement1.executeQuery(employee_added);
 
-            if (idCodiPostal != 0) {
+            if (resultSet1.next())
+                return new Empleado(
+                        resultSet1.getInt("id"),
+                        resultSet1.getString("nombre"),
+                        resultSet1.getString("primer_apellido"),
+                        resultSet1.getString("segundo_apellido"),
+                        resultSet1.getInt("edad"),
+                        resultSet1.getString("sexo"),
+                        resultSet1.getString("telefono"),
+                        resultSet1.getString("correo"),
+                        resultSet1.getString("nom_calle"),
+                        resultSet1.getString("num_casa"),
+                        resultSet1.getString("codigo"),
+                        resultSet1.getString("c_estado"),
+                        resultSet1.getString("ciudad"),
+                        resultSet1.getString("municipio"),
+                        resultSet1.getString("asentamiento"),
+                        resultSet1.getString("tipo_asentamiento")
+                );
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
 
-                var employee_added = "SELECT * FROM get_employee_edited(" +
-                        "" + empleado.getId() + "," +
-                        "'" + empleado.getNombre() +
-                        "','" + empleado.getPrimerApellido() + "'" +
-                        ",'" + empleado.getSegundoApellido() + "'" +
-                        "," + empleado.getEdad() + "" +
-                        ",'" + empleado.getTelefono() + "'" +
-                        ",'" + empleado.getCorreo() + "'" +
-                        ",'" + empleado.getSexo() + "'" +
-                        ",'" + empleado.getNombreCalle() + "'" +
-                        ",'" + empleado.getnCasa() + "'" +
-                        ",'true'," + idCodiPostal + ")";
-
-                var statement1 = connection.createStatement();
-                var resultSet1 = statement1.executeQuery(employee_added);
-
-                if (resultSet1.next())
-                    return new Empleado(
-                            resultSet1.getInt("id"),
-                            resultSet1.getString("nombre"),
-                            resultSet1.getString("primer_apellido"),
-                            resultSet1.getString("segundo_apellido"),
-                            resultSet1.getInt("edad"),
-                            resultSet1.getString("sexo"),
-                            resultSet1.getString("telefono"),
-                            resultSet1.getString("correo"),
-                            resultSet1.getString("nom_calle"),
-                            resultSet1.getString("num_casa"),
-                            resultSet1.getString("codigo"),
-                            resultSet1.getString("c_estado"),
-                            resultSet1.getString("ciudad"),
-                            resultSet1.getString("municipio"),
-                            resultSet1.getString("asentamiento"),
-                            resultSet1.getString("tipo_asentamiento")
-                    );
-            }
-        } catch (SQLException e) {
-        e.printStackTrace();
-    }
-
-    return null;
-
+        return null;
     }
 }

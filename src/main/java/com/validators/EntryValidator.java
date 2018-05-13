@@ -1,9 +1,17 @@
 package com.validators;
 
+import com.jfoenix.controls.JFXComboBox;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
+import jdk.jfr.Description;
+import tray.notification.NotificationType;
 
-public class SimpleValidator {
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class EntryValidator {
 
     public EventHandler<KeyEvent> onlyLetters() {
         return new EventHandler<>() {

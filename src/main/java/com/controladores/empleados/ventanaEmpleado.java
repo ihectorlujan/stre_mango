@@ -1,13 +1,12 @@
 package com.controladores.empleados;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXRadioButton;
+import com.jfoenix.controls.*;
 import com.modelo.Conexion;
 import com.modelo.cod_postal.CodigoPostal;
 import com.modelo.empleado.Empleado;
 import com.validators.Messages;
-import com.validators.SimpleValidator;
+import com.validators.EntryValidator;
+import com.validators.ValidateFields;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -16,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.TreeItem;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
@@ -24,10 +22,11 @@ import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
 import tray.notification.NotificationType;
 
-public class AgregarEmpleado extends Stage {
+public class ventanaEmpleado extends Stage {
     private Conexion conexion = new Conexion();
     private ObservableList<CodigoPostal> list = FXCollections.observableArrayList();
-    private SimpleValidator handler = new SimpleValidator();
+    private EntryValidator handler = new EntryValidator();
+    private ValidateFields validateFields = new ValidateFields();
 
     private HBox hBoxTitulo = new HBox();
     private HBox hBoxCodigoPostal = new HBox();
@@ -37,18 +36,18 @@ public class AgregarEmpleado extends Stage {
     private GridPane gridPaneTelefono = new GridPane();
     private GridPane gridPaneDomicilio = new GridPane();
 
-    private Label lblNombre = new Label("Nombre:");
-    private Label lblApellidoPaterno = new Label("Primer apellido:");
+    private Label lblNombre = new Label("Nombre:*");
+    private Label lblApellidoPaterno = new Label("Primer apellido:*");
     private Label lblApellidoMaterno = new Label("Segundo apellido:");
-    private Label lblEdad = new Label("Edad:");
-    private Label lblSexo = new Label("Sexo:");
-    private Label lblTelefono = new Label("Telefono:");
-    private Label lblCorreo = new Label("Correo:");
+    private Label lblEdad = new Label("Edad:*");
+    private Label lblSexo = new Label("Sexo:*");
+    private Label lblTelefono = new Label("Telefono:*");
+    private Label lblCorreo = new Label("Correo:*");
     private Label lblDatosDomiciliarios = new Label("Datos domiciliarios");
     private Label lblAgregar = new Label("Datos del empleado");
-    private Label lblCalle = new Label("Calle:");
-    private Label lblNoCasa = new Label("No de casa:");
-    private Label lblCodPostal = new Label("C.P:");
+    private Label lblCalle = new Label("Calle:*");
+    private Label lblNoCasa = new Label("No de casa:*");
+    private Label lblCodPostal = new Label("C.P:*");
 
     private TextField txtNombre = new TextField();
     private TextField txtPrimerApellido = new TextField();
@@ -63,14 +62,14 @@ public class AgregarEmpleado extends Stage {
 
     private JFXRadioButton rbHombre = new JFXRadioButton("Hombre");
     private JFXRadioButton rbMujer = new JFXRadioButton("Mujer");
-    private JFXComboBox cmbEdad = new JFXComboBox<Integer>();
+    private JFXComboBox<Integer> cmbEdad = new JFXComboBox<>();
 
     private ColumnConstraints column1 = new ColumnConstraints();
     private ColumnConstraints column2 = new ColumnConstraints();
 
     private Messages messages = new Messages();
 
-    public AgregarEmpleado() {
+    public ventanaEmpleado() {
         var panePrincipal = new VBox();
 
         //Llenar comboBox
@@ -88,7 +87,7 @@ public class AgregarEmpleado extends Stage {
         hBoxContainers();
 
         loadPostalCodes();
-        verificaciones();
+        verificacionTelefono();
 
         JFXButton btnAgregar = new JFXButton("Aceptar");
 
@@ -107,26 +106,30 @@ public class AgregarEmpleado extends Stage {
         hBoxTitulo.setPadding(new Insets(5));
         HBox hBoxBntAgregar = new HBox();
         hBoxBntAgregar.getChildren().add(btnAgregar);
-
         hBoxBntAgregar.setAlignment(Pos.CENTER_RIGHT);
 
         //Accion del boton
         btnAgregar.setOnAction(e -> {
-            try {
+            var idCodigo = validateFields.idCpDatabase(txtCodigoPostal.getText());
+            if (verificarCampos() && idCodigo > 0) {
                 agregarEmpleado(new Empleado(txtNombre.getText(),
                         txtPrimerApellido.getText(),
-                        txtSegundoApellido.getText().equals("")? "" : txtSegundoApellido.getText(),
+                        txtSegundoApellido.getText().equals("") ? "" : txtSegundoApellido.getText(),
                         Integer.parseInt(cmbEdad.getValue().toString()),
                         rbHombre.isSelected() ? "hombre" : "mujer",
                         txtTelefono.getText() + " " + txtTelefono1.getText() + " " + txtTelefono2.getText(),
                         txtCorreo.getText(),
                         txtCalle.getText(),
-                        txtNoCasa.getText()), txtCodigoPostal.getText());
-            }catch (NullPointerException ignored){
-                messages.setMessage("Campo nulo","Verifique que todos los campos esten llenos", NotificationType.ERROR);
+                        txtNoCasa.getText()), idCodigo);
+            }else {
+                messages.setMessageAlert(this, "Verifique lo siguiente:", "" +
+                        "\t- Los campos con * son obligatorios\n" +
+                        "\t- El correo tenga el formato correcto\n" +
+                        "\t- El telefono contenga 10 digitos\n" +
+                        "\t- El formato del codigo postal\n");
             }
-        });
 
+        });
 
         //Add childs to pane Principal
         panePrincipal.getChildren().addAll(hBoxTitulo, gridPane, hBoxDatosDomiciliarios, gridPaneDomicilio, hBoxCodigoPostal, hBoxBntAgregar);
@@ -140,14 +143,14 @@ public class AgregarEmpleado extends Stage {
 
         //Properties of stage
         setResizable(false);
-        Scene scene = new Scene(panePrincipal, 410,465);
+        Scene scene = new Scene(panePrincipal, 440,470);
         setScene(scene);
         initModality(Modality.APPLICATION_MODAL);
         scene.getStylesheets().add(getClass().getResource("/estilos/agregar_empleado.css").toExternalForm());
         show();
     }
 
-    public AgregarEmpleado(Empleado empleado) {
+    public ventanaEmpleado(Empleado empleado) {
         var panePrincipal = new VBox();
 
         //Establecer los campos
@@ -183,7 +186,7 @@ public class AgregarEmpleado extends Stage {
         hBoxContainers();
 
         loadPostalCodes();
-        verificaciones();
+        verificacionTelefono();
 
         JFXButton btnAgregar = new JFXButton("Aceptar");
 
@@ -207,7 +210,8 @@ public class AgregarEmpleado extends Stage {
 
         //Accion del boton
         btnAgregar.setOnAction(e -> {
-            try {
+            var idCodigo = validateFields.idCpDatabase(txtCodigoPostal.getText());
+            if (verificarCampos() && idCodigo > 0) {
                 updateEmpleado(new Empleado(empleado.getId(),
                         txtNombre.getText(),
                         txtPrimerApellido.getText(),
@@ -217,10 +221,13 @@ public class AgregarEmpleado extends Stage {
                         txtTelefono.getText() + " " + txtTelefono1.getText() + " " + txtTelefono2.getText(),
                         txtCorreo.getText(),
                         txtCalle.getText(),
-                        txtNoCasa.getText()), txtCodigoPostal.getText());
-            }catch (NullPointerException ignored){
-                ignored.printStackTrace();
-                messages.setMessage("Campo nulo","Verifique que todos los campos esten llenos", NotificationType.ERROR);
+                        txtNoCasa.getText()), idCodigo);
+            }else {
+                messages.setMessageAlert(this, "Verifique lo siguiente:", "" +
+                        "\t- Los campos con * son obligatorios\n" +
+                        "\t- El correo tenga el formato correcto\n" +
+                        "\t- El telefono contenga 10 digitos\n" +
+                        "\t- El formato del codigo postal\n");
             }
         });
 
@@ -237,14 +244,14 @@ public class AgregarEmpleado extends Stage {
 
         //Properties of stage
         setResizable(false);
-        Scene scene = new Scene(panePrincipal, 410,465);
+        Scene scene = new Scene(panePrincipal, 440,470);
         setScene(scene);
         initModality(Modality.APPLICATION_MODAL);
         scene.getStylesheets().add(getClass().getResource("/estilos/agregar_empleado.css").toExternalForm());
         show();
     }
 
-    private void verificaciones() {
+    private void verificacionTelefono() {
         txtNombre.addEventFilter(KeyEvent.ANY, handler.onlyLetters());
         txtPrimerApellido.addEventFilter(KeyEvent.ANY, handler.onlyLetters());
         txtSegundoApellido.addEventFilter(KeyEvent.ANY, handler.onlyLetters());
@@ -276,6 +283,17 @@ public class AgregarEmpleado extends Stage {
             }
         });
 
+    }
+
+    private boolean verificarCampos() {
+        var verificarEdad = false;
+        var verificarCamposVacios = validateFields.validateFields(txtNombre, txtPrimerApellido, txtTelefono, txtTelefono1, txtTelefono2, txtCalle, txtNoCasa, txtCorreo);
+        var verificarSexo = rbHombre.isSelected() || rbMujer.isSelected();
+        var verificarCorreo = validateFields.validateEmail(txtCorreo.getText());
+
+        try { verificarEdad = cmbEdad.getValue() > 16; } catch (Exception ignored){};
+
+        return verificarCamposVacios && verificarEdad && verificarSexo && verificarCorreo;
     }
 
     private void loadPostalCodes() {
@@ -372,19 +390,10 @@ public class AgregarEmpleado extends Stage {
             combo.getItems().add(i);
     }
 
-    private void agregarEmpleado(Empleado x, String codigoPostal) {
-        var cod = codigoPostal.split(" ");
-
-        StringBuilder asenta = new StringBuilder();
-        for (int i = 1; i < cod.length; i++) {
-            if (i != cod.length - 1)
-                asenta.append(cod[i]).append(" ");
-            else
-                asenta.append(cod[i]);
-        }
+    private void agregarEmpleado(Empleado x, int idCodigoPostal) {
 
         conexion.establecerConexion();
-        var newEmpleado  = Empleado.addEmpleado(conexion.getConection(), x,cod[0], asenta.toString());
+        var newEmpleado  = Empleado.addEmpleado(conexion.getConection(), x,idCodigoPostal);
         conexion.cerrarConexion();
 
         if (newEmpleado != null) {
@@ -392,24 +401,15 @@ public class AgregarEmpleado extends Stage {
             OpcionEmpleado.listEmpleados.add(newEmpleado);
             this.close();
         }
+
         else
-            messages.setMessage("Verifique sus campos","El empleado no se agrego", NotificationType.ERROR);
+            messages.setMessage("Hubo un error","El empleado no se agrego", NotificationType.ERROR);
     }
 
-    private void updateEmpleado(Empleado x, String codigoPostal) {
-        var cod = codigoPostal.split(" ");
-
-        var asenta = "";
-        for (int i = 1; i < cod.length; i++) {
-            if (i != cod.length - 1)
-                asenta += cod[i] + " ";
-            else
-                asenta += cod[i];
-        }
-
+    private void updateEmpleado(Empleado x, int idCodigoPostal) {
 
         conexion.establecerConexion();
-        var success  = Empleado.updateEmpleado(conexion.getConection(), x,cod[0], asenta);
+        var success  = Empleado.updateEmpleado(conexion.getConection(), x, idCodigoPostal);
         conexion.cerrarConexion();
 
         if (success != null) {
@@ -419,7 +419,7 @@ public class AgregarEmpleado extends Stage {
             messages.setMessage("Empleado editado", "El empleado se edito satisfactoriamente", NotificationType.SUCCESS);
             this.close();
         }else
-           messages.setMessage("Verifique sus campos","El empleado no se edito correctamente", NotificationType.ERROR);
+           messages.setMessage("Algo salio mal","El empleado no se edito correctamente", NotificationType.ERROR);
     }
 
 }
