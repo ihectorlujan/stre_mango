@@ -5,6 +5,7 @@ import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.modelo.Conexion;
 import com.modelo.Producto;
+import com.validators.Messages;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.collections.FXCollections;
@@ -19,6 +20,10 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import tray.notification.NotificationType;
 import tray.notification.TrayNotification;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 
 public class OpcionProducto extends VBox {
@@ -47,6 +52,13 @@ public class OpcionProducto extends VBox {
     Conexion conexion = new Conexion();
     //Popup esta seguro
     JFXPopup popupEstaSeguro;
+
+    // Messages
+    Messages message = new Messages();
+
+    // Producto a seleccionar
+    Producto producto;
+    int indice;
 
     private ObservableList<Producto> listaProductos;
 
@@ -96,6 +108,15 @@ public class OpcionProducto extends VBox {
 
         btnAceptar.setOnAction(e -> insertProduct(listaProductos));
 
+        btnEditar.setOnAction(e->{
+            int selection = tblProductos.getSelectionModel().getSelectedIndex();
+            if(selection >=0){
+                new EditarProducto(listaProductos,producto,indice);
+            }else{
+                message.setMessage("No selecciono ningun registro","Seleccione el producto a editar",NotificationType.INFORMATION);
+            }
+        });
+
         setBtnEditar(tblProductos);
 
         btnEliminar.setOnAction(x -> {
@@ -104,11 +125,7 @@ public class OpcionProducto extends VBox {
                 popupEliminar(listaProductos, tblProductos);
                 popupEstaSeguro.show(btnEliminar, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.RIGHT);
             }else{
-                TrayNotification trayNotification = new TrayNotification();
-                trayNotification.setTitle("No selecciono ningun registro");
-                trayNotification.setMessage("Seleccione el producto a eliminar");
-                trayNotification.setNotificationType(NotificationType.ERROR);
-                trayNotification.showAndDismiss(Duration.millis(2000));
+                message.setMessage("No selecciono ningun registro","Seleccione el producto a eliminar",NotificationType.WARNING);
             }
 
         });
@@ -118,28 +135,12 @@ public class OpcionProducto extends VBox {
     }
 
     private void setBtnEditar(JFXTreeTableView<Producto> tbl){
-
         tbl.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)->{
 
             if(newValue!=null){
-                final Producto producto = newValue.getValue();
-                final int indice = listaProductos.indexOf(producto);
-                btnEditar.setOnAction(e->{
-                    int selection = tbl.getSelectionModel().getSelectedIndex();
-
-                    if(selection >=0){
-                        new EditarProducto(listaProductos,producto,indice);
-                    }else{
-                        TrayNotification trayNotification = new TrayNotification();
-                        trayNotification.setTitle("No selecciono ningun registro");
-                        trayNotification.setMessage("Seleccione el producto a editar");
-                        trayNotification.setNotificationType(NotificationType.ERROR);
-                        trayNotification.showAndDismiss(Duration.millis(2000));
-                    }
-                });
+                producto = newValue.getValue();
+                indice = listaProductos.indexOf(producto);
             }
-
-
         });
 
 
@@ -438,25 +439,13 @@ public class OpcionProducto extends VBox {
             if (resultSuccess == 1) {
                 listp.add(product);
                 clearFields();
-                TrayNotification trayNotification = new TrayNotification();
-                trayNotification.setTitle("Completado");
-                trayNotification.setMessage("Se agregó exitosamente!");
-                trayNotification.setNotificationType(NotificationType.SUCCESS);
-                trayNotification.showAndDismiss(Duration.millis(3000));
+                message.setMessage("Completado","Se agregó exitosamente!",NotificationType.SUCCESS);
             } else {
-                TrayNotification trayNotification = new TrayNotification();
-                trayNotification.setTitle("Algo salio mal...");
-                trayNotification.setMessage("Intentelo de nuevo");
-                trayNotification.setNotificationType(NotificationType.ERROR);
-                trayNotification.showAndDismiss(Duration.millis(2000));
+                message.setMessage("Algo salio mal","Intentelo de nuevo",NotificationType.ERROR);
 
             }
         }else{
-            TrayNotification trayNotification = new TrayNotification();
-            trayNotification.setTitle("Campos no introducidos");
-            trayNotification.setMessage("Por favor llene los campos!");
-            trayNotification.setNotificationType(NotificationType.ERROR);
-            trayNotification.showAndDismiss(Duration.millis(2000));
+            message.setMessage("Campos no introducidos","Por favor llene los campos!",NotificationType.INFORMATION);
         }
     }
     public void clearFields(){
@@ -467,36 +456,23 @@ public class OpcionProducto extends VBox {
         txtfPrecioCompra.setText("");
         txtfExistencia.setText("");
     }
+
     public void deleteProduct(ObservableList<Producto> listP,JFXTreeTableView tableView){
 
         try{
-            Producto product = listP.get(tableView.getSelectionModel().getSelectedIndex());
 
             conexion.establecerConexion();
-            int resultSuccess = product.eliminarProducto(conexion.getConection());
+            int resultSuccess = producto.eliminarProducto(conexion.getConection());
             conexion.cerrarConexion();
             if (resultSuccess == 1) {
-                listP.remove(product);
-                TrayNotification trayNotification = new TrayNotification();
-                trayNotification.setTitle("Completado");
-                trayNotification.setMessage("Se eliminó correctamente!");
-                trayNotification.setNotificationType(NotificationType.SUCCESS);
-                trayNotification.showAndDismiss(Duration.millis(2000));
+                listP.remove(producto);
+                message.setMessage("Completado","Se eliminó correctamente!",NotificationType.SUCCESS);
             } else {
-                TrayNotification trayNotification = new TrayNotification();
-                trayNotification.setTitle("Algo salio mal...");
-                trayNotification.setMessage("Intentelo de nuevo");
-                trayNotification.setNotificationType(NotificationType.ERROR);
-                trayNotification.showAndDismiss(Duration.millis(2000));
-
+                message.setMessage("Algo salio mal","Intentelo de nuevo",NotificationType.ERROR);
             }
 
         }catch (NumberFormatException e) {
-            TrayNotification trayNotification = new TrayNotification();
-            trayNotification.setTitle("No selecciono registro");
-            trayNotification.setMessage("Seleccione el producto a eliminar");
-            trayNotification.setNotificationType(NotificationType.ERROR);
-            trayNotification.showAndDismiss(Duration.millis(2000));
+            message.setMessage("No selecciono ningun registro","Seleccione el producto a eliminar",NotificationType.WARNING);
         }
 
     }
