@@ -8,6 +8,7 @@ import com.modelo.Producto;
 import com.validators.Messages;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -19,11 +20,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import tray.notification.NotificationType;
-import tray.notification.TrayNotification;
+
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class OpcionProducto extends VBox {
@@ -131,6 +134,12 @@ public class OpcionProducto extends VBox {
         });
         //Evento de buscar
         search(txtfSearch,tblProductos);
+
+        // validaciones
+        validateInput(10,"^\\d{0,6}(\\.\\d{0,2})?$",txtfPrecioCompra,txtfPrecioVenta);
+        validateLength(80,txtfCodigoBarras,txtfNombre);
+        validateInput(4,"^[0-9]{0,4}$",txtfExistencia);
+
 
     }
 
@@ -477,5 +486,47 @@ public class OpcionProducto extends VBox {
 
     }
 
+
+    private void validateLength(int max,TextField... textFields){
+
+
+        for(int i=0;i<textFields.length;i++){
+            final TextField aux = textFields[i];
+            aux.textProperty().addListener((arg0,oldValue,newValue)->{
+                if (newValue !=null) {
+                    if(aux.getText().length() > max){
+                        String s = aux.getText().substring(0,max);
+                        aux.setText(s);
+                    }
+
+                    System.out.println(oldValue);
+                }
+            });
+        }
+    }
+
+
+    private void validateInput(int max,String regex,TextField... textFields){
+        for(int i=0;i<textFields.length;i++){
+            final TextField aux = textFields[i];
+            aux.textProperty().addListener((arg0,oldValue,newValue)->{
+
+                     if(newValue == null){
+                         return;
+                     }
+
+                     if(aux.getText().length() > max){
+                         aux.setText(newValue.substring(0,max));
+                     }
+
+                     if(newValue.matches(regex)){
+                         aux.setText(newValue);
+                     }else{
+                         aux.setText(oldValue);
+                     }
+
+            });
+        }
+    }
 
 }
