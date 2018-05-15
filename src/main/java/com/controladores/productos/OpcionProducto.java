@@ -8,7 +8,6 @@ import com.modelo.Producto;
 import com.validators.Messages;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -18,15 +17,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 import tray.notification.NotificationType;
 
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class OpcionProducto extends VBox {
@@ -51,6 +43,7 @@ public class OpcionProducto extends VBox {
     private JFXButton btnAceptar;
     private JFXButton btnEditar;
     private JFXButton btnEliminar;
+    private JFXButton btnMostrar;
     //Conexion
     Conexion conexion = new Conexion();
     //Popup esta seguro
@@ -131,6 +124,13 @@ public class OpcionProducto extends VBox {
                 message.setMessage("No selecciono ningun registro","Seleccione el producto a eliminar",NotificationType.WARNING);
             }
 
+        });
+
+        btnMostrar.setOnAction(e->{
+            if(producto !=null){
+                new MostrarProducto(producto);
+            }else
+                message.setMessage("No selecciono ningun registro","Seleccione un producto a mostrar",NotificationType.NOTICE);
         });
         //Evento de buscar
         search(txtfSearch,tblProductos);
@@ -252,16 +252,24 @@ public class OpcionProducto extends VBox {
         icoEliminar.setFill(Color.WHITE);
         btnEliminar.setTooltip(new Tooltip("Eliminar"));
 
+        Text icoMostrar = GlyphsDude.createIcon(FontAwesomeIcon.INFO);
+        btnMostrar = new JFXButton();
+        btnMostrar.setGraphic(icoMostrar);
+        icoMostrar.setFill(Color.WHITE);
+        btnMostrar.setTooltip(new Tooltip("Mostrar"));
+
         /*Insertar en el panel de botones*/
         panelBotones.setAlignment(Pos.BASELINE_RIGHT);
         panelBotones.setPadding(new Insets(5,10,5,10));
-        panelBotones.getChildren().addAll(btnAceptar,btnEditar,btnEliminar);
+        panelBotones.getChildren().addAll(btnMostrar,btnAceptar,btnEditar,btnEliminar);
 
         HBox.setHgrow(panelBotones,Priority.ALWAYS);
-        HBox.setMargin(btnAceptar,new Insets(5,5,5,5));
-        HBox.setMargin(btnEditar,new Insets(5,5,5,5));
+        HBox.setMargin(btnAceptar,new Insets(5,5,5,10));
+        HBox.setMargin(btnEditar,new Insets(5,5,5,10));
+        HBox.setMargin(btnEliminar,new Insets(5,5,5,10));
+        HBox.setMargin(btnMostrar,new Insets(5,5,5,10));
         HBox.setHgrow(box,Priority.ALWAYS);
-        box.getChildren().add(panelBotones);
+        box.getChildren().addAll(panelBotones);
 
         return box;
 
@@ -488,7 +496,6 @@ public class OpcionProducto extends VBox {
 
 
     private void validateLength(int max,TextField... textFields){
-
 
         for(int i=0;i<textFields.length;i++){
             final TextField aux = textFields[i];

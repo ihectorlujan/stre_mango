@@ -1,0 +1,27 @@
+.labelPrinc {
+    -fx-font-family: Quicksand;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.labelSub {
+    -fx-font-family: Quicksand;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+
+
+.white {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 2.5, 0.8, 0.0,0.0);
+}
+
+.btnRaisedGreenDark {
+    -fx-background-color: #33691e;
+    -fx-text-fill: white;
+    -fx-font-family: Quicksand;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -jfx-button-type: RAISED;
+}
