@@ -13,8 +13,8 @@ import java.sql.Statement;
 public class Cliente extends RecursiveTreeObject <Cliente> {
     private IntegerProperty id;
     private StringProperty nombre;
-    private StringProperty apellido_paterno;
-    private StringProperty apellido_materno;
+    private StringProperty primer_apellido;
+    private StringProperty segundo_apellido;
     private IntegerProperty edad;
     private StringProperty sexo;
     private StringProperty telefono;
@@ -29,11 +29,11 @@ public class Cliente extends RecursiveTreeObject <Cliente> {
     private StringProperty tipo_asentamiento;
     private BooleanProperty isHabilitado;
 
-    public Cliente(Integer id, String nombre, String apellido_paterno, String apellido_materno, Integer edad, String sexo, String telefono, String correo, String nCalle, String nCasa, String codigoPostal, String estado, String ciudad, String municipio, String asentamiento, Boolean isHabilitado, String tipo_asentamiento) {
+    public Cliente(Integer id, String nombre, String primer_apellido, String segundo_apellido, Integer edad, String sexo, String telefono, String correo, String nCalle, String nCasa, String codigoPostal, String estado, String ciudad, String municipio, String asentamiento, Boolean isHabilitado, String tipo_asentamiento) {
         this.id = new SimpleIntegerProperty(id);
         this.nombre = new SimpleStringProperty(nombre);
-        this.apellido_paterno = new SimpleStringProperty(apellido_paterno);
-        this.apellido_materno = new SimpleStringProperty(apellido_materno);
+        this.primer_apellido = new SimpleStringProperty(primer_apellido);
+        this.segundo_apellido = new SimpleStringProperty(segundo_apellido);
         this.edad = new SimpleIntegerProperty(edad);
         this.sexo = new SimpleStringProperty(sexo);
         this.telefono = new SimpleStringProperty(telefono);
@@ -74,28 +74,28 @@ public class Cliente extends RecursiveTreeObject <Cliente> {
         this.nombre.set(nombre);
     }
 
-    public String getApellido_paterno() {
-        return apellido_paterno.get();
+    public String getPrimer_apellido() {
+        return primer_apellido.get();
     }
 
-    public StringProperty apellido_paternoProperty() {
-        return apellido_paterno;
+    public StringProperty primer_apellidoProperty() {
+        return primer_apellido;
     }
 
-    public void setApellido_paterno(String apellido_paterno) {
-        this.apellido_paterno.set(apellido_paterno);
+    public void setPrimer_apellido(String primer_apellido) {
+        this.primer_apellido.set(primer_apellido);
     }
 
-    public String getApellido_materno() {
-        return apellido_materno.get();
+    public String getSegundo_apellido() {
+        return segundo_apellido.get();
     }
 
-    public StringProperty apellido_maternoProperty() {
-        return apellido_materno;
+    public StringProperty segundo_apellidoProperty() {
+        return segundo_apellido;
     }
 
-    public void setApellido_materno(String apellido_materno) {
-        this.apellido_materno.set(apellido_materno);
+    public void setSegundo_apellido(String segundo_apellido) {
+        this.segundo_apellido.set(segundo_apellido);
     }
 
     public int getEdad() {
@@ -263,8 +263,8 @@ public class Cliente extends RecursiveTreeObject <Cliente> {
                 lista.add(new Cliente(
                         resultSet.getInt("id"),
                         resultSet.getString("nombre"),
-                        resultSet.getString("apellido_paterno"),
-                        resultSet.getString("apellido_materno"),
+                        resultSet.getString("primer_apellido"),
+                        resultSet.getString("segundo_apellido"),
                         resultSet.getInt("edad"),
                         resultSet.getString("sexo"),
                         resultSet.getString("telefono"),

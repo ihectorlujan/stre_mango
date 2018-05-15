@@ -4,13 +4,12 @@ import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.modelo.Conexion;
 import com.modelo.cliente.Cliente;
-import com.modelo.cliente.Cliente;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
@@ -19,57 +18,68 @@ import javafx.scene.text.Text;
 public class Opcion_clientes extends VBox {
 
     Conexion connection = new Conexion();
+    private Cliente cliente = null;
+    private Insets insetsBase = new Insets(10);
+    private Label titulo = new Label("Datos del Cliente.");
+    private HBox hBoxTitulo = new HBox();
+    private HBox hBoxDomicilio = new HBox();
+    private HBox hBoxBusqueda = new HBox();
+    private HBox hBoxBotones = new HBox();
+    private HBox hBoxLista = new HBox();
+    private HBox hBoxSpace = new HBox();
+    private HBox hBoxSpace2 = new HBox();
+    private HBox hBoxSpace3 = new HBox();
+    private HBox hBoxSpace4 = new HBox();
+    private GridPane gridPane = new GridPane();
+    private GridPane gridPane2 = new GridPane();
+    private Label lnombre = new Label("Nombre: ");
+    private Label lApellidoP = new Label("Apellido paterno: ");
+    private Label lApellidoM = new Label("Apellido materno: ");
+    private Label lEdad = new Label("Edad: ");
+    private Label lSexoH = new Label("Hombre: ");
+    private Label lSexoM = new Label("Mujer: ");
+    private Label lTelefono = new Label("Telefono: ");
+    private Label lEmail = new Label("Email: ");
+    private Label lDomicilio = new Label("Datos domiciliarios del Cliente.");
+    private Label lCalle = new Label("Calle: ");
+    private Label lNCasa = new Label("Numero de casa: ");
+    private Label lCP = new Label("C.P: ");
+    private Label lBuscar = new Label("Buscar: ");
+    private Label lId = new Label("ID: ");
+    private Label lIdContainer = new Label("13");
+    private Label lLista = new Label("Lista de Clientes.");
+    private TextField tNombre = new TextField();
+    private TextField tApellidoP = new TextField();
+    private TextField tApellidoM = new TextField();
+    private TextField tTelefono = new TextField();
+    private TextField tEmail = new TextField();
+    private TextField tCalle = new TextField();
+    private TextField tNcasa = new TextField();
+    private TextField tCP = new TextField();
+    private TextField tBuscar = new TextField();
+    private ComboBox cboxEdad = new ComboBox<Integer>();
+    private RadioButton rbSexoH = new RadioButton();
+    private RadioButton rbSexoM = new RadioButton();   //Group - Cliente femenino
+    private JFXButton btnAnadir = new JFXButton();
+    private JFXButton btnEditar = new JFXButton();
+    private JFXButton btnEliminar = new JFXButton();
+    private JFXButton btnMas = new JFXButton();
+    private Label lEstado = new Label("Estado: ");
+    private Label lCiudad = new Label("Ciudad: ");
+    private Label lMunicipio = new Label("Municipio: ");
+    private Label lTipoAsentamiento = new Label("Tipo: ");
+    private Label lAsentamiento = new Label("Asentamiento: ");
+    private TextField tEstado = new TextField();
+    private TextField tCiudad = new TextField();
+    private TextField tMunicipio = new TextField();
+    private TextField tTipoAsentamiento = new TextField();
+    private TextField tAsentamiento = new TextField();
+    private JFXPopup popupCodigoPostal;
 
     public Opcion_clientes(){
-
-        var insetsBase = new Insets(10);
-        var titulo = new Label("Datos del Cliente.");
-        var hBoxTitulo = new HBox();
-        var hBoxDomicilio = new HBox();
-        var hBoxBusqueda = new HBox();
-        var hBoxBotones = new HBox();
-        var hBoxLista = new HBox();
-        var hBoxSpace = new HBox();
-        var hBoxSpace2 = new HBox();
-        var hBoxSpace3 = new HBox();
-        var hBoxSpace4 = new HBox();
-        var gridPane = new GridPane();
-        var gridPane2 = new GridPane();
-        var lnombre = new Label("Nombre: ");
-        var lApellidoP = new Label("Apellido paterno: ");
-        var lApellidoM = new Label("Apellido materno: ");
-        var lEdad = new Label("Edad: ");
-        var lSexoH = new Label("Hombre: ");
-        var lSexoM = new Label("Mujer: ");
-        var lTelefono = new Label("Telefono: ");
-        var lEmail = new Label("Email: ");
-        var lDomicilio = new Label("Datos domiciliarios del Cliente.");
-        var lCalle = new Label("Calle: ");
-        var lNCasa = new Label("Numero de casa: ");
-        var lCP = new Label("C.P: ");
-        var lBuscar = new Label("Buscar: ");
-        var lId = new Label("ID: ");
-        var lIdContainer = new Label("13");
-        var lLista = new Label("Lista de Clientes.");
-        var tNombre = new TextField();
-        var tApellidoP = new TextField();
-        var tApellidoM = new TextField();
-        var tTelefono = new TextField();
-        var tEmail = new TextField();
-        var tCalle = new TextField();
-        var tNcasa = new TextField();
-        var tCP = new TextField();
-        var tBuscar = new TextField();
-        var cboxEdad = new ComboBox<Integer>();
-        var rbSexoH = new RadioButton();
-        var rbSexoM = new RadioButton();   //Group - Cliente femenino
-        var btnAnadir = new JFXButton();
-        var btnEditar = new JFXButton();
-        var btnEliminar = new JFXButton();
         var icoEdit = GlyphsDude.createIcon(FontAwesomeIcon.EDIT,"14px");
         var icoAdd = GlyphsDude.createIcon(FontAwesomeIcon.USER_PLUS,"14px");
         var icoDelete = GlyphsDude.createIcon(FontAwesomeIcon.TRASH_ALT,"14px");
-        var btnMas = new JFXButton();
         var icoInfo = GlyphsDude.createIcon(FontAwesomeIcon.INFO,"14px");
 
         cboxEdad.getItems().addAll(18,19,20,21,22,23,24);
@@ -123,7 +133,6 @@ public class Opcion_clientes extends VBox {
 
 
         // Datos del GridPane2.
-
         tCalle.setPrefWidth(250);
         tNcasa.setPrefWidth(60);
         tCP.setPrefWidth(60);
@@ -184,9 +193,13 @@ public class Opcion_clientes extends VBox {
 
         // Tabla de clientes.
         var table = createTable(listClientes);
+        establecerCampos(table);
 
-        // Agrega los nodos () al VBox.
-        getChildren().addAll(hBoxTitulo, gridPane, hBoxDomicilio, gridPane2, hBoxLista, table);
+        // Accion de los botones.
+        btnMas.setOnAction(x -> {
+                    initPopUpCodigoPostal();
+                    popupCodigoPostal.show(btnMas, JFXPopup.PopupVPosition.BOTTOM, JFXPopup.PopupHPosition.RIGHT);// Agrega los nodos () al VBox.
+                });getChildren().addAll(hBoxTitulo, gridPane, hBoxDomicilio, gridPane2, hBoxLista, table);
 
         setPadding(insetsBase);
 
@@ -207,8 +220,8 @@ public class Opcion_clientes extends VBox {
         var tableView = new JFXTreeTableView<>(root);
 
         var clmNombre = new JFXTreeTableColumn<Cliente, String>("Nombre");
-        var clmApellidoP = new JFXTreeTableColumn<Cliente, String>("Apellido paterno");
-        var clmApellidoM = new JFXTreeTableColumn<Cliente, String>("Apellido materno");
+        var clmApellidoP = new JFXTreeTableColumn<Cliente, String>("Primer apellido");
+        var clmApellidoM = new JFXTreeTableColumn<Cliente, String>("Segundo apellido");
         var clmEdad = new JFXTreeTableColumn<Cliente, Integer>("Edad");
         var clmTel = new JFXTreeTableColumn<Cliente, String>("Telefono");
         var clmCorreo = new JFXTreeTableColumn<Cliente, String>("Correo");
@@ -227,7 +240,7 @@ public class Opcion_clientes extends VBox {
         clmApellidoP.setPrefWidth(195);
         clmApellidoP.setCellValueFactory((TreeTableColumn.CellDataFeatures<Cliente, String> param) -> {
             if (clmApellidoP.validateValue(param))
-                return param.getValue().getValue().apellido_paternoProperty();
+                return param.getValue().getValue().primer_apellidoProperty();
             else
                 return clmApellidoP.getComputedValue(param);
         });
@@ -236,7 +249,7 @@ public class Opcion_clientes extends VBox {
         clmApellidoM.setPrefWidth(180);
         clmApellidoM.setCellValueFactory((TreeTableColumn.CellDataFeatures<Cliente, String> param) -> {
             if (clmApellidoM.validateValue(param))
-                return param.getValue().getValue().apellido_maternoProperty();
+                return param.getValue().getValue().segundo_apellidoProperty();
             else
                 return clmApellidoM.getComputedValue(param);
         });
@@ -278,5 +291,69 @@ public class Opcion_clientes extends VBox {
     private void setStyleIcons(Text... text) {
         for(Text t: text)
             t.getStyleClass().add("ico");
+    }
+
+    private void establecerCampos(JFXTreeTableView<Cliente> tableView) {
+        tableView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            if(newValue != null) {
+                cliente = newValue.getValue();
+                lIdContainer.setText(newValue.getValue().getId()+"");
+                tNombre.setText(newValue.getValue().getNombre());
+                tApellidoP.setText(newValue.getValue().getPrimer_apellido());
+                tApellidoM.setText(newValue.getValue().getSegundo_apellido());
+                cboxEdad.setValue(newValue.getValue().getEdad()+"");
+                if (newValue.getValue().getSexo().equals("hombre"))
+                    rbSexoH.setSelected(true);
+                else
+                    rbSexoM.setSelected(true);
+                tTelefono.setText(newValue.getValue().getTelefono());
+                tEmail.setText(newValue.getValue().getCorreo());
+                tEstado.setText(newValue.getValue().getEstado());
+                tCalle.setText(newValue.getValue().getnCalle());
+                tNcasa.setText(newValue.getValue().getnCasa()+"");
+                tCP.setText(newValue.getValue().getCodigoPostal());
+                tAsentamiento.setText(newValue.getValue().getAsentamiento());
+                tCiudad.setText(newValue.getValue().getCiudad());
+                tMunicipio.setText(newValue.getValue().getMunicipio());
+                tTipoAsentamiento.setText(newValue.getValue().getTipo_asentamiento());
+            }
+        }));
+    }
+
+    private void initPopUpCodigoPostal() {
+        var pane = new GridPane();
+
+        //Columns
+        var column1 = new ColumnConstraints();
+        var column2 = new ColumnConstraints();
+
+        column1.setHgrow(Priority.SOMETIMES);
+        column2.setHgrow(Priority.ALWAYS);
+
+        pane.add(lEstado,0,0);
+        pane.add(lCiudad,0,1);
+        pane.add(lMunicipio,0,2);
+        pane.add(lTipoAsentamiento,0,3);
+        pane.add(lAsentamiento,0,4);
+
+        pane.add(tEstado,1,0);
+        pane.add(tCiudad,1,1);
+        pane.add(tMunicipio,1,2);
+        pane.add(tTipoAsentamiento,1,3);
+        pane.add(tAsentamiento,1,4);
+
+        pane.getChildren().forEach(x -> {
+            if (x instanceof TextField)
+                ((TextField) x).setEditable(false);
+        });
+
+        pane.getStylesheets().setAll("/estilos/empleados.css");
+        pane.setHgap(20);
+        pane.setVgap(4);
+        pane.setPrefSize(400,190);
+        pane.getColumnConstraints().addAll(column1, column2);
+        pane.setPadding(new Insets(10));
+
+        popupCodigoPostal = new JFXPopup(pane);
     }
 }
