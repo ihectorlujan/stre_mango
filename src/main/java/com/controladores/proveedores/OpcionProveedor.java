@@ -5,6 +5,8 @@ import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import com.modelo.Conexion;
+import com.modelo.Proveedor;
 import com.modelo.empleado.Empleado;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,9 +16,14 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
 public class OpcionProveedor extends VBox {
+    Conexion conexion = new Conexion();
+    ObservableList<Proveedor> listProvee;
 
 
     public OpcionProveedor(){
+        conexion.establecerConexion();
+        listProvee = Proveedor.llenarProveedores(conexion.getConection());
+        conexion.cerrarConexion();
 
         var insetsBase = new Insets(10);
         var titulo = new Label("Datos del proveedor.");
@@ -139,7 +146,7 @@ public class OpcionProveedor extends VBox {
 
 
         // Tabla de clientes.
-        var table = createTable(listEmpleados);
+        var table = createTable(listProvee);
 
         // Agrega los nodos () al VBox.
         getChildren().addAll(hBoxTitulo, gridPane, hBoxDomicilio, gridPane2, hBoxLista, table);
@@ -156,48 +163,48 @@ public class OpcionProveedor extends VBox {
                 .forEach(x -> ((TextField) x).setEditable(false));
     }
 
-    private JFXTreeTableView createTable(ObservableList<Empleado> list) {
-        final TreeItem<Empleado> root = new RecursiveTreeItem<>(list, RecursiveTreeObject::getChildren);
+    private JFXTreeTableView createTable(ObservableList<Proveedor> list) {
+        final TreeItem<Proveedor> root = new RecursiveTreeItem<>(list, RecursiveTreeObject::getChildren);
 
         var tableView = new JFXTreeTableView<>(root);
 
-        var clmNombre = new JFXTreeTableColumn<Empleado, String>("Razon Social");
-        var clmApellido = new JFXTreeTableColumn<Empleado, String>("Email");
-        var clmTelefono = new JFXTreeTableColumn<Empleado, String>("Telefono");
-        var clmCorreo = new JFXTreeTableColumn<Empleado, String>("Direccion");
+        var clmNombre = new JFXTreeTableColumn<Proveedor, String>("Razon Social");
+        var clmApellido = new JFXTreeTableColumn<Proveedor, String>("Email");
+        var clmTelefono = new JFXTreeTableColumn<Proveedor, String>("Telefono");
+        var clmCorreo = new JFXTreeTableColumn<Proveedor, String>("Direccion");
 
         clmNombre.setResizable(false);
         clmNombre.setPrefWidth(195);
-        clmNombre.setCellValueFactory((TreeTableColumn.CellDataFeatures<Empleado, String> param) -> {
+        clmNombre.setCellValueFactory((TreeTableColumn.CellDataFeatures<Proveedor, String> param) -> {
             if (clmNombre.validateValue(param))
-                return param.getValue().getValue().nombreProperty();
+                return param.getValue().getValue().razonSocialProperty();
             else
                 return clmNombre.getComputedValue(param);
         });
 
         clmApellido.setResizable(false);
         clmApellido.setPrefWidth(195);
-        clmApellido.setCellValueFactory((TreeTableColumn.CellDataFeatures<Empleado, String> param) -> {
+        clmApellido.setCellValueFactory((TreeTableColumn.CellDataFeatures<Proveedor, String> param) -> {
             if (clmApellido.validateValue(param))
-                return param.getValue().getValue().nombreProperty();
+                return param.getValue().getValue().correoProperty();
             else
                 return clmApellido.getComputedValue(param);
         });
 
         clmTelefono.setResizable(false);
         clmTelefono.setPrefWidth(180);
-        clmTelefono.setCellValueFactory((TreeTableColumn.CellDataFeatures<Empleado, String> param) -> {
+        clmTelefono.setCellValueFactory((TreeTableColumn.CellDataFeatures<Proveedor, String> param) -> {
             if (clmTelefono.validateValue(param))
-                return param.getValue().getValue().nombreProperty();
+                return param.getValue().getValue().phoneProperty();
             else
                 return clmTelefono.getComputedValue(param);
         });
 
         clmCorreo.setResizable(false);
         clmCorreo.setPrefWidth(190);
-        clmCorreo.setCellValueFactory((TreeTableColumn.CellDataFeatures<Empleado, String> param) -> {
+        clmCorreo.setCellValueFactory((TreeTableColumn.CellDataFeatures<Proveedor, String> param) -> {
             if (clmCorreo.validateValue(param))
-                return param.getValue().getValue().nombreProperty();
+                return param.getValue().getValue().asentamientoProperty();
             else
                 return clmCorreo.getComputedValue(param);
         });
