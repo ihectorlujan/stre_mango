@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Proveedor extends RecursiveTreeObject {
+public class Proveedor extends RecursiveTreeObject<Proveedor>{
 
     private IntegerProperty id;
     private StringProperty razonSocial;

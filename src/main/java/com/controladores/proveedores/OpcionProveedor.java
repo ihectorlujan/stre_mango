@@ -19,48 +19,87 @@ public class OpcionProveedor extends VBox {
     Conexion conexion = new Conexion();
     ObservableList<Proveedor> listProvee;
 
+   private Insets   insetsBase;
+   private Label    titulo;
+   private HBox     hBoxTitulo;
+   private HBox     hBoxDomicilio;
+   private HBox     hBoxBusqueda;
+   private HBox     hBoxLista;
+   private HBox     hBoxTabla;
+   private HBox     hBoxSpace;
+   private HBox     hBoxSpace2;
+   private HBox     hBoxSpace3;
+   private HBox     hBoxSpace4;
+   private GridPane gridPane;
+   private GridPane gridPane2;
+   private Label    lrazonSocial;
+   private Label    lTelefono;
+   private Label    lEmail;
+   private Label    lDomicilio;
+   private Label    lCalle;
+   private Label    lNCasa;
+   private Label    lCP;
+   private Label    lEstado;
+   private Label    lBuscar;
+   private Label    lId;
+   private Label    lIdContainer;
+   private Label    lLista;
+   private TextField tRazonSocial;
+   private TextField tTelefono;
+   private TextField tEmail;
+   private TextField tCalle;
+   private TextField tNcasa;
+   private TextField tCP;
+   private TextField tEstado;
+   private TextField  tBuscar;
+   private ComboBox<Integer>  cboxEdad ;
+   private RadioButton rbSexoH ;
+   private JFXButton   btnMas ;
+
+    private Proveedor proveedor=null;
 
     public OpcionProveedor(){
         conexion.establecerConexion();
         listProvee = Proveedor.llenarProveedores(conexion.getConection());
         conexion.cerrarConexion();
 
-        var insetsBase = new Insets(10);
-        var titulo = new Label("Datos del proveedor.");
-        var hBoxTitulo = new HBox();
-        var hBoxDomicilio = new HBox();
-        var hBoxBusqueda = new HBox();
-        var hBoxLista = new HBox();
-        var hBoxTabla = new HBox();
-        var hBoxSpace = new HBox();
-        var hBoxSpace2 = new HBox();
-        var hBoxSpace3 = new HBox();
-        var hBoxSpace4 = new HBox();
-        var gridPane = new GridPane();
-        var gridPane2 = new GridPane();
-        var lrazonSocial = new Label("Razon Social: ");
-        var lTelefono = new Label("Telefono: ");
-        var lEmail = new Label("Email: ");
-        var lDomicilio = new Label("Datos domiciliarios del Proveedor.");
-        var lCalle = new Label("Calle: ");
-        var lNCasa = new Label("Numero de casa: ");
-        var lCP = new Label("C.P: ");
-        var lEstado = new Label("Estado: ");
-        var lBuscar = new Label("Buscar: ");
-        var lId = new Label("ID: ");
-        var lIdContainer = new Label("128");
-        var lLista = new Label("Lista de Proveedores.");
-        var tRazonSocial = new TextField();
-        var tTelefono = new TextField();
-        var tEmail = new TextField();
-        var tCalle = new TextField();
-        var tNcasa = new TextField();
-        var tCP = new TextField();
-        var tEstado = new TextField();
-        var tBuscar = new TextField();
-        var cboxEdad = new ComboBox<Integer>();
-        var rbSexoH = new RadioButton();
-        var btnMas = new JFXButton();
+        insetsBase   = new Insets(10);
+        titulo       = new Label("Datos del proveedor.");
+        hBoxTitulo   = new HBox();
+        hBoxDomicilio= new HBox();
+        hBoxBusqueda = new HBox();
+        hBoxLista    = new HBox();
+        hBoxTabla    = new HBox();
+        hBoxSpace    = new HBox();
+        hBoxSpace2   = new HBox();
+        hBoxSpace3   = new HBox();
+        hBoxSpace4   = new HBox();
+        gridPane     = new GridPane();
+        gridPane2    = new GridPane();
+        lrazonSocial = new Label("Razon Social: ");
+        lTelefono    = new Label("Telefono: ");
+        lEmail       = new Label("Email: ");
+        lDomicilio   = new Label("Datos domiciliarios del Proveedor.");
+        lCalle       = new Label("Calle: ");
+        lNCasa       = new Label("Numero de casa: ");
+        lCP          = new Label("C.P: ");
+        lEstado      = new Label("Estado: ");
+        lBuscar      = new Label("Buscar: ");
+        lId          = new Label("ID: ");
+        lIdContainer = new Label();
+        lLista       = new Label("Lista de Proveedores.");
+        tRazonSocial = new TextField();
+        tTelefono    = new TextField();
+        tEmail       = new TextField();
+        tCalle       = new TextField();
+        tNcasa       = new TextField();
+        tCP          = new TextField();
+        tEstado      = new TextField();
+        tBuscar      = new TextField();
+        cboxEdad     = new ComboBox<Integer>();
+        rbSexoH      = new RadioButton();
+        btnMas       = new JFXButton();
+
         cboxEdad.getItems().addAll(18,19,20,21,22,23,24);
         ObservableList<Empleado> listEmpleados = FXCollections.observableArrayList();
 
@@ -147,6 +186,7 @@ public class OpcionProveedor extends VBox {
 
         // Tabla de clientes.
         var table = createTable(listProvee);
+        establecerCampos(table);
 
         // Agrega los nodos () al VBox.
         getChildren().addAll(hBoxTitulo, gridPane, hBoxDomicilio, gridPane2, hBoxLista, table);
@@ -214,6 +254,27 @@ public class OpcionProveedor extends VBox {
         tableView.getColumns().setAll(clmNombre, clmApellido, clmTelefono, clmCorreo);
 
         return tableView;
+    }
+
+    private void establecerCampos(JFXTreeTableView<Proveedor> tableView) {
+        tableView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            if(newValue != null) {
+                proveedor = newValue.getValue();
+                lIdContainer.setText(newValue.getValue().getId()+"");
+                tRazonSocial.setText(newValue.getValue().getRazonSocial());
+                tTelefono.setText(newValue.getValue().getPhone());
+                tEmail.setText(newValue.getValue().getCorreo());
+                tCalle.setText(newValue.getValue().getCalle());
+                tNcasa.setText(newValue.getValue().getNoCasa());
+                tEstado.setText(newValue.getValue().getEstado());
+                //tCP.setText(newValue.getValue().getCodigoPostal());
+                //txtAsentamiento.setText(newValue.getValue().getAsentamiento());
+                //txtCiudad.setText(newValue.getValue().getCiudad());
+                //txtMunicipio.setText(newValue.getValue().getMunicipio());
+                //txtTipoAsentamiento.setText(newValue.getValue().getTipoAsentamiento());
+                //txtEdad.setText(newValue.getValue().getEdad()+"");
+            }
+        }));
     }
 
 
