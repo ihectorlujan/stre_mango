@@ -7,6 +7,7 @@ import com.modelo.empleado.Empleado;
 import com.validators.Messages;
 import com.validators.EntryValidator;
 import com.validators.ValidateFields;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -130,6 +131,7 @@ public class ventanaEmpleado extends Stage {
             }
 
         });
+
 
         //Add childs to pane Principal
         panePrincipal.getChildren().addAll(hBoxTitulo, gridPane, hBoxDatosDomiciliarios, gridPaneDomicilio, hBoxCodigoPostal, hBoxBntAgregar);

@@ -21,7 +21,7 @@ import tray.notification.TrayNotification;
 
 public class OpcionEmpleado extends VBox {
 
-    Conexion connection = new Conexion();
+    private Conexion connection = new Conexion();
 
     private TextField txtNombre = new TextField();
     private TextField txtApellidoPaterno = new TextField();
@@ -37,6 +37,9 @@ public class OpcionEmpleado extends VBox {
     private TextField txtTipoAsentamiento = new TextField();
     private TextField txtCiudad = new TextField();
     private TextField txtMunicipio = new TextField();
+    private TextField txtUsuario = new TextField();
+    private TextField txtPrivilegio = new TextField();
+    private PasswordField txtPassword = new PasswordField();
     private Label lblIdN = new Label("");
     private Label lblEstado = new Label("Estado:");
     private Label lblTipoAsentamiento = new Label("Tipo: ");
@@ -57,9 +60,9 @@ public class OpcionEmpleado extends VBox {
         var bottomInsets = new Insets(0,0,10,0);
         var lblDatos = new Label("Datos Personales del empleado");
         var lblListEmpleados = new Label("Lista de empleados");
-        var lblDatosDomiciliaros = new Label("Datos domiciliarios del empleado");
         var gridPane = new GridPane();
         var gridPaneDomicilio = new GridPane();
+        var gridPaneUsuario = new GridPane();
         var lblID = new Label("ID:");
         var lblNombre = new Label("Nombre:");
         var lblApellidoPaterno = new Label("Primer Apellido:");
@@ -72,13 +75,15 @@ public class OpcionEmpleado extends VBox {
         var lblNoCasa = new Label("No de casa:");
         var lblCodigoPostal = new Label("C.P:");
         var lblBuscar = new Label("Buscar:");
+        var lblUsuario = new Label("Usuario:");
+        var lblPassword = new Label("Password:");
+        var lblPrivilegio = new Label("Privilegio");
         var toggleGroup = new ToggleGroup();
         var hBox = new HBox();
         var hBoxTituloSearch = new HBox();
         var hBoxListaEmpleado = new HBox();
         var hBoxSexo = new HBox();
         var hBoxCodigoPostal = new HBox();
-        var hBoxDomicilio = new HBox();
         var hBoxId = new HBox(5);
         var hBoxSearch = new HBox();
         var hBoxEdad = new HBox();
@@ -125,11 +130,6 @@ public class OpcionEmpleado extends VBox {
         txtCodPostal.setPrefWidth(60);
         txtEdad.setPrefWidth(40);
         txtEdad.setEditable(false);
-
-        //HBox domicilio
-        hBoxDomicilio.getChildren().add(lblDatosDomiciliaros);
-        hBoxDomicilio.setPadding(new Insets(5));
-        hBoxDomicilio.getStyleClass().add("panelWhite");
 
         //Radio Buttons
         rbHombre.setToggleGroup(toggleGroup);
@@ -223,6 +223,20 @@ public class OpcionEmpleado extends VBox {
         blockGridPaneFields(gridPaneDomicilio);
         gridPaneDomicilio.setPadding(new Insets(10));
 
+        //grid pane usuario
+        gridPaneUsuario.setPadding(new Insets(10));
+        gridPaneUsuario.add(lblUsuario, 0,0);
+        gridPaneUsuario.add(txtUsuario, 1,0);
+        gridPaneUsuario.add(lblPassword,2,0);
+        gridPaneUsuario.add(txtPassword,3,0);
+        gridPaneUsuario.add(lblPrivilegio, 4, 0);
+        gridPaneUsuario.add(txtPrivilegio,5,0);
+        gridPaneUsuario.setHgap(10);
+        gridPaneUsuario.getColumnConstraints().addAll(column1, column2, column3, column4, column5, column6);
+        gridPaneUsuario.getColumnConstraints().forEach(x -> x.setHgrow(Priority.SOMETIMES));
+        gridPaneUsuario.getStyleClass().add("panelWhite");
+        blockGridPaneFields(gridPaneUsuario);
+
         hBox.getChildren().addAll(hBoxListaEmpleado, btnAnadir, btnEditar, btnEliminar);
         hBox.getStyleClass().add("panelWhite");
         hBox.setAlignment(Pos.CENTER_RIGHT);
@@ -253,12 +267,12 @@ public class OpcionEmpleado extends VBox {
 
         VBox.setMargin(hBoxTituloSearch, bottomInsets);
         VBox.setMargin(gridPane, bottomInsets);
-        VBox.setMargin(hBoxDomicilio, bottomInsets);
         VBox.setMargin(gridPaneDomicilio, bottomInsets);
+        VBox.setMargin(gridPaneUsuario, bottomInsets);
         VBox.setMargin(hBox, bottomInsets);
 
         setPadding(new Insets(10));
-        getChildren().addAll(hBoxTituloSearch, gridPane, hBoxDomicilio, gridPaneDomicilio, hBox, table);
+        getChildren().addAll(hBoxTituloSearch, gridPane, gridPaneDomicilio, gridPaneUsuario, hBox, table);
         getStylesheets().add(getClass().getResource("/estilos/empleados.css").toExternalForm());
     }
 
@@ -353,7 +367,7 @@ public class OpcionEmpleado extends VBox {
         var clmMunicipio = new JFXTreeTableColumn<Empleado, String>("Municipio");
 
         clmID.setResizable(false);
-        clmID.setPrefWidth(50);
+        clmID.setPrefWidth(90);
         clmID.setCellValueFactory((TreeTableColumn.CellDataFeatures<Empleado, Integer> param) -> {
             if (clmID.validateValue(param))
                 return param.getValue().getValue().idProperty().asObject();
@@ -447,6 +461,9 @@ public class OpcionEmpleado extends VBox {
                 txtMunicipio.setText(newValue.getValue().getMunicipio());
                 txtTipoAsentamiento.setText(newValue.getValue().getTipoAsentamiento());
                 txtEdad.setText(newValue.getValue().getEdad()+"");
+                txtUsuario.setText(newValue.getValue().getUsuario());
+                txtPassword.setText(newValue.getValue().getPassword());
+                txtPrivilegio.setText(newValue.getValue().getTipo());
             }
         }));
     }

@@ -33,8 +33,13 @@
 }
 
 .anchorPane {
-    -fx-background-image: url("/imagenes/background.jpg");
+    -fx-background-image: url("https://images.pexels.com/photos/162601/nuts-screw-metal-thread-162601.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
     -fx-background-size: cover;
+}
+
+.panel {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgb(255.0, 255.0, 255.0, 0.9), 5.0, 0.7, 0.0,0.0);
 }
 
 .menus{

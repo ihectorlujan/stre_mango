@@ -1,6 +1,7 @@
 package com.validators;
 
 import com.jfoenix.controls.JFXComboBox;
+import javafx.beans.property.IntegerProperty;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import jdk.jfr.Description;

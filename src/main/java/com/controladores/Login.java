@@ -3,15 +3,25 @@ package com.controladores;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+import com.modelo.Conexion;
+import com.validators.EntryValidator;
+import com.validators.Messages;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tray.notification.NotificationType;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Login extends AnchorPane {
     private JFXButton btnSignIn = new JFXButton("Sign In");
@@ -25,6 +35,8 @@ public class Login extends AnchorPane {
     private AnchorPane apane = new AnchorPane();
     private AnchorPane forgetPasswordPane = new AnchorPane();
     private Text icoBack;
+    private Conexion conexion = new Conexion();
+    private Messages messages = new Messages();
 
     public Login(Stage primaryStage) {
         getChildren().addAll(apane, label);
@@ -44,8 +56,13 @@ public class Login extends AnchorPane {
 
         // Eventos
         btnSignIn.setOnAction(e -> {
-            primaryStage.close();
-            new DashBoard();
+            if (isLogin(textField.getText(), txtPassword.getText())) {
+                messages.setMessage("Bienvenido","Usted es un administrador", NotificationType.SUCCESS);
+                primaryStage.close();
+                new DashBoard();
+            }else{
+                messages.setMessage("Verifique","Datos incorrectos", NotificationType.WARNING);
+            }
         });
 
         btnForgetPassword.setOnAction(e -> {
@@ -70,12 +87,28 @@ public class Login extends AnchorPane {
         getStylesheets().add(getClass().getResource("/estilos/login.css").toExternalForm());
     }
 
+
+    private boolean isLogin(String user, String password) {
+        conexion.establecerConexion();
+        try {
+            Statement statement = conexion.getConection().createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM isLogin('" + user +"','"+ password +"')");
+
+            if (resultSet.next())
+                return resultSet.getBoolean(1);
+
+        }catch (SQLException w) {
+            w.printStackTrace();
+        }
+        return false;
+    }
+
     private void paneProperties(AnchorPane apane) {
         apane.setTranslateX(341);
         apane.setTranslateY(22);
         apane.setPrefHeight(434);
         apane.setPrefWidth(331);
-        apane.setStyle("-fx-background-color: white");
+        apane.getStyleClass().add("panel");
         apane.getChildren().addAll(lblSign,lblTip,btnSignIn, btnForgetPassword, textField, txtPassword);
     }
 
@@ -151,7 +184,7 @@ public class Login extends AnchorPane {
     }
 
     private void lblChinoJrProperties(Label chino) {
-        chino.setRotate(-23.6);
+        chino.setRotate(-15.6);
         chino.setTranslateX(75);
         chino.setTranslateY(181);
         chino.getStyleClass().add("chino");

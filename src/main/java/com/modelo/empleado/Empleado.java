@@ -26,8 +26,11 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
     private StringProperty municipio;
     private StringProperty asentamiento;
     private StringProperty tipoAsentamiento;
+    private StringProperty usuario;
+    private StringProperty password;
+    private StringProperty tipo;
 
-    public Empleado(int id, String nombre, String primerApellido, String apellidoMaterno, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa, String codigoPostal, String estado, String ciudad, String municipio, String asentamiento, String tipoAsentamiento) {
+    public Empleado(int id, String nombre, String primerApellido, String apellidoMaterno, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa, String codigoPostal, String estado, String ciudad, String municipio, String asentamiento, String tipoAsentamiento, String usuario, String password, String tipo) {
         this.nombre = new SimpleStringProperty(nombre);
         this.edad = new SimpleIntegerProperty(edad);
         this.segundoApellido = new SimpleStringProperty(apellidoMaterno);
@@ -44,6 +47,9 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         this.ciudad = new SimpleStringProperty(ciudad);
         this.sexo = new SimpleStringProperty(sexo);
         this.id = new SimpleIntegerProperty(id);
+        this.usuario = new SimpleStringProperty(usuario);
+        this.password = new SimpleStringProperty(password);
+        this.tipo = new SimpleStringProperty(tipo);
     }
 
     public Empleado(int id, String nombre, String primerApellido, String segundoApellido, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa) {
@@ -267,6 +273,42 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         this.tipoAsentamiento.set(tipoAsentamiento);
     }
 
+    public String getUsuario() {
+        return usuario.get();
+    }
+
+    public StringProperty usuarioProperty() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario.set(usuario);
+    }
+
+    public String getPassword() {
+        return password.get();
+    }
+
+    public StringProperty passwordProperty() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password.set(password);
+    }
+
+    public String getTipo() {
+        return tipo.get();
+    }
+
+    public StringProperty tipoProperty() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo.set(tipo);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -307,7 +349,10 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
                         resultSet.getString("ciudad"),
                         resultSet.getString("municipio"),
                         resultSet.getString("asentamiento"),
-                        resultSet.getString("tipo_asentamiento")
+                        resultSet.getString("tipo_asentamiento"),
+                        resultSet.getString("usuario"),
+                        resultSet.getString("password"),
+                        resultSet.getString("tipo")
                         )
                 );
 
@@ -372,7 +417,10 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
                             resultSet1.getString("ciudad"),
                             resultSet1.getString("municipio"),
                             resultSet1.getString("asentamiento"),
-                            resultSet1.getString("tipo_asentamiento")
+                            resultSet1.getString("tipo_asentamiento"),
+                            resultSet1.getString("usuario"),
+                            resultSet1.getString("password"),
+                            resultSet1.getString("tipo")
                     );
             }
 
@@ -417,7 +465,10 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
                         resultSet1.getString("ciudad"),
                         resultSet1.getString("municipio"),
                         resultSet1.getString("asentamiento"),
-                        resultSet1.getString("tipo_asentamiento")
+                        resultSet1.getString("tipo_asentamiento"),
+                        resultSet1.getString("usuario"),
+                        resultSet1.getString("password"),
+                        resultSet1.getString("tipo")
                 );
         }catch(SQLException e) {
             e.printStackTrace();
