@@ -52,7 +52,7 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         this.tipo = new SimpleStringProperty(tipo);
     }
 
-    public Empleado(int id, String nombre, String primerApellido, String segundoApellido, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa) {
+    public Empleado(int id, String nombre, String primerApellido, String segundoApellido, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa, String user, String password, String tipo) {
         this.id = new SimpleIntegerProperty(id);
         this.nombre = new SimpleStringProperty(nombre);
         this.edad = new SimpleIntegerProperty(edad);
@@ -63,9 +63,12 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         this.nombreCalle = new SimpleStringProperty(nombreCalle);
         this.nCasa = new SimpleStringProperty(nCasa);
         this.sexo = new SimpleStringProperty(sexo);
+        this.usuario = new SimpleStringProperty(user);
+        this.password = new SimpleStringProperty(password);
+        this.tipo = new SimpleStringProperty(tipo);
     }
 
-    public Empleado(String nombre, String primerApellido, String apellidoMaterno, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa) {
+    public Empleado(String nombre, String primerApellido, String apellidoMaterno, Integer edad, String sexo, String telefono, String correo, String nombreCalle, String nCasa, String usuario, String password, String tipo) {
         this.nombre = new SimpleStringProperty(nombre);
         this.edad = new SimpleIntegerProperty(edad);
         this.segundoApellido = new SimpleStringProperty(apellidoMaterno);
@@ -75,6 +78,9 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
         this.nombreCalle = new SimpleStringProperty(nombreCalle);
         this.nCasa = new SimpleStringProperty(nCasa);
         this.sexo = new SimpleStringProperty(sexo);
+        this.usuario = new SimpleStringProperty(usuario);
+        this.password = new SimpleStringProperty(password);
+        this.tipo = new SimpleStringProperty(tipo);
     }
 
     public Empleado(int id){
@@ -385,7 +391,7 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
     public static Empleado addEmpleado(Connection connection, Empleado empleado, int idCodigoPostal) {
         try {
             if (idCodigoPostal != 0) {
-                var employee_added = "SELECT * FROM get_employee_added('" +
+                var employee_added = "SELECT * FROM add_employee('" +
                         empleado.getNombre() +
                         "','"+ empleado.getPrimerApellido() +"'" +
                         ",'"+ empleado.getSegundoApellido() +"'" +
@@ -394,8 +400,12 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
                         ",'"+ empleado.getCorreo() +"'" +
                         ",'"+ empleado.getSexo() +"'" +
                         ",'"+ empleado.getNombreCalle() +"'" +
-                        ",'"+ empleado.getnCasa() +"'" +
-                        ",'true',"+ idCodigoPostal +")";
+                        ",'"+ empleado.getnCasa() +"'," +
+                        idCodigoPostal +",'" +
+                        empleado.getUsuario() + "','" +
+                        empleado.getPassword()+"','"
+                        + empleado.getTipo() + "')";
+                System.out.println(employee_added);
 
                 var statementP = connection.createStatement();
                 var resultSet1 = statementP.executeQuery(employee_added);
@@ -443,7 +453,10 @@ public class Empleado extends RecursiveTreeObject<Empleado> {
                     ",'" + empleado.getSexo() + "'" +
                     ",'" + empleado.getNombreCalle() + "'" +
                     ",'" + empleado.getnCasa() + "'" +
-                    ",'true'," + idCodigoPostal + ")";
+                    "," + idCodigoPostal + "," +
+                    "'"+empleado.getUsuario()+"','"+empleado.getPassword()+"','" +
+                    empleado.getTipo() + "')";
+            System.out.println(employee_added);
 
             var statement1 = connection.createStatement();
             var resultSet1 = statement1.executeQuery(employee_added);

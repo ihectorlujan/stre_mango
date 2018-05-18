@@ -33,6 +33,15 @@
 
 .white {
     -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 2.0, 0.8, 0.0,0.0);
+}
+
+.white:hover {
+    -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.5, 0.8, 0.0,0.0);
+}
+
+.onlyWhite {
+    -fx-background-color: white;
 }
 
 .btnRaisedBlue {

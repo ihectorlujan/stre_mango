@@ -14,6 +14,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyEvent;
@@ -29,13 +30,14 @@ public class ventanaEmpleado extends Stage {
     private EntryValidator handler = new EntryValidator();
     private ValidateFields validateFields = new ValidateFields();
 
-    private HBox hBoxTitulo = new HBox();
     private HBox hBoxCodigoPostal = new HBox();
     private HBox hBoxSexo = new HBox();
     private HBox hBoxEdad = new HBox();
+    private VBox boxDomicilioCp = new VBox();
     private GridPane gridPane = new GridPane();
     private GridPane gridPaneTelefono = new GridPane();
     private GridPane gridPaneDomicilio = new GridPane();
+    private GridPane gridPaneUsuario = new GridPane();
 
     private Label lblNombre = new Label("Nombre:*");
     private Label lblApellidoPaterno = new Label("Primer apellido:*");
@@ -45,10 +47,12 @@ public class ventanaEmpleado extends Stage {
     private Label lblTelefono = new Label("Telefono:*");
     private Label lblCorreo = new Label("Correo:*");
     private Label lblDatosDomiciliarios = new Label("Datos domiciliarios");
-    private Label lblAgregar = new Label("Datos del empleado");
     private Label lblCalle = new Label("Calle:*");
     private Label lblNoCasa = new Label("No de casa:*");
     private Label lblCodPostal = new Label("C.P:*");
+    private Label lblUsuario = new Label("Usuario*");
+    private Label lblPass = new Label("Contrasena*");
+    private Label lblPrivilegio = new Label("Privilegio*");
 
     private TextField txtNombre = new TextField();
     private TextField txtPrimerApellido = new TextField();
@@ -60,21 +64,27 @@ public class ventanaEmpleado extends Stage {
     private TextField txtCalle = new TextField();
     private TextField txtNoCasa = new TextField();
     private TextField txtCodigoPostal = new TextField();
+    private TextField txtUsuario = new TextField();
+    private PasswordField txtPass = new PasswordField();
 
     private JFXRadioButton rbHombre = new JFXRadioButton("Hombre");
     private JFXRadioButton rbMujer = new JFXRadioButton("Mujer");
     private JFXComboBox<Integer> cmbEdad = new JFXComboBox<>();
+    private JFXComboBox<String> cmbPrivilegio = new JFXComboBox<>();
 
     private ColumnConstraints column1 = new ColumnConstraints();
     private ColumnConstraints column2 = new ColumnConstraints();
 
     private Messages messages = new Messages();
 
+    private Insets bottomInsets = new Insets(0,0,10,0);
+
     public ventanaEmpleado() {
         var panePrincipal = new VBox();
 
         //Llenar comboBox
         llenarComboEdad(cmbEdad);
+        establecerPrioridades(cmbPrivilegio);
 
         //Toggle group
         var toggleGroup = new ToggleGroup();
@@ -85,6 +95,7 @@ public class ventanaEmpleado extends Stage {
         gridPaneDatosGenerales();
         gridPaneDomicilio();
         gridPaneTelefono();
+        gridPaneUsuario();
         hBoxContainers();
 
         loadPostalCodes();
@@ -95,16 +106,9 @@ public class ventanaEmpleado extends Stage {
         //Add styles
         btnAgregar.getStyleClass().add("btnRaisedBlue");
         gridPane.getStyleClass().add("white");
-
-        //HBox de datos domiciliarios
-        HBox hBoxDatosDomiciliarios = new HBox();
-        hBoxDatosDomiciliarios.getChildren().add(lblDatosDomiciliarios);
-        hBoxDatosDomiciliarios.setPadding(new Insets(5));
-        hBoxDatosDomiciliarios.getStyleClass().add("white");
+        gridPaneUsuario.getStyleClass().add("white");
 
         //Hboxes de ayuda
-        hBoxTitulo.getChildren().add(lblAgregar);
-        hBoxTitulo.setPadding(new Insets(5));
         HBox hBoxBntAgregar = new HBox();
         hBoxBntAgregar.getChildren().add(btnAgregar);
         hBoxBntAgregar.setAlignment(Pos.CENTER_RIGHT);
@@ -121,7 +125,10 @@ public class ventanaEmpleado extends Stage {
                         txtTelefono.getText() + " " + txtTelefono1.getText() + " " + txtTelefono2.getText(),
                         txtCorreo.getText(),
                         txtCalle.getText(),
-                        txtNoCasa.getText()), idCodigo);
+                        txtNoCasa.getText(),
+                        txtUsuario.getText(),
+                        txtPass.getText(),
+                        cmbPrivilegio.getValue()), idCodigo);
             }else {
                 messages.setMessageAlert(this, "Verifique lo siguiente:", "" +
                         "\t- Los campos con * son obligatorios\n" +
@@ -132,21 +139,25 @@ public class ventanaEmpleado extends Stage {
 
         });
 
+        //vBox Domicilio and cp
+        boxDomicilioCp.getChildren().addAll(gridPaneDomicilio, hBoxCodigoPostal);
+        boxDomicilioCp.getStyleClass().add("white");
 
         //Add childs to pane Principal
-        panePrincipal.getChildren().addAll(hBoxTitulo, gridPane, hBoxDatosDomiciliarios, gridPaneDomicilio, hBoxCodigoPostal, hBoxBntAgregar);
+        panePrincipal.getChildren().addAll(gridPane, boxDomicilioCp, gridPaneUsuario,hBoxBntAgregar);
 
         //Properties of panePrincipal
         panePrincipal.setPadding(new Insets(10));
-        VBox.setMargin(hBoxTitulo, new Insets(0,0,5,0));
-        VBox.setMargin(gridPane, new Insets(0,0,5,0));
-        VBox.setMargin(hBoxDatosDomiciliarios, new Insets(0,0,5,0));
-        VBox.setMargin(hBoxCodigoPostal, new Insets(0,0,10,0));
+        VBox.setMargin(gridPane, bottomInsets);
+        VBox.setMargin(boxDomicilioCp, bottomInsets);
+        VBox.setMargin(hBoxCodigoPostal, bottomInsets);
+        VBox.setMargin(gridPaneUsuario, bottomInsets);
 
         //Properties of stage
         setResizable(false);
-        Scene scene = new Scene(panePrincipal, 440,470);
+        Scene scene = new Scene(panePrincipal, 440,535);
         setScene(scene);
+        setTitle("Agregar un empleado");
         initModality(Modality.APPLICATION_MODAL);
         scene.getStylesheets().add(getClass().getResource("/estilos/agregar_empleado.css").toExternalForm());
         show();
@@ -172,9 +183,14 @@ public class ventanaEmpleado extends Stage {
         txtCalle.setText(empleado.getNombreCalle());
         txtNoCasa.setText(empleado.getnCasa());
         txtCodigoPostal.setText(empleado.getCodigoPostal() + " " + empleado.getAsentamiento());
+        txtUsuario.setText(empleado.getUsuario());
+        txtPass.setText(empleado.getPassword());
+        cmbPrivilegio.setValue(empleado.getTipo());
+
 
         //Llenar comboBox
         llenarComboEdad(cmbEdad);
+        establecerPrioridades(cmbPrivilegio);
 
         //Toggle group
         var toggleGroup = new ToggleGroup();
@@ -185,6 +201,7 @@ public class ventanaEmpleado extends Stage {
         gridPaneDatosGenerales();
         gridPaneDomicilio();
         gridPaneTelefono();
+        gridPaneUsuario();
         hBoxContainers();
 
         loadPostalCodes();
@@ -195,16 +212,10 @@ public class ventanaEmpleado extends Stage {
         //Add styles
         btnAgregar.getStyleClass().add("btnRaisedBlue");
         gridPane.getStyleClass().add("white");
+        gridPaneUsuario.getStyleClass().add("white");
 
-        //HBox de datos domiciliarios
-        HBox hBoxDatosDomiciliarios = new HBox();
-        hBoxDatosDomiciliarios.getChildren().add(lblDatosDomiciliarios);
-        hBoxDatosDomiciliarios.setPadding(new Insets(5));
-        hBoxDatosDomiciliarios.getStyleClass().add("white");
 
         //Hboxes de ayuda
-        hBoxTitulo.getChildren().add(lblAgregar);
-        hBoxTitulo.setPadding(new Insets(5));
         HBox hBoxBntAgregar = new HBox();
         hBoxBntAgregar.getChildren().add(btnAgregar);
 
@@ -223,7 +234,10 @@ public class ventanaEmpleado extends Stage {
                         txtTelefono.getText() + " " + txtTelefono1.getText() + " " + txtTelefono2.getText(),
                         txtCorreo.getText(),
                         txtCalle.getText(),
-                        txtNoCasa.getText()), idCodigo);
+                        txtNoCasa.getText(),
+                        txtUsuario.getText(),
+                        txtPass.getText(),
+                        cmbPrivilegio.getValue()), idCodigo);
             }else {
                 messages.setMessageAlert(this, "Verifique lo siguiente:", "" +
                         "\t- Los campos con * son obligatorios\n" +
@@ -233,21 +247,25 @@ public class ventanaEmpleado extends Stage {
             }
         });
 
+        //vBox Domicilio and cp
+        boxDomicilioCp.getChildren().addAll(gridPaneDomicilio, hBoxCodigoPostal);
+        boxDomicilioCp.getStyleClass().add("white");
+
 
         //Add childs to pane Principal
-        panePrincipal.getChildren().addAll(hBoxTitulo, gridPane, hBoxDatosDomiciliarios, gridPaneDomicilio, hBoxCodigoPostal, hBoxBntAgregar);
+        panePrincipal.getChildren().addAll(gridPane, boxDomicilioCp, gridPaneUsuario, hBoxBntAgregar);
 
         //Properties of panePrincipal
         panePrincipal.setPadding(new Insets(10));
-        VBox.setMargin(hBoxTitulo, new Insets(0,0,5,0));
-        VBox.setMargin(gridPane, new Insets(0,0,5,0));
-        VBox.setMargin(hBoxDatosDomiciliarios, new Insets(0,0,5,0));
-        VBox.setMargin(hBoxCodigoPostal, new Insets(0,0,10,0));
+        VBox.setMargin(gridPane, bottomInsets);
+        VBox.setMargin(boxDomicilioCp, bottomInsets);
+        VBox.setMargin(gridPaneUsuario, bottomInsets);
 
         //Properties of stage
         setResizable(false);
-        Scene scene = new Scene(panePrincipal, 440,470);
+        Scene scene = new Scene(panePrincipal, 440,535);
         setScene(scene);
+        setTitle("Editar empleado");
         initModality(Modality.APPLICATION_MODAL);
         scene.getStylesheets().add(getClass().getResource("/estilos/agregar_empleado.css").toExternalForm());
         show();
@@ -289,7 +307,7 @@ public class ventanaEmpleado extends Stage {
 
     private boolean verificarCampos() {
         var verificarEdad = false;
-        var verificarCamposVacios = validateFields.validateFields(txtNombre, txtPrimerApellido, txtTelefono, txtTelefono1, txtTelefono2, txtCalle, txtNoCasa, txtCorreo);
+        var verificarCamposVacios = validateFields.validateFields(txtNombre, txtPrimerApellido, txtTelefono, txtTelefono1, txtTelefono2, txtCalle, txtNoCasa, txtCorreo, txtUsuario,txtPass);
         var verificarSexo = rbHombre.isSelected() || rbMujer.isSelected();
         var verificarCorreo = validateFields.validateEmail(txtCorreo.getText());
 
@@ -319,14 +337,11 @@ public class ventanaEmpleado extends Stage {
 
         //HBox codigo postal
         hBoxCodigoPostal.getChildren().addAll(lblCodPostal, txtCodigoPostal);
-        hBoxCodigoPostal.getStyleClass().add("white");
+        hBoxCodigoPostal.getStyleClass().add("onlyWhite");
         hBoxCodigoPostal.setAlignment(Pos.CENTER);
         hBoxCodigoPostal.setPadding(new Insets(0,10,5,10));
         HBox.setHgrow(txtCodigoPostal, Priority.ALWAYS);
         HBox.setMargin(lblCodPostal, new Insets(0,10,0,0));
-
-        //Estilos de los diversos Box
-        hBoxTitulo.getStyleClass().add("white");
     }
 
     private void gridPaneDomicilio() {
@@ -343,7 +358,7 @@ public class ventanaEmpleado extends Stage {
 
         gridPaneDomicilio.getColumnConstraints().addAll(column1, column2);
         gridPaneDomicilio.setPadding(new Insets(10));
-        gridPaneDomicilio.getStyleClass().add("white");
+        gridPaneDomicilio.getStyleClass().add("onlyWhite");
         gridPaneDomicilio.getColumnConstraints().forEach(x -> x.setHgrow(Priority.SOMETIMES));
         gridPaneDomicilio.setHgap(20);
         gridPaneDomicilio.setVgap(5);
@@ -373,6 +388,21 @@ public class ventanaEmpleado extends Stage {
         gridPane.setVgap(5);
     }
 
+    private void gridPaneUsuario() {
+        gridPaneUsuario.add(lblUsuario, 0,0);
+        gridPaneUsuario.add(txtUsuario, 1,0);
+        gridPaneUsuario.add(lblPass, 0,1);
+        gridPaneUsuario.add(txtPass,1,1);
+        gridPaneUsuario.add(lblPrivilegio,0,2);
+        gridPaneUsuario.add(cmbPrivilegio,1,2);
+
+        gridPaneUsuario.getColumnConstraints().addAll(column1, column2);
+        gridPaneUsuario.getColumnConstraints().forEach(x -> x.setHgrow(Priority.SOMETIMES));
+        gridPaneUsuario.setPadding(new Insets(10));
+        gridPaneUsuario.setHgap(20);
+        gridPaneUsuario.setVgap(5);
+    }
+
     private void gridPaneTelefono() {
         txtTelefono.setPrefWidth(40);
         txtTelefono1.setPrefWidth(40);
@@ -390,6 +420,10 @@ public class ventanaEmpleado extends Stage {
     private void llenarComboEdad(JFXComboBox<Integer> combo) {
         for (int i = 16; i < 60; i++)
             combo.getItems().add(i);
+    }
+
+    private void establecerPrioridades(JFXComboBox<String> combo) {
+        combo.getItems().addAll("ADMINISTRADOR", "EMPLEADO");
     }
 
     private void agregarEmpleado(Empleado x, int idCodigoPostal) {

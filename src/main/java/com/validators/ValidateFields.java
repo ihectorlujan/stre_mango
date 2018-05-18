@@ -40,7 +40,7 @@ public class ValidateFields {
                 asenta += cod[i];
         }
 
-        var queryCodigoPostal = "SELECT id FROM codigo_postal WHERE d_codigo = '" + cod[0] + "' and d_asenta = '" + asenta + "'";
+        var queryCodigoPostal = "SELECT id FROM codigo_postal WHERE UPPER(d_codigo) = '" + cod[0].toUpperCase() + "' and UPPER(d_asenta) = '" + asenta.toUpperCase() + "'";
         var idCodiPostal = 0;
 
         try {
