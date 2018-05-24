@@ -1,18 +1,24 @@
 package com.controladores.clientes;
 
+import com.controladores.empleados.ventanaEmpleado;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.modelo.Conexion;
 import com.modelo.cliente.Cliente;
+import com.modelo.empleado.Empleado;
+import com.validators.Messages;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import tray.notification.NotificationType;
 
 
 public class Opcion_clientes extends VBox {
@@ -60,6 +66,8 @@ public class Opcion_clientes extends VBox {
     private ComboBox cboxEdad = new ComboBox<Integer>();
     private RadioButton rbSexoH = new RadioButton();
     private RadioButton rbSexoM = new RadioButton();   //Group - Cliente femenino
+    private ToggleGroup toggleGroup = new ToggleGroup();
+
     private JFXButton btnAnadir = new JFXButton();
     private JFXButton btnEditar = new JFXButton();
     private JFXButton btnEliminar = new JFXButton();
@@ -69,12 +77,17 @@ public class Opcion_clientes extends VBox {
     private Label lMunicipio = new Label("Municipio: ");
     private Label lTipoAsentamiento = new Label("Tipo: ");
     private Label lAsentamiento = new Label("Asentamiento: ");
+    private Label lblIdN = new Label("");
     private TextField tEstado = new TextField();
     private TextField tCiudad = new TextField();
     private TextField tMunicipio = new TextField();
     private TextField tTipoAsentamiento = new TextField();
     private TextField tAsentamiento = new TextField();
     private JFXPopup popupCodigoPostal;
+    private Messages messages = new Messages();
+
+    static JFXTreeTableView table = null;
+    static ObservableList<Cliente> listClientes = null;
 
     public Opcion_clientes(){
         var icoEdit = GlyphsDude.createIcon(FontAwesomeIcon.EDIT,"14px");
@@ -83,7 +96,6 @@ public class Opcion_clientes extends VBox {
         var icoInfo = GlyphsDude.createIcon(FontAwesomeIcon.INFO,"14px");
 
         cboxEdad.getItems().addAll(18,19,20,21,22,23,24);
-        ObservableList<Cliente> listClientes = null;
 
         // Barra de titulo y busqueda.
         hBoxTitulo.getChildren().addAll(titulo, hBoxBusqueda);
@@ -126,6 +138,12 @@ public class Opcion_clientes extends VBox {
         gridPane.add(lEmail,2,3);
         gridPane.add(tEmail,3,3);
 
+        // Toggle group
+        rbSexoH.setToggleGroup(toggleGroup);
+        rbSexoM.setToggleGroup(toggleGroup);
+        rbSexoH.setDisable(true);
+        rbSexoM.setDisable(true);
+
         // Barra de datos domiciliarios.
         hBoxDomicilio.getChildren().add(lDomicilio);
         hBoxDomicilio.setPadding(new Insets(10,10,10,10));
@@ -155,6 +173,12 @@ public class Opcion_clientes extends VBox {
         hBoxLista.getStyleClass().add("panelWhite");
         HBox.setMargin(btnEditar, new Insets(0,0,0,10));
         HBox.setMargin(btnEliminar, new Insets(0,0,0,10));
+
+        // Etiquetas de informacion.
+        btnAnadir.setTooltip(new Tooltip("Agregar cliente"));
+        btnEditar.setTooltip(new Tooltip("Editar cliente"));
+        btnEliminar.setTooltip(new Tooltip("Eliminar cliente"));
+        btnMas.setTooltip(new Tooltip("Mas detalles"));
 
         // Agrega las columnas al GridPane.
         gridPane.getColumnConstraints().addAll(columna1, columna2, columna3, columna4);
@@ -196,12 +220,23 @@ public class Opcion_clientes extends VBox {
         establecerCampos(table);
 
         // Accion de los botones.
+
         btnMas.setOnAction(x -> {
                     initPopUpCodigoPostal();
                     popupCodigoPostal.show(btnMas, JFXPopup.PopupVPosition.BOTTOM, JFXPopup.PopupHPosition.RIGHT);// Agrega los nodos () al VBox.
                 });getChildren().addAll(hBoxTitulo, gridPane, hBoxDomicilio, gridPane2, hBoxLista, table);
 
         setPadding(insetsBase);
+
+        btnEditar.setOnAction(x -> editCliente(cliente));
+
+        btnAnadir.setOnAction(this::addCliente);
+
+//        btnEliminar.setOnAction(x -> {
+//            initPopUpEliminar(listClientes, table);
+//            popupEstaSeguro.show(btnEliminar, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.RIGHT);
+//        });
+
 
         //Hoja de estilos
         getStylesheets().add(getClass().getResource("/estilos/clientes.css").toExternalForm());
@@ -293,6 +328,60 @@ public class Opcion_clientes extends VBox {
             t.getStyleClass().add("ico");
     }
 
+
+//    private void initPopUpEliminar(ObservableList<Cliente> list, JFXTreeTableView tableView) {
+//        var vBox = new VBox();
+//        var gridPane = new GridPane();
+//
+//        var column1 = new ColumnConstraints();
+//        var column2 = new ColumnConstraints();
+//
+//        var lblSeguro = new Label("¿Esta seguro de eliminar este empleado?");
+//        var btnAceptar = new JFXButton("Eliminar");
+//        var btnCancelar = new JFXButton("Cancelar");
+//
+//        btnAceptar.setOnAction(x -> deleteCliente(list));
+//        btnCancelar.setOnAction(x -> popupEstaSeguro.hide());
+//
+//        gridPane.add(btnAceptar, 0,0);
+//        gridPane.add(btnCancelar,1,0);
+//
+//        vBox.getChildren().addAll(lblSeguro, gridPane);
+//
+//        gridPane.setHgap(20);
+//        gridPane.getColumnConstraints().addAll(column1, column2);
+//        gridPane.getColumnConstraints().forEach(x -> {
+//            x.setHgrow(Priority.SOMETIMES);
+//            x.setHalignment(HPos.CENTER);
+//        });
+//
+//        vBox.getStylesheets().setAll("/estilos/empleados.css");
+//        vBox.setPadding(new Insets(10));
+//        vBox.setAlignment(Pos.CENTER);
+//        VBox.setMargin(lblSeguro, new Insets(0,0,10,0));
+//
+//        popupEstaSeguro = new JFXPopup(vBox);
+//    }
+
+    private void deleteCliente(ObservableList<Empleado> list) {
+        try {
+            var temporalityEmployeed = new Empleado(Integer.parseInt(lblIdN.getText()));
+
+            connection.establecerConexion();
+            var resultado = temporalityEmployeed.eliminarEmpleado(connection.getConection());
+            connection.cerrarConexion();
+
+            if (resultado != null) {
+                list.removeIf(x -> x.getId() == resultado.getId());
+                messages.setMessage("Completado","Se elimino satisfactoriamente", NotificationType.SUCCESS);
+            } else
+                messages.setMessage("Algo salio mal...","Intentelo mas tarde", NotificationType.ERROR);
+
+        }catch (NumberFormatException e) {
+            messages.setMessage("No selecciono registro", "Seleccione el registro a eliminar", NotificationType.ERROR);
+        }
+    }
+
     private void establecerCampos(JFXTreeTableView<Cliente> tableView) {
         tableView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             if(newValue != null) {
@@ -355,5 +444,19 @@ public class Opcion_clientes extends VBox {
         pane.setPadding(new Insets(10));
 
         popupCodigoPostal = new JFXPopup(pane);
+    }
+
+    private void editCliente(Cliente x) {
+        try{
+            new VentanaCliente(x);
+        }catch (Exception e) {
+            messages.setMessage("Seleccione cliente", "No selecciono ningun cliente", NotificationType.INFORMATION);
+        }
+
+    }
+
+
+    private void addCliente(ActionEvent e) {
+        new VentanaCliente();
     }
 }

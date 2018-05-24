@@ -1,6 +1,7 @@
 package com.modelo.cliente;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import com.modelo.empleado.Empleado;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -285,6 +286,54 @@ public class Cliente extends RecursiveTreeObject <Cliente> {
         } catch (SQLException e){
             e.printStackTrace();
         }
+        return null;
+    }
+
+    public static Cliente updateCliente(Connection connection, Cliente cliente, int idCodigoPostal) {
+        try {
+            var cliente_agregado = "SELECT * FROM get_employee_edited(" +
+                    "" + cliente.getId() + "," +
+                    "'" + cliente.getNombre() +
+                    "','" + cliente.getPrimer_apellido() + "'" +
+                    ",'" + cliente.getSegundo_apellido() + "'" +
+                    "," + cliente.getEdad() + "" +
+                    ",'" + cliente.getTelefono() + "'" +
+                    ",'" + cliente.getCorreo() + "'" +
+                    ",'" + cliente.getSexo() + "'" +
+                    ",'" + cliente.getnCalle() + "'" +
+                    ",'" + cliente.getnCasa() + "'" +
+                    "," + idCodigoPostal + ",";
+            System.out.println(cliente_agregado);
+
+            var statement1 = connection.createStatement();
+            var resultSet1 = statement1.executeQuery(cliente_agregado);
+
+//            if (resultSet1.next())
+//                return new Cliente(
+//                        resultSet1.getInt("id"),
+//                        resultSet1.getString("nombre"),
+//                        resultSet1.getString("primer_apellido"),
+//                        resultSet1.getString("segundo_apellido"),
+//                        resultSet1.getInt("edad"),
+//                        resultSet1.getString("sexo"),
+//                        resultSet1.getString("telefono"),
+//                        resultSet1.getString("correo"),
+//                        resultSet1.getString("nom_calle"),
+//                        resultSet1.getString("num_casa"),
+//                        resultSet1.getString("codigo"),
+//                        resultSet1.getString("c_estado"),
+//                        resultSet1.getString("ciudad"),
+//                        resultSet1.getString("municipio"),
+//                        resultSet1.getString("asentamiento"),
+//                        resultSet1.getString("tipo_asentamiento"),
+//                        resultSet1.getString("usuario"),
+//                        resultSet1.getString("password"),
+//                        resultSet1.getString("tipo")
+//                );
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 }
